@@ -2,14 +2,14 @@
 
 :root {
 
-    --color-primary: #aff1d1;
+    --color-primary: #9a75b9;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
     --color-warning: #ffbb55;
     --color-white: #fff;
     --color-info-dark: #7d8da1;
     --color-info-light: #dce1eb;
-    --color-dark: #363949;
+    --color-dark: #573a6e;
     --color-light: rgba(132, 139, 200, 0.18);
     --color-primary-variant: #333e88;
     --color-dark-variant: #677483;
@@ -26,32 +26,22 @@
     --box_shadow: 0 2rem 3rem var(--color-light)
 }
 
-/*DARK */
+/*DARK 867194*/
 body.dark-theme-variables {
-    --color-primary: #6fd66f;
-    /* a deep blue-green color */
-    --color-danger: #ff3737;
-    /* a bright, bold red color */
-    --color-success: #34c759;
-    /* a deep green color */
-    --color-warning: #ffc107;
-    /* a vibrant orange color */
-    --color-white: #6c6b6b;
-    /* a darkened white color */
-    --color-info-dark: #444;
-    /* a dark gray color */
-    --color-info-light: #666;
-    /* a medium gray color */
-    --color-dark: #212121;
-    /* a dark gray color */
-    --color-light: rgba(255, 255, 255, 0.1);
-    /* a subtle, darkened white color */
-    --color-primary-variant: #337ab7;
-    /* a deep blue color */
-    --color-dark-variant: #444444;
-    /* a dark gray color */
-    --color-background: #2f2f2f;
+    --color-primary: #7d6c88; /* un morado oscuro */
+    --color-danger: #d9534f; /* rojo oscuro */
+    --color-success: #34c759; /* verde profundo */
+    --color-warning: #ffc107; /* un naranja vibrante */
+    --color-white: #c3b6cc; /* tablas, secciones un blanco oscuro */
+    --color-info-dark: #b899cf; /* un morado gris oscuro */
+    --color-info-light: #d0ccd7; /* un morado gris medio letra sidebar*/ 
+    --color-dark: #2b2230; /* un gris muy oscuro con tono morado */
+    --color-light: rgba(211, 203, 226, 0.1); /* un blanco oscuro sutil */
+    --color-primary-variant: #6b3f76; /* un morado más vibrante */
+    --color-dark-variant: #3a2b40; /* sidebarun gris oscuro con tono morado */
+    --color-background: #d0ccd7; /* un morado oscuro */
 }
+
 
 /* a dark gray background color */
 

@@ -203,6 +203,10 @@ aside .sidebar {
 
 }
 
+aside .sidebar button{
+    background: white;
+}
+
 aside .sidebar.collapsed {
     width: 60px;
 }

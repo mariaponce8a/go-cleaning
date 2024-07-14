@@ -7,7 +7,7 @@
     --color-success: #41f1b6;
     --color-warning: #ffbb55;
     --color-white: #fff;
-    --color-info-dark: #7d8da1;
+    --color-info-dark: #907da1;
     --color-info-light: #dce1eb;
     --color-dark: #573a6e;
     --color-light: rgba(132, 139, 200, 0.18);
@@ -32,14 +32,14 @@ body.dark-theme-variables {
     --color-danger: #d9534f; /* rojo oscuro */
     --color-success: #34c759; /* verde profundo */
     --color-warning: #ffc107; /* un naranja vibrante */
-    --color-white: #c3b6cc; /* tablas, secciones un blanco oscuro */
-    --color-info-dark: #b899cf; /* un morado gris oscuro */
+    --color-white: #dcd3e0; /* tablas, secciones un blanco oscuro */
+    --color-info-dark: #8d779f; /* iconos letra */
     --color-info-light: #d0ccd7; /* un morado gris medio letra sidebar*/ 
     --color-dark: #2b2230; /* un gris muy oscuro con tono morado */
     --color-light: rgba(211, 203, 226, 0.1); /* un blanco oscuro sutil */
-    --color-primary-variant: #6b3f76; /* un morado más vibrante */
+    --color-primary-variant: #71507a; /* un morado más vibrante */
     --color-dark-variant: #3a2b40; /* sidebarun gris oscuro con tono morado */
-    --color-background: #d0ccd7; /* un morado oscuro */
+    --color-background: #eae9ed; /* un morado oscuro */
 }
 
 

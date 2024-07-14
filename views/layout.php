@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 
@@ -13,7 +13,7 @@
         <aside>
             <div class="top">
                 <div class="logo" id="logo">
-                    <img src="../../public/img/logo.png" alt="Logo">
+                    <img src="../public/img/logo.png" alt="Logo">
                     <h2><span>BURBUJA</span> DE <span>SEDA</span></h2>
                 </div>
                 <div class="close" id="close-btn">
@@ -25,11 +25,11 @@
                     <button id="menu-btn">
                         <span class="material-icons-sharp">menu</span>
                     </button>
-                    <a href="../dashboard.php" class="<?php echo ($pagina_actual == 'Dashboard') ? 'active' : ''; ?>">
+                    <a href="#" onclick="loadInterlPage('./dashboard/dashboard.php')" class="<?php echo ($pagina_actual == 'Dashboard') ? 'active' : ''; ?>">
                         <span class="material-icons-sharp">grid_view</span>
                         <h3>Dashboard</h3>
                     </a>
-                    <a href="../usuarios/usuarios.php" class="<?php echo ($pagina_actual == 'Usuarios') ? 'active' : ''; ?>">
+                    <a href="#" onclick="loadInterlPage('./usuarios/usuarios.php')" class="<?php echo ($pagina_actual == 'Usuarios') ? 'active' : ''; ?>">
                         <span class="material-icons-sharp">person_outline</span>
                         <h3>Usuarios</h3>
                     </a>
@@ -37,15 +37,15 @@
                         <span class="material-icons-sharp">local_laundry_service</span>
                         <h3>Pedidos</h3>
                     </a>
-                    <a href="../servicios/servicios.php" class="<?php echo ($pagina_actual == 'Servicios') ? 'active' : ''; ?>">
+                    <a href="./servicios/servicios.php" class="<?php echo ($pagina_actual == 'Servicios') ? 'active' : ''; ?>">
                         <span class="material-icons-sharp">workspaces</span>
                         <h3>Servicios</h3>
                     </a>
-                    <a href="../clientes/clientes.php" class="<?php echo ($pagina_actual == 'Clientes') ? 'active' : ''; ?>">
+                    <a href="./clientes/clientes.php" class="<?php echo ($pagina_actual == 'Clientes') ? 'active' : ''; ?>">
                         <span class="material-icons-sharp">person_search</span>
                         <h3>Clientes</h3>
                     </a>
-                    <a href="../configuracion/configuracion.php" class="<?php echo ($pagina_actual == 'Configuración') ? 'active' : ''; ?>">
+                    <a href="./configuracion/configuracion.php" class="<?php echo ($pagina_actual == 'Configuración') ? 'active' : ''; ?>">
                         <span class="material-icons-sharp">settings</span>
                         <h3>Configuración</h3>
                     </a>
@@ -57,14 +57,7 @@
             </div>
         </aside>
 
-        <main class="main-content">
-            <?php require_once("../usuarios/usuarios.php"); ?>
-            <h1>
-                <?php echo $pagina_actual; ?>
-            </h1>
-            <div class="date">
-                <input type="date">
-            </div>
+        <main class="main-content" id="dynamicContent">
         </main>
 
         <div class="right">
@@ -113,7 +106,69 @@
             </div>
         </div>
     </div>
-</body>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggler = document.querySelector('.theme-toggler');
+            const lightModeIcon = document.querySelector('.theme-toggler .material-icons-sharp:first-child');
+            const darkModeIcon = document.querySelector('.theme-toggler .material-icons-sharp:last-child');
+            const menuBtn = document.getElementById('menu-btn');
+            const closeBtn = document.getElementById('close-btn');
+            const sidebar = document.querySelector('.sidebar');
+            const topSection = document.querySelector('.top');
+            const body = document.body;
+            const logoText = document.querySelector('.logo h2');
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('collapsed');
+                topSection.classList.toggle('hidden');
+
+            };
+
+            // Función para aplicar el tema
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.add('dark-theme-variables');
+                    sidebar.classList.add('dark-theme-variables'); // Aplicar tema oscuro a la barra lateral
+                    topSection.classList.add('dark-theme-variables'); // Aplicar tema oscuro al encabezado
+                    lightModeIcon.classList.remove('active');
+                    darkModeIcon.classList.add('active');
+                } else {
+                    body.classList.remove('dark-theme-variables');
+                    sidebar.classList.remove('dark-theme-variables'); // Quitar tema oscuro de la barra lateral
+                    topSection.classList.remove('dark-theme-variables'); // Quitar tema oscuro del encabezado
+                    lightModeIcon.classList.add('active');
+                    darkModeIcon.classList.remove('active');
+                }
+            };
+
+            // Alternar el tema cuando se hace clic en el toggler
+            themeToggler.addEventListener('click', () => {
+                if (body.classList.contains('dark-theme-variables')) {
+                    applyTheme('light');
+                } else {
+                    applyTheme('dark');
+                }
+            });
+
+            // Aplicar tema por defecto
+            applyTheme('light');
+
+            // Función para ocultar el texto específico del logo
+            closeBtn.addEventListener('click', () => {
+                toggleSidebar();
+            });
+
+            menuBtn.addEventListener('click', () => {
+                toggleSidebar();
+            });
+        });
+
+        function loadInterlPage(urlPage) {
+            $("#dynamicContent").load(urlPage);
+        }
+    </script>
+
+</body>
 
 </html>

@@ -1,56 +1,70 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
 
---color-primary: #aff1d1;
---color-danger:#ff7782;
---color-success: #41f1b6;
---color-warning: #ffbb55;
---color-white:#fff;
---color-info-dark :#7d8da1;
---color-info-light :#dce1eb;
---color-dark:#363949;
---color-light:rgba(132, 139, 200, 0.18);
---color-primary-variant:#333e88;
---color-dark-variant:#677483;
---color-background:#f6f6f9;
+    --color-primary: #aff1d1;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #333e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
 
---card-boarder-radius: 2rem;
---border-radius-1: 0.4rem;
---border-radius-2: 0.8rem;
---border-radius-3: 0.2rem;
+    --card-boarder-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 0.2rem;
 
---card_padding: 1.8rem;
---padding-1: 1.2rem;
+    --card_padding: 1.8rem;
+    --padding-1: 1.2rem;
 
---box_shadow: 0 2rem 3rem var(--color-light)
-
+    --box_shadow: 0 2rem 3rem var(--color-light)
 }
+
 /*DARK */
 body.dark-theme-variables {
-    --color-primary: #6fd66f; /* a deep blue-green color */
-    --color-danger: #ff3737; /* a bright, bold red color */
-    --color-success: #34c759; /* a deep green color */
-    --color-warning: #ffc107; /* a vibrant orange color */
-    --color-white: #6c6b6b; /* a darkened white color */
-    --color-info-dark: #444; /* a dark gray color */
-    --color-info-light: #666; /* a medium gray color */
-    --color-dark: #212121; /* a dark gray color */
-    --color-light: rgba(255, 255, 255, 0.1); /* a subtle, darkened white color */
-    --color-primary-variant: #337ab7; /* a deep blue color */
-    --color-dark-variant: #444444; /* a dark gray color */
+    --color-primary: #6fd66f;
+    /* a deep blue-green color */
+    --color-danger: #ff3737;
+    /* a bright, bold red color */
+    --color-success: #34c759;
+    /* a deep green color */
+    --color-warning: #ffc107;
+    /* a vibrant orange color */
+    --color-white: #6c6b6b;
+    /* a darkened white color */
+    --color-info-dark: #444;
+    /* a dark gray color */
+    --color-info-light: #666;
+    /* a medium gray color */
+    --color-dark: #212121;
+    /* a dark gray color */
+    --color-light: rgba(255, 255, 255, 0.1);
+    /* a subtle, darkened white color */
+    --color-primary-variant: #337ab7;
+    /* a deep blue color */
+    --color-dark-variant: #444444;
+    /* a dark gray color */
     --color-background: #2f2f2f;
- } /* a dark gray background color */
+}
+
+/* a dark gray background color */
 
 body.dark-theme-variables .sidebar,
 body.dark-theme-variables .top {
-    background-color: var(--color-dark); /* Fondo oscuro para sidebar y top */
-    color: var(--color-white); /* Texto blanco para sidebar y top */
+    background-color: var(--color-dark);
+    /* Fondo oscuro para sidebar y top */
+    color: var(--color-white);
+    /* Texto blanco para sidebar y top */
 }
 
 
-*{
+* {
     margin: 0;
     padding: 0;
     outline: 0;
@@ -62,11 +76,11 @@ body.dark-theme-variables .top {
 
 }
 
-html{
+html {
     font-size: 14px;
 }
 
-body{
+body {
     width: 100vw;
     height: 100vw;
     font-family: poppins, sans-serif;
@@ -77,88 +91,89 @@ body{
     color: var(--color-dark);
 }
 
-.container{
+.container {
     display: grid;
     width: 96%;
-    margin: 0 auto;
+    height: 100%;
+    margin: 0;
     gap: 1.8rem;
     grid-template-columns: 14rem auto 23rem;
 }
 
-a{
+a {
     color: var(--color-dark);
 }
 
-img{
+img {
     display: block;
     width: 100%;
 }
 
-h1{
+h1 {
     font-weight: 800;
     font-size: 1.8rem;
 }
 
-h2{
+h2 {
     font-size: 1.4rem;
 }
 
-h3{
+h3 {
     font-size: 0.87rem;
 }
 
-h4{
+h4 {
     font-size: 0.8rem;
 }
 
-h5{
+h5 {
     font-size: 0.77rem;
 }
 
-small{
+small {
     font-size: 0.75rem;
 }
 
-.profile-photo{
+.profile-photo {
     width: 2.8rem;
     height: 2.8rem;
     border-radius: 50%;
     overflow: hidden;
 }
 
-.text-muted{
+.text-muted {
     color: var(--color-info-dark);
 }
 
-p{
+p {
     color: var(--color-dark-variant);
 }
 
-b{
+b {
     color: var(--color-dark);
 }
 
-.primary{
+.primary {
     color: var(--color-primary);
 }
 
-.danger{
+.danger {
     color: var(--color-danger);
 }
 
-.success{
+.success {
     color: var(--color-success);
 }
 
-.warning{
+.warning {
     color: var(--color-warning);
 }
 
-aside{
-    height: 100vb;
-    background: rgb(238, 236, 236);
+aside {
+    height: 100vh;
 
 }
+
 
 aside.hidden {
     width: 60px;
@@ -167,18 +182,20 @@ aside.hidden {
 aside .top {
     background: white;
     display: flex;
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
     padding: 0 1rem;
 }
 
 
-aside .logo img{
+aside .logo img {
     width: 2rem;
     height: 2rem;
 }
 
-aside .close img{
+aside .close img {
     display: none;
 }
 
@@ -189,17 +206,15 @@ aside .sidebar {
     background: white;
     display: flex;
     flex-direction: column;
-    height: 86vh;
-    position: relative;
-    top: 3rem;
+    gap: 20px;
+    height: 100vh;
+    padding-top: 20px;
     box-shadow: 0 8px 20px 0 rgb(0 0 0 / 15%);
-    z-index: 1;
-    margin-top: -2.5rem; 
 
 }
 
 aside .sidebar.collapsed {
-    width: 60px; /* Ancho del sidebar colapsado */
+    width: 60px;
 }
 
 aside h3 {
@@ -207,7 +222,8 @@ aside h3 {
 }
 
 aside .sidebar.collapsed a h3 {
-    display: none; /* Ocultar el texto en el sidebar colapsado */
+    display: none;
+    /* Ocultar el texto en el sidebar colapsado */
 }
 
 aside .sidebar a {
@@ -217,7 +233,6 @@ aside .sidebar a {
     gap: 1rem;
     align-items: center;
     position: relative;
-    height: 3.7rem;
     transition: all 300ms ease;
 }
 
@@ -231,11 +246,6 @@ aside .sidebar a span {
     transition: all 300ms ease;
 }
 
-aside .sidebar a:last-child {
-    position: absolute;
-    bottom: 2rem;
-    width: 100%;
-}
 
 aside .sidebar a.active {
     background: var(--color-light);
@@ -287,15 +297,17 @@ aside.hidden .sidebar a h3 {
 }
 
 aside .sidebar.collapsed .logo h2 {
-    display: none; /* Ocultar el texto del logo en el sidebar colapsado */
+    display: none;
+    /* Ocultar el texto del logo en el sidebar colapsado */
 }
 
 aside .top {
     transition: all 300ms ease;
 }
 
-aside .sidebar.collapsed ~ .top {
-    display: none; /* Ocultar la clase .top */
+aside .sidebar.collapsed~.top {
+    display: none;
+    /* Ocultar la clase .top */
 }
 
 aside .top {
@@ -303,16 +315,17 @@ aside .top {
 }
 
 aside .top.hidden {
-    display: none; /* Ocultar la clase .top */
+    display: none;
+    /* Ocultar la clase .top */
 }
 
 /* =======MAIN======*/
 
-main{
+main {
     margin-top: 1.4rem;
 }
 
-main .date{
+main .date {
     display: inline-block;
     background-color: var(--color-light);
     border-radius: var(--border-radius-1);
@@ -320,7 +333,7 @@ main .date{
     padding: 0.5rem 1.6rem;
 }
 
-main .date input{
+main .date input {
     background: transparent;
     color: var(--color-dark);
 }
@@ -331,7 +344,7 @@ main .insights {
     gap: 1.5rem;
 }
 
-main .insights > div{
+main .insights>div {
     background: var(--color-white);
     padding: var(--card_padding);
     border-radius: var(--card-border-radius--);
@@ -339,34 +352,35 @@ main .insights > div{
     box-shadow: var(--box_shadow);
     transition: all 300ms-ease;
 }
-main .insights > div :hover{
-    box-shadow: none;   
+
+main .insights>div :hover {
+    box-shadow: none;
 }
 
-main.insights >div span{
+main.insights>div span {
     background: coral;
     padding: 0.5rem;
     border-radius: 50%;
     color: var(--color-white);
-    font-size: r2em ;
+    font-size: r2em;
 }
 
-main .insights >div.expenses span{
+main .insights>div.expenses span {
     background: var(--color-danger);
 }
 
-main .insights >div.income span{
+main .insights>div.income span {
     background: var(--color-success);
 }
 
-main .insights >div.middle {
+main .insights>div.middle {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 main .insights h3 {
-    margin: 1rem 0 0.6rem ;
+    margin: 1rem 0 0.6rem;
     font-size: 1rem;
 }
 
@@ -396,6 +410,7 @@ main .insights .sales svg circle {
     stroke-dasharray: 200;
     stroke-dashoffset: -30;
 }
+
 main .insights .expenses svg circle {
     stroke-dasharray: 80;
     stroke-dashoffset: 20;
@@ -428,7 +443,7 @@ main .recent-order {
     margin-top: 2rem;
 }
 
-main .recent-order table{
+main .recent-order table {
     background: var(--color-white);
     width: 100%;
     border-radius: var(--card-boarder-radius);
@@ -452,7 +467,7 @@ main table tbody tr:last-child {
     border: none;
 }
 
-main .recent-order a{
+main .recent-order a {
     text-align: center;
     display: block;
     margin: 1rem auto;
@@ -475,16 +490,17 @@ main .recent-order a{
     display: none;
 }
 
-.right .theme-toggler{
+.right .theme-toggler {
     background: var(--color-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 1.6rem;
     width: 4.2rem;
-    cursor:pointer;
+    cursor: pointer;
     border-radius: var(--border-radius-1);
 }
+
 .right .theme-toggler span {
     font-size: 1.2rem;
     width: 50%;
@@ -504,15 +520,15 @@ main .recent-order a{
     display: flex;
     gap: 2rem;
 }
-    
+
 
 /* ====actualizaciones*/
 .right .recent-updates {
     margin-top: 1rem;
 }
 
-.right .recent-updates h2{
-    margin-bottom: 0.8rem;   
+.right .recent-updates h2 {
+    margin-bottom: 0.8rem;
 }
 
 .right .recent-updates .update {
@@ -527,8 +543,8 @@ main .recent-order a{
     box-shadow: none;
 }
 
-.right .recent-updates .updates .update{
-    display: grid ;
+.right .recent-updates .updates .update {
+    display: grid;
     grid-template-columns: 2.6rem auto;
     gap: 1rem;
     margin-bottom: 1rem;
@@ -556,11 +572,11 @@ main .recent-order a{
     transition: all 300ms ease;
 }
 
-.right .sales-analytics .item:hover{
+.right .sales-analytics .item:hover {
     box-shadow: none;
 }
 
-.right .sales-analytics .item .right{
+.right .sales-analytics .item .right {
     display: flex;
     justify-content: space-between;
     align-items: start;
@@ -568,7 +584,7 @@ main .recent-order a{
     width: 100%;
 }
 
-.right .sales-analytics .item .icon{
+.right .sales-analytics .item .icon {
     padding: 0.6rem;
     color: var(--color-white);
     border-radius: 50%;
@@ -579,33 +595,50 @@ main .recent-order a{
 /* Media queries para dispositivos pequeños (ej. teléfonos) */
 @media only screen and (max-width: 768px) {
     .container {
-        grid-template-columns: 1fr; /* Cambia a una sola columna */
+        grid-template-columns: 1fr;
+        height: 100%;
+        /* Cambia a una sola columna */
+    }
+
+    aside {
+        height: 100%;
+        background: rgb(0 0 0 / 35%);
+        position: absolute;
+        width: 100%;
     }
 
     aside.hidden {
-        width: 0; /* Oculta completamente el aside cuando está en modo oculto */
+        width: 0;
+        /* Oculta completamente el aside cuando está en modo oculto */
     }
 
     aside .sidebar {
-        top: 0; /* Ajusta la posición del sidebar en la parte superior */
-        margin-top: 0; /* Elimina el margen superior negativo */
+        top: 0;
+        /* Ajusta la posición del sidebar en la parte superior */
+        margin-top: 0;
+        /* Elimina el margen superior negativo */
     }
 
     main .insights {
-        grid-template-columns: 1fr; /* Cambia a una sola columna en los insights */
+        grid-template-columns: 1fr;
+        /* Cambia a una sola columna en los insights */
     }
 }
 
 /* Media queries para iPads y otros dispositivos medianos */
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
     .container {
-        grid-template-columns: 12rem 1fr 20rem; /* Ajusta columnas según el espacio disponible */
+        grid-template-columns: 12rem 1fr 20rem;
+        height: 100%;
+        /* Ajusta columnas según el espacio disponible */
     }
 }
 
 /* Media queries para dispositivos grandes (ej. navegadores de escritorio) */
 @media only screen and (min-width: 1025px) {
     .container {
-        grid-template-columns: 14rem 1fr 23rem; /* Restaura el diseño original para pantallas grandes */
+        grid-template-columns: 14rem 1fr 23rem;
+        height: 100%;
+        /* Restaura el diseño original para pantallas grandes */
     }
 }

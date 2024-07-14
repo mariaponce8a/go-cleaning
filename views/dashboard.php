@@ -14,7 +14,7 @@
         <aside>
             <div class="top">
                 <div class="logo" id="logo">
-                    <img src="../../public/img/logo.png" alt="Logo">
+                    <img src="../public/img/logo.png" alt="Logo">
                     <h2><span>BURBUJA</span> DE <span>SEDA</span></h2>
                 </div>
                 <div class="close" id="close-btn">

@@ -3,13 +3,15 @@ $pagina_actual = 'Usuarios'; // Variable para indicar que estamos en la página 
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<?php require_once('../html/layout.php') ?>
-</head>
-<body>
-<div class="container">
 
-<main class="main-content">
+<head>
+    <?php require_once('./html/layout.php') ?>
+</head>
+
+<body>
+    <div class="container">
+
+        <main class="main-content">
             <h1>Dashboard</h1>
             <div class="date">
                 <input type="date">
@@ -46,7 +48,8 @@ $pagina_actual = 'Usuarios'; // Variable para indicar que estamos en la página 
                 <a href="#">Mostrar todo</a>
             </div>
         </main>
-        </div>
+    </div>
 
 </body>
+
 </html>

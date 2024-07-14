@@ -58,13 +58,14 @@
         </aside>
 
         <main class="main-content">
-                <h1>
-                    <?php echo $pagina_actual; ?>
-                </h1>
-                <div class="date">
-                    <input type="date">
-                </div>
-            </main>
+            <?php require_once("../usuarios/usuarios.php"); ?>
+            <h1>
+                <?php echo $pagina_actual; ?>
+            </h1>
+            <div class="date">
+                <input type="date">
+            </div>
+        </main>
 
         <div class="right">
             <div class="top">

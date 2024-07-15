@@ -1,3 +1,7 @@
+<?php
+require_once("../layout.php");
+?>
+
 <h1>Dashboard</h1>
 <div class="date">
     <input type="date">
@@ -28,4 +32,3 @@
             </tr>
     </table>
 </div>
-<script src="./dashboard/dashboard.js"></script>

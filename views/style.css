@@ -67,7 +67,7 @@ body.dark-theme-variables .top {
 }
 
 html {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 body {
@@ -158,6 +158,196 @@ b {
 .warning {
     color: var(--color-warning);
 }
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+  }
+  
+  
+  
+  .hidden-form {
+    display: none;
+  }
+  
+  .editar-btn,
+  .eliminar-btn {
+      padding: 6px 12px; /* Padding interior */
+      margin-right: 5px; /* Margen derecho entre botones */
+      cursor: pointer; /* Cursor de tipo puntero al pasar el mouse */
+      border: none; /* Sin borde */
+      border-radius: 3px; /* Bordes redondeados */
+      font-size: 10px; /* Tamaño de fuente */
+      display: inline-block; /* Mostrar en línea para que estén en la misma línea */
+      width: 40px; /* Ancho fijo para ambos botones */
+      align-items: center;
+  }
+  
+  /* Estilo de fondo y texto para el botón Editar */
+  .editar-btn {
+      background-color: #94cdf4; /* Color de fondo azul */
+      color: #fff; /* Color de texto blanco */
+  }
+  
+  /* Estilo de fondo y texto para el botón Eliminar */
+  .eliminar-btn {
+      background-color: var(--color-danger); /* Color de fondo rojo */
+      color: #fff; /* Color de texto blanco */
+  }
+
+  /* Estilo para el modal */
+.modal {
+    display: none; /* Por defecto oculto */
+    position: fixed; /* Posición fija para que se mantenga en pantalla */
+    z-index: 1000; /* Z-index alto para estar por encima del contenido */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    overflow: auto; /* Permitir desplazamiento si el contenido es demasiado grande */
+}
+
+.modal-content {
+    position: absolute; /* Agrega esto */
+    top: 50%; /* Coloca el contenido del modal en el centro vertical */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra el modal correctamente */
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Ancho del modal */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);   
+    width: calc(40% - 15px);
+
+}
+
+.modal-content h2 {
+    margin-top: 0; /* Eliminar margen superior del título */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+  main button {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; 
+    gap: 6px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+  /* Estilos para formularios */
+/* Estilos para formularios */
+/* Estilos para formularios */
+form {
+    margin-bottom: 1rem; /* Margen inferior para separación entre formularios */
+}
+
+form label {
+    font-weight: 600; /* Peso de la fuente para etiquetas de formulario */
+    margin-bottom: 0.5rem; /* Margen inferior para etiquetas */
+    display: block; /* Mostrar etiquetas en bloque */
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form input[type="number"],
+form input[type="password"] {
+    width: calc(100% - 20px); /* Ancho ajustado para inputs */
+    padding: 0.3rem; /* Relleno interior más compacto */
+    margin-bottom: 0.5rem; /* Margen inferior reducido */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="date"]:focus,
+form input[type="number"]:focus,
+form input[type="password"]:focus {
+    outline: none; /* Sin contorno al enfocar */
+    border-color: var(--color-primary); /* Cambiar color del borde al enfocar */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra al enfocar */
+}
+
+form button[type="submit"] {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+form button[type="submit"]:hover {
+    background-color: var(--color-info-dark); /* Color de fondo más oscuro al pasar el mouse */
+}
+
+/* Estilos para filtros de búsqueda */
+.filters {
+    margin-bottom: 1rem; 
+    display: flex; /* Mostrar elementos en línea */
+    align-items: center; /* Alinear verticalmente al centro */
+    gap: 1rem; /*/* Margen inferior para separación */
+}
+
+.filters label {
+    font-weight: 600; /* Peso de la fuente para etiquetas */
+    margin-right: 0.5rem; /* Margen derecho entre etiqueta y elemento de formulario */
+}
+
+.filters input[type="date"],
+.filters input[type="text"] {
+    width: calc(100% - 12px); /* Ancho ajustado para inputs */
+    padding: 0.4rem; /* Relleno interior más compacto */
+    margin-right: 0.5rem; /* Margen derecho entre elementos */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+.filters button {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+.filters button:hover {
+    background-color: var(--color-info-dark); /* Color de fondo más oscuro al pasar el mouse */
+}
+
+
+
+  
 
 aside {
     height: 100vh;
@@ -324,6 +514,7 @@ main .date {
     background-color: var(--color-light);
     border-radius: var(--border-radius-1);
     margin-top: 1rem;
+    margin-bottom: 1rem; /* Ajusta el margen inferior según sea necesario */
     padding: 0.5rem 1.6rem;
 }
 
@@ -449,6 +640,10 @@ main .recent-order table {
 
 main .recent-order table:hover {
     box-shadow: none;
+}
+
+main .recent-order h2{
+    margin-bottom: 5px;
 }
 
 main table tbody td {

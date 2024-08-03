@@ -1,0 +1,61 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+    --color-primary: #9a75b9;
+    --color-info-dark: #907da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #573a6e;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #333e88;
+    --color-dark-variant: #677483;
+    --color-background: #f2ebf5;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+
+
+    --xxxxlsize: max(25px, min(70px, 5vw));
+    --xxxlsize: max(29px, min(35px, 3vw));
+    --xxlsize: max(25px, min(29px, 3vw));
+    --xlsize: max(20px, min(25px, 3vw));
+    --lsize: max(18px, min(20px, 3vw));
+    --msize: max(14px, min(16px, 3vw));
+    --ssize: max(10px, min(14px, 3vw));
+
+    --blackFont: "R-black", "Lucida Sans", sans-serif;
+    --regularFont: "R-regular", "Lucida Sans", sans-serif;
+    --semiBoldFont: "R-sBold", "Lucida Sans", sans-serif;
+    --thinFont: "R-Thin", "Lucida Sans", sans-serif;
+ 
+}
+
+@font-face {
+    font-family: R-black;
+    src: url(/assets/fonts/Raleway-Black.ttf);
+}
+
+@font-face {
+    font-family: R-regular;
+    src: url(/assets/fonts/Raleway-Regular.ttf);
+}
+
+@font-face {
+    font-family: R-sBold;
+    src: url(/assets/fonts/Raleway-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: R-Thin;
+    src: url(/assets/fonts/Raleway-Thin.ttf);
+}

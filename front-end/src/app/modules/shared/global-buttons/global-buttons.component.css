@@ -1,0 +1,43 @@
+.buttonCont {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.buttonConfirm,
+.buttonBack,
+.buttonDisabled {
+    height: 40px;
+    width: 100%;
+    color: white;
+    font-family: var(--semiBoldFont);
+    font-size: var(--xssize);
+    border-radius: 50px;
+    margin: auto;
+    padding: 5px 10px;
+    border: 2px solid white;
+    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.171);
+}
+
+.buttonConfirm {
+    background-color: var(--primary);
+    transition: .3s;
+}
+
+.buttonBack {
+    background-color: var(--secondary);
+    transition: .3s;
+}
+ 
+
+.buttonConfirm:hover {
+    background-color: var(--primaryDark);
+    transition: .3s;
+}
+
+.buttonBack:hover {
+    background-color: var(--secondaryDark);
+    transition: .3s;
+}
+ 

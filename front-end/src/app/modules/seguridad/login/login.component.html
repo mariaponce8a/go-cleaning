@@ -1,11 +1,56 @@
 <div class="contenedorLogin">
 
     <div class="contenedorImagen">
-        <label class="appName">Burbujas de seda</label>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="#fff"
+        class="bi bi-suit-diamond-fill" viewBox="0 0 16 16">
+        <path
+            d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2" />
+    </svg>
+        <label class="appName">Burbuja de seda</label>
         <label class="appLogo">Eres como te ves</label>
     </div>
     <div class="contenedorFormulario">
-        <form> 
-        </form>
+        <div class="w-100">
+            <div class="formLogin d-flex flex-column gap-2 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="#000"
+                    class="bi bi-suit-diamond-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2" />
+                </svg>
+                <label
+                    style="font-family: var(--semiBoldFont);color: var(--primaryDark); font-size: var(--xlsize);">Bienvenido</label>
+                <label
+                    style="font-family: var(--semiBoldFont);color: var(--primaryLigth); font-size: var(--ssize);">Ingrese
+                    sus credenciales</label>
+            </div>
+            <form class="formLogin">
+                <mat-form-field siz class="w-100" appearance="outline">
+                    <mat-label>Usuario</mat-label>
+                    <mat-icon style="color: var(--primaryLigth);" matIconPrefix>person</mat-icon>
+                    <input matInput placeholder="Usuario" type="text">
+                </mat-form-field>
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Clave</mat-label>
+                    <mat-icon style="color: var(--primaryLigth);" matIconPrefix>lock</mat-icon>
+                    <input matInput placeholder="Usuario" [type]="!hidePassword? 'password': 'text'">
+                    <button mat-icon-button matSuffix (click)="changePasswordVisibility()">
+                        <mat-icon style="color: var(--primaryLigth);">{{!hidePassword? 'visibility':
+                            'visibility_off'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+                <div class="d-flex flex-column gap-2">
+                    <mat-checkbox>
+                        <label
+                            style="font-family: var(--regularFont);color: var(--primaryDark); font-size: var(--ssize);">Recordar
+                            credenciales</label>
+                    </mat-checkbox>
+                    <app-global-buttons [showConfirm]="true" [showCancel]="true" [textBtn1]="'INGRESAR'"
+                        [textBtn2]="'REGISTRAR'" (btnAction)="handleAction($event)"></app-global-buttons>
+                </div>
+            </form>
+            <div class="d-flex justify-content-center w-100 mt-3"
+                style=" font-family: var(--regularFont);color: var(--primaryDark); font-size: var(--ssize);">v1.0.0
+            </div>
+        </div>
     </div>
 </div>

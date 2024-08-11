@@ -11,19 +11,13 @@ body {
 }
 
 :root {
-    --color-primary: #9a75b9;
-    --color-info-dark: #907da1;
-    --color-info-light: #dce1eb;
-    --color-dark: #573a6e;
-    --color-light: rgba(132, 139, 200, 0.18);
-    --color-primary-variant: #333e88;
-    --color-dark-variant: #677483;
-    --color-background: #f2ebf5;
-    --color-danger: #ff7782;
-    --color-success: #41f1b6;
-    --color-warning: #ffbb55;
-    --color-white: #fff;
+    --primary: #191723;
+    --primaryLigth: #252135;
+    --primaryDark: #000000;
 
+    --secondary: #2d584d;
+    --secondaryLigth: #44796b;
+    --secondaryDark: #203d36; 
 
     --xxxxlsize: max(25px, min(70px, 5vw));
     --xxxlsize: max(29px, min(35px, 3vw));
@@ -32,12 +26,13 @@ body {
     --lsize: max(18px, min(20px, 3vw));
     --msize: max(14px, min(16px, 3vw));
     --ssize: max(10px, min(14px, 3vw));
+    --xssize: max(9px, min(12px, 3vw));
 
     --blackFont: "R-black", "Lucida Sans", sans-serif;
     --regularFont: "R-regular", "Lucida Sans", sans-serif;
     --semiBoldFont: "R-sBold", "Lucida Sans", sans-serif;
     --thinFont: "R-Thin", "Lucida Sans", sans-serif;
- 
+
 }
 
 @font-face {
@@ -58,4 +53,43 @@ body {
 @font-face {
     font-family: R-Thin;
     src: url(/assets/fonts/Raleway-Thin.ttf);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/**************GLOBAL STYLES*****************/
+
+
+/*********MATERIAL DESIGN OVERWRITE STYLES**********/
+
+/*Para tamaño del input de formulario*/
+.mat-mdc-form-field-flex {
+    height: 40px !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline {
+    height: 40px !important;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+    position: relative;
+    top: 20px;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
+    position: relative;
+    top: -5px;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+    position: relative;
+    top: 25px;
 }

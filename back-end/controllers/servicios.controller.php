@@ -1,110 +1,118 @@
-<?php 
-require_once('./back-end/models/servicios.model.php'); 
+<?php
+require_once('../models/servicios.model.php');
+require_once('../config/cors.php');
 
-class Servicios_controller {
+$servicio = new Clase_Servicios();
+header('Content-Type: application/json');
 
-    // Método para obtener todos los servicios
-    public function obtenerTodosServicios() {
-        $serviciosModel = new Clase_Servicios();
-        $resultado = $serviciosModel->todos();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
 
-        $data = json_decode($resultado, true);
+    if (isset($data['op'])) {
+        switch ($data['op']) {
+            case "todos":
+                $datos = $servicio->todos();
+                if ($datos !== false) {
+                    http_response_code(200); // OK
+                    echo json_encode($datos);
+                } else {
+                    http_response_code(404); // Not Found
+                    echo json_encode(array("error" => "No se encontraron servicios."));
+                }
+                break;
 
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "OK", "data" => $data));
+            case "insertar":
+                if (isset($data["descripcion_servicio"])) {
+                    $descripcion_servicio = $data["descripcion_servicio"];
+                    $costo_unitario = isset($data["costo_unitario"]) ? $data["costo_unitario"] : null;
+                    $validar_pesaje = isset($data["validar_pesaje"]) ? $data["validar_pesaje"] : null;
+
+                    $resultado = $servicio->insertar($descripcion_servicio, $costo_unitario, $validar_pesaje);
+                    if ($resultado === "ok") {
+                        http_response_code(201); // Created
+                        echo json_encode(array("resultado" => "ok"));
+                    } else {
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(array("resultado" => "error", "error" => "Error al insertar el servicio: " . $resultado));
+                    }
+                } else {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para insertar el servicio."));
+                }
+                break;
+
+            case "actualizar":
+                if (isset($data["id_servicio"], $data["descripcion_servicio"])) {
+                    $id_servicio = $data["id_servicio"];
+                    $descripcion_servicio = $data["descripcion_servicio"];
+                    $costo_unitario = isset($data["costo_unitario"]) ? $data["costo_unitario"] : null;
+                    $validar_pesaje = isset($data["validar_pesaje"]) ? $data["validar_pesaje"] : null;
+
+                    $resultado = $servicio->actualizar($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
+                    if ($resultado === "ok") {
+                        http_response_code(200); // OK
+                        echo json_encode(array("resultado" => "ok"));
+                    } else {
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(array("resultado" => "error", "error" => "Error al actualizar el servicio: " . $resultado));
+                    }
+                } else {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para actualizar el servicio."));
+                }
+                break;
+
+            case "eliminar":
+                if (isset($data["id_servicio"])) {
+                    $id_servicio = $data["id_servicio"];
+                    $resultado = $servicio->eliminar($id_servicio);
+                    if ($resultado === "ok") {
+                        http_response_code(200); // OK
+                        echo json_encode(array("resultado" => "ok"));
+                    } else {
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(array("resultado" => "error", "error" => "Error al eliminar el servicio: " . $resultado));
+                    }
+                } else {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro 'id_servicio' para eliminar el servicio."));
+                }
+                break;
+
+            case "detalle":
+                if (isset($data["id_servicio"])) {
+                    $id_servicio = $data["id_servicio"];
+                    try {
+                        $servicioDetalle = $servicio->buscarPorId($id_servicio);
+                        if ($servicioDetalle) {
+                            http_response_code(200); // OK
+                            echo json_encode($servicioDetalle);
+                        } else {
+                            http_response_code(404); // Not Found
+                            echo json_encode(array("resultado" => "error", "error" => "No se encontró el servicio."));
+                        }
+                    } catch (Exception $e) {
+                        error_log("Error al obtener el detalle del servicio: " . $e->getMessage());
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(array("resultado" => "error", "error" => "Error al obtener el detalle del servicio."));
+                    }
+                } else {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro ID para obtener el detalle del servicio."));
+                }
+                break;
+
+            default:
+                http_response_code(400); // Bad Request
+                echo json_encode(array("resultado" => "error", "error" => "Operación no válida."));
+                break;
         }
+    } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(array("resultado" => "error", "error" => "No se especificó la operación."));
     }
-
-    // Método para insertar un nuevo servicio
-    public function insertarServicio($descripcion_servicio, $costo_unitario, $validar_pesaje) {
-        $serviciosModel = new Clase_Servicios();
-
-        if (empty($descripcion_servicio) || !is_numeric($costo_unitario) || !is_numeric($validar_pesaje)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Todos los campos son requeridos y deben ser válidos."));
-        }
-
-        $resultado = $serviciosModel->insertar($descripcion_servicio, $costo_unitario, $validar_pesaje);
-        $data = json_decode($resultado, true);
-
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => $data['mensaje']));
-        }
-    }
-
-    // Método para actualizar un servicio
-    public function actualizarServicio($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje) {
-        $serviciosModel = new Clase_Servicios();
-
-        if (empty($id_servicio) || empty($descripcion_servicio) || !is_numeric($costo_unitario) || !is_numeric($validar_pesaje)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Todos los campos son requeridos y deben ser válidos."));
-        }
-
-        $resultado = $serviciosModel->actualizar($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
-        $data = json_decode($resultado, true);
-
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => $data['mensaje']));
-        }
-    }
-
-    // Método para eliminar un servicio
-    public function eliminarServicio($id_servicio) {
-        $serviciosModel = new Clase_Servicios();
-
-        if (empty($id_servicio)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Debe ingresar un ID de servicio."));
-        }
-
-        $resultado = $serviciosModel->eliminar($id_servicio);
-        $data = json_decode($resultado, true);
-
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => $data['mensaje']));
-        }
-    }
-
-    // Método para buscar un servicio por ID
-    public function buscarServicioPorId($id_servicio) {
-        $serviciosModel = new Clase_Servicios();
-
-        if (empty($id_servicio)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Debe ingresar un ID de servicio."));
-        }
-
-        $resultado = $serviciosModel->buscarPorId($id_servicio);
-        $data = json_decode($resultado, true);
-
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "OK", "data" => $data));
-        }
-    }
-
-    // Método para buscar servicios por descripción
-    public function buscarServiciosPorDescripcion($descripcion_servicio) {
-        $serviciosModel = new Clase_Servicios();
-
-        if (empty($descripcion_servicio)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Debe ingresar una descripción de servicio."));
-        }
-
-        $resultado = $serviciosModel->buscarPorDescripcion($descripcion_servicio);
-        $data = json_decode($resultado, true);
-
-        if (isset($data['error'])) {
-            return json_encode(array("respuesta" => "0", "mensaje" => $data['error']));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "OK", "data" => $data));
-        }
-    }
+} else {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(array("resultado" => "error", "error" => "Método no permitido."));
 }
 ?>

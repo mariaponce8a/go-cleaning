@@ -3,29 +3,27 @@ require_once('./back-end/config/conexion.php');
 
 class Clase_Clientes
 {
-    // Método para obtener todos los clientes
-    public function todos()
+    public function getAllClientes()
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
+            $query = "SELECT * FROM tb_clientes_registrados";
+            $exeResult = mysqli_query($conexion, $query);
 
-            $consulta = "SELECT * FROM tb_clientes_registrados";
-            $resultado = $conexion->query($consulta);
+            if ($exeResult == false) {
+                throw new Exception("Problemas al cargar los clientes");
+            } else {
+                $clientes = array();
+                while ($fila = mysqli_fetch_assoc($exeResult)) {
+                    $clientes[] = $fila;
+                }
 
-            if ($resultado === false) {
-                throw new Exception($conexion->error);
+                return json_encode($clientes);
             }
-
-            $clientes = array();
-            while ($fila = $resultado->fetch_assoc()) {
-                $clientes[] = $fila;
-            }
-
-            return json_encode($clientes);
         } catch (Exception $e) {
-            error_log("Error en obtener todos los clientes: " . $e->getMessage());
-            return $e->getMessage();
+            error_log($e->getMessage());
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
@@ -33,26 +31,23 @@ class Clase_Clientes
         }
     }
 
-    // Método para insertar un nuevo cliente
-    public function insertar($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
+    public function registrarCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-
-            $consulta = "INSERT INTO tb_clientes_registrados (identificacion_cliente, tipo_identificacion_cliente, nombre_cliente, apellido_cliente, telefono_cliente, correo_cliente) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $conexion->prepare($consulta);
-
+            $query = "INSERT INTO tb_clientes_registrados (identificacion_cliente, tipo_identificacion_cliente, nombre_cliente, apellido_cliente, telefono_cliente, correo_cliente) VALUES (?,?,?,?,?,?)";
+            $stmt = $conexion->prepare($query);
             $stmt->bind_param("ssssss", $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
 
             if ($stmt->execute()) {
-                return json_encode(array("status" => "ok"));
+                return true;
             } else {
-                throw new Exception($stmt->error);
+                throw new Exception("Problemas al registrar el cliente");
             }
         } catch (Exception $e) {
-            error_log("Error al insertar cliente: " . $e->getMessage());
-            return $e->getMessage();
+            error_log($e->getMessage());
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
@@ -60,26 +55,23 @@ class Clase_Clientes
         }
     }
 
-    // Método para actualizar un cliente
-    public function actualizar($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
+    public function actualizarCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-
-            $consulta = "UPDATE tb_clientes_registrados SET identificacion_cliente=?, tipo_identificacion_cliente=?, nombre_cliente=?, apellido_cliente=?, telefono_cliente=?, correo_cliente=? WHERE id_cliente=?";
-            $stmt = $conexion->prepare($consulta);
-
+            $query = "UPDATE tb_clientes_registrados SET identificacion_cliente = ?, tipo_identificacion_cliente = ?, nombre_cliente = ?, apellido_cliente = ?, telefono_cliente = ?, correo_cliente = ? WHERE id_cliente = ?";
+            $stmt = $conexion->prepare($query);
             $stmt->bind_param("ssssssi", $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente, $id_cliente);
 
             if ($stmt->execute()) {
-                return json_encode(array("status" => "ok"));
+                return true;
             } else {
-                throw new Exception($stmt->error);
+                throw new Exception("Problemas al actualizar el cliente");
             }
         } catch (Exception $e) {
-            error_log("Error al actualizar cliente: " . $e->getMessage());
-            return $e->getMessage();
+            error_log($e->getMessage());
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
@@ -87,26 +79,23 @@ class Clase_Clientes
         }
     }
 
-    // Método para eliminar un cliente
-    public function eliminar($id_cliente)
+    public function eliminarCliente($id_cliente)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-
-            $consulta = "DELETE FROM tb_clientes_registrados WHERE id_cliente=?";
-            $stmt = $conexion->prepare($consulta);
-
+            $query = "DELETE FROM tb_clientes_registrados WHERE id_cliente = ?";
+            $stmt = $conexion->prepare($query);
             $stmt->bind_param("i", $id_cliente);
 
             if ($stmt->execute()) {
-                return json_encode(array("status" => "ok"));
+                return true;
             } else {
-                throw new Exception($stmt->error);
+                throw new Exception("Problemas al eliminar el cliente");
             }
         } catch (Exception $e) {
-            error_log("Error al eliminar cliente: " . $e->getMessage());
-            return $e->getMessage();
+            error_log($e->getMessage());
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
@@ -114,46 +103,13 @@ class Clase_Clientes
         }
     }
 
-    // Método para buscar un cliente por ID
-    public function buscarPorId($id_cliente)
+    public function buscarClientePorNombre($nombre_cliente)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-
-            $consulta = "SELECT * FROM tb_clientes_registrados WHERE id_cliente=?";
-            $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param("i", $id_cliente);
-
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                if ($resultado->num_rows === 1) {
-                    return json_encode($resultado->fetch_assoc());
-                } else {
-                    throw new Exception("No se encontró el cliente.");
-                }
-            } else {
-                throw new Exception($stmt->error);
-            }
-        } catch (Exception $e) {
-            error_log("Error al buscar cliente por ID: " . $e->getMessage());
-            return $e->getMessage();
-        } finally {
-            if (isset($conexion)) {
-                $conexion->close();
-            }
-        }
-    }
-
-    // Método para buscar clientes por nombre
-    public function buscarPorNombre($nombre_cliente)
-    {
-        try {
-            $con = new Clase_Conectar();
-            $conexion = $con->Procedimiento_Conectar();
-
-            $consulta = "SELECT * FROM tb_clientes_registrados WHERE nombre_cliente LIKE ?";
-            $stmt = $conexion->prepare($consulta);
+            $query = "SELECT * FROM tb_clientes_registrados WHERE nombre_cliente LIKE ?";
+            $stmt = $conexion->prepare($query);
             $nombreBusqueda = "%" . $nombre_cliente . "%";
             $stmt->bind_param("s", $nombreBusqueda);
 
@@ -165,11 +121,11 @@ class Clase_Clientes
                 }
                 return json_encode($clientes);
             } else {
-                throw new Exception($stmt->error);
+                throw new Exception("Problemas al buscar los clientes por nombre");
             }
         } catch (Exception $e) {
-            error_log("Error al buscar clientes por nombre: " . $e->getMessage());
-            return $e->getMessage();
+            error_log($e->getMessage());
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();

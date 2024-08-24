@@ -1,111 +1,88 @@
 <?php
-require_once('../models/estados.models.php');
-require_once('../config/cors.php');
+require_once('./back-end/models/estados.models.php');
 
-$estados = new Clase_Estados();
-header('Content-Type: application/json'); 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (isset($data['op'])) {
-        switch ($data['op']) {
-            case "todos":
-                $datos = $estados->todos();
-                if ($datos !== false) {
-                    http_response_code(200); // OK
-                    echo json_encode($datos);
-                } else {
-                    http_response_code(404); // Not Found
-                    echo json_encode(array("error" => "No se encontraron estados."));
-                }
-                break;
-                
-            case "insertar":
-                if (isset($data["descripcion_estado"])) {
-                    $descripcion_estado = $data["descripcion_estado"];
-                    $resultado = $estados->insertar($descripcion_estado);
-                    if ($resultado === "ok") {
-                        http_response_code(201); // Created
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al insertar el estado: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para insertar el estado."));
-                }
-                break;
-
-            case "actualizar":
-                if (isset($data["id_estado"], $data["descripcion_estado"])) {
-                    $id_estado = $data["id_estado"];
-                    $descripcion_estado = $data["descripcion_estado"];
-                    $resultado = $estados->actualizar($id_estado, $descripcion_estado);
-                    if ($resultado === "ok") {
-                        http_response_code(200); // OK
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al actualizar el estado: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para actualizar el estado."));
-                }
-                break;
-
-            case "eliminar":
-                if (isset($data["id_estado"])) {
-                    $id_estado = $data["id_estado"];
-                    $resultado = $estados->eliminar($id_estado);
-                    if ($resultado === "ok") {
-                        http_response_code(200); // OK
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al eliminar el estado: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro 'id_estado' para eliminar el estado."));
-                }
-                break;
-
-            case "detalle":
-                if (isset($data["id_estado"])) {
-                    $id_estado = $data["id_estado"];
-                    try {
-                        $estadoDetalle = $estados->buscarPorId($id_estado);
-                        if ($estadoDetalle) {
-                            http_response_code(200); // OK
-                            echo json_encode($estadoDetalle);
-                        } else {
-                            http_response_code(404); // Not Found
-                            echo json_encode(array("resultado" => "error", "error" => "No se encontró el estado."));
-                        }
-                    } catch (Exception $e) {
-                        error_log("Error al obtener el detalle del estado: " . $e->getMessage());
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al obtener el detalle del estado."));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro ID para obtener el detalle del estado."));
-                }
-                break;
-
-            default:
-                http_response_code(400); // Bad Request
-                echo json_encode(array("resultado" => "error", "error" => "Operación no válida."));
-                break;
+class Estados_controller
+{
+    public function getAllStates()
+    {
+        error_log("Obteniendo todos los estados");
+        $estadosModel = new Clase_Estados();
+        $resultado = $estadosModel->todos();
+        if (
+            $resultado === false
+            ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "No se encontraron estados."));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Estados cargados con éxito", "data" => $resultado));
         }
-    } else {
-        http_response_code(400); // Bad Request
-        echo json_encode(array("resultado" => "error", "error" => "No se especificó la operación."));
     }
-} else {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(array("resultado" => "error", "error" => "Método no permitido."));
+
+    public function insertState($descripcion_estado)
+    {
+        error_log("Insertando un nuevo estado");
+        $estadosModel = new Clase_Estados();
+        if (
+            $descripcion_estado === null
+            ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Faltan parámetros para insertar el estado."));
+        }
+        $resultado = $estadosModel->insertar($descripcion_estado);
+        if ($resultado === "ok") {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Estado insertado con éxito"));
+        } else {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Error al insertar el estado: " . $resultado));
+        }
+    }
+
+    public function updateState($id_estado, $descripcion_estado)
+    {
+        error_log("Actualizando el estado con ID: " . $id_estado);
+        $estadosModel = new Clase_Estados();
+        if (
+            $id_estado === null || 
+            $descripcion_estado === null
+            ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Faltan parámetros para actualizar el estado."));
+        }
+        $resultado = $estadosModel->actualizar($id_estado, $descripcion_estado);
+        if ($resultado === "ok") {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Estado actualizado con éxito"));
+        } else {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Error al actualizar el estado: " . $resultado));
+        }
+    }
+
+    public function deleteState($id_estado)
+    {
+        error_log("Eliminando el estado con ID: " . $id_estado);
+        $estadosModel = new Clase_Estados();
+        if (
+            $id_estado === null
+            ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Falta el parámetro 'id_estado' para eliminar el estado."));
+        }
+        $resultado = $estadosModel->eliminar($id_estado);
+        if ($resultado === "ok") {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Estado eliminado con éxito"));
+        } else {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Error al eliminar el estado: " . $resultado));
+        }
+    }
+
+    public function getStateDetail($id_estado)
+    {
+        error_log("Obteniendo detalle del estado con ID: " . $id_estado);
+        $estadosModel = new Clase_Estados();
+        if (
+            $id_estado === null
+            ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Falta el parámetro ID para obtener el detalle del estado."));
+        }
+        $resultado = $estadosModel->buscarPorId($id_estado);
+        if ($resultado === false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "No se encontró el estado."));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Estado encontrado", "data" => $resultado));
+        }
+    }
 }

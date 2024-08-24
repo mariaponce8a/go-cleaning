@@ -1,120 +1,87 @@
 <?php
-require_once('../models/recomendacion_lavado.models.php');
-require_once('../config/cors.php');
+require_once('./back-end/models/recomendacion_lavado.models.php');
 
-$recomendacionLavado = new Clase_RecomendacionLavado();
-header('Content-Type: application/json'); 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (isset($data['op'])) {
-        switch ($data['op']) {
-            case "todos":
-                $datos = $recomendacionLavado->todos();
-                if ($datos !== false) {
-                    http_response_code(200); // OK
-                    echo json_encode($datos);
-                } else {
-                    http_response_code(404); // Not Found
-                    echo json_encode(array("status" => "error", "message" => "No se encontraron recomendaciones."));
-                }
-                break;
-
-            case 'insertar':
-                if (isset($data['descripcion_material'], $data['descripcion_servicio'])) {
-                    $descripcion_material = $data['descripcion_material'];
-                    $descripcion_servicio = $data['descripcion_servicio'];
-
-                    try {
-                        $resultado = $recomendacionLavado->insertar($descripcion_material, $descripcion_servicio);
-                        if ($resultado === "ok") {
-                            http_response_code(201); // Created
-                            echo json_encode(["status" => "ok"]);
-                        } else {
-                            throw new Exception($resultado);
-                        }
-                    } catch (Exception $e) {
-                        http_response_code(400); // Bad Request
-                        echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(["status" => "error", "message" => "Faltan parámetros para insertar los datos."]);
-                }
-                break;
-                
-            case 'actualizar':
-                if (isset($data['id_recomendacion_lavado'], $data['descripcion_material'], $data['descripcion_servicio'])) {
-                    $id_recomendacion_lavado = $data['id_recomendacion_lavado'];
-                    $descripcion_material = $data['descripcion_material'];
-                    $descripcion_servicio = $data['descripcion_servicio'];
-                    try {
-                        $resultado = $recomendacionLavado->actualizar($id_recomendacion_lavado, $descripcion_material, $descripcion_servicio);
-                        if ($resultado === "ok") {
-                            http_response_code(200); // OK
-                            echo json_encode(["status" => "ok"]);
-                        } else {
-                            throw new Exception($resultado);
-                        }
-                    } catch (Exception $e) {
-                        http_response_code(400); // Bad Request
-                        echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(["status" => "error", "message" => "Faltan parámetros para la actualización de los datos."]);
-                }
-                break;
-
-            case 'eliminar':
-                if (isset($data["id_recomendacion_lavado"])) {
-                    $id_recomendacion_lavado = $data['id_recomendacion_lavado'];
-                    $resultado = $recomendacionLavado->eliminar($id_recomendacion_lavado);
-                    if ($resultado === "ok") {
-                        http_response_code(200); // OK
-                        echo json_encode(["status" => "ok"]);
-                    } else {
-                        http_response_code(400); // Bad Request
-                        echo json_encode(["status" => "error", "message" => $resultado]);
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(["status" => "error", "message" => "Falta el parámetro ID para eliminar el registro."]);
-                }
-                break;
-
-            case 'detalle':
-                if (isset($data['id_recomendacion_lavado'])) {
-                    $id_recomendacion_lavado = $data['id_recomendacion_lavado'];
-                    $resultado = $recomendacionLavado->buscarPorId($id_recomendacion_lavado);
-                    if ($resultado) {
-                        http_response_code(200); // OK
-                        echo json_encode([
-                            'id_recomendacion_lavado' => $resultado['id_recomendacion_lavado'],
-                            'descripcion_material' => $resultado['descripcion_material'],
-                            'descripcion_servicio' => $resultado['descripcion_servicio']
-                        ]);
-                    } else {
-                        http_response_code(404); // Not Found
-                        echo json_encode(["status" => "error", "message" => "No se encontró el registro con id $id_recomendacion_lavado"]);
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(["status" => "error", "message" => "Falta el parámetro id_recomendacion_lavado."]);
-                }
-                break;
-
-            default:
-                http_response_code(400); // Bad Request
-                echo json_encode(["status" => "error", "message" => "Operación no válida."]);
-                break;
+class RecomendacionLavado_controller
+{
+    public function getAllRecommendations()
+    {
+        error_log("--------------");
+        $recomendacionLavadoModel = new Clase_RecomendacionLavado();
+        $resultado = $recomendacionLavadoModel->todos();
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . json_encode($resultado));
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para cargar las recomendaciones de lavado"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Recomendaciones cargadas con éxito", "data" => $resultado));
         }
-    } else {
-        http_response_code(400); // Bad Request
-        echo json_encode(["status" => "error", "message" => "No se especificó la operación."]);
     }
-} else {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(["status" => "error", "message" => "Método no permitido."]);
+
+    public function insertRecommendation($descripcion_material, $descripcion_servicio)
+    {
+        error_log("--------------");
+        $recomendacionLavadoModel = new Clase_RecomendacionLavado();
+        if ($descripcion_material === null || $descripcion_servicio === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $recomendacionLavadoModel->insertar($descripcion_material, $descripcion_servicio);
+        error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar la recomendación de lavado"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Recomendación registrada con éxito"));
+        }
+    }
+
+    public function updateRecommendation($id_recomendacion_lavado, $descripcion_material, $descripcion_servicio)
+    {
+        error_log("--------------");
+        $recomendacionLavadoModel = new Clase_RecomendacionLavado();
+        if ($id_recomendacion_lavado === null || $descripcion_material === null || $descripcion_servicio === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $recomendacionLavadoModel->actualizar($id_recomendacion_lavado, $descripcion_material, $descripcion_servicio);
+        error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar la recomendación de lavado"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Recomendación actualizada con éxito"));
+        }
+    }
+
+    public function deleteRecommendation($id_recomendacion_lavado)
+    {
+        error_log("--------------");
+        $recomendacionLavadoModel = new Clase_RecomendacionLavado();
+        if ($id_recomendacion_lavado === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Recomendación no seleccionada"));
+        }
+        $resultado = $recomendacionLavadoModel->eliminar($id_recomendacion_lavado);
+        error_log("----------RESULTADO DELETE DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para eliminar la recomendación de lavado"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Recomendación eliminada con éxito"));
+        }
+    }
+
+    public function getRecommendationDetail($id_recomendacion_lavado)
+    {
+        error_log("--------------");
+        $recomendacionLavadoModel = new Clase_RecomendacionLavado();
+        if ($id_recomendacion_lavado === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Falta el parámetro ID para obtener el detalle de la recomendación de lavado."));
+        }
+        try {
+            $recomendacionDetalle = $recomendacionLavadoModel->buscarPorId($id_recomendacion_lavado);
+            error_log("----------RESULTADO DETALLE DESDE CONTROLLER: " . json_encode($recomendacionDetalle));
+            if ($recomendacionDetalle == false) {
+                return json_encode(array("respuesta" => "0", "mensaje" => "No se encontró la recomendación de lavado."));
+            } else {
+                return json_encode(array("respuesta" => "1", "mensaje" => "Detalle de la recomendación de lavado cargado con éxito", "data" => $recomendacionDetalle));
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener el detalle de la recomendación de lavado: " . $e->getMessage());
+            return json_encode(array("respuesta" => "0", "mensaje" => "Error al obtener el detalle de la recomendación de lavado."));
+        }
+    }
 }

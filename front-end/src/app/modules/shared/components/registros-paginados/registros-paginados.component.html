@@ -1,0 +1,42 @@
+<div class="  table-responsive table-responsiveCustom">
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
+  <table mat-table class="rowAlternate" mat-table [dataSource]="valores" matSort aria-describedby="Lista de recursos"
+    matSortDisableClear>
+
+    <ng-container stickyEnd="true" matColumnDef="accion">
+      <th class="tableCont" mat-header-cell *matHeaderCellDef>Acci&oacute;n</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="btncrudContainer">
+          <!--btn detalle-->
+          <!--btn editar-->
+          <button class="edit" type="button"  mat-icon-button (click)="actionRow('editar',element)">
+            <mat-icon>edit
+            </mat-icon>
+          </button>
+          <!--btn borrar-->
+          <button class="delete" type="button" mat-icon-button
+            (click)="actionRow('eliminar',element)">
+            <mat-icon>restore_from_trash
+            </mat-icon>
+          </button> 
+        </div>
+      </td>
+    </ng-container>
+
+
+    <ng-container *ngFor="let item of titulos;" [matColumnDef]="item.value">
+      <th style="text-align: center;" class="tableCont" mat-header-cell *matHeaderCellDef>
+        {{item.viewValue}}</th>
+      <td mat-cell *matCellDef="let element">{{element[item.value]}}</td>
+    </ng-container>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" 
+        style="text-align: center; font-family: var(--text) !important;">
+        No se encontraron registros
+      </td>
+    </tr>
+
+    <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+  </table>
+</div>

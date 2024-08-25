@@ -1,116 +1,95 @@
 <?php
 require_once('../models/descuentos.model.php');
-require_once('../config/cors.php');
 
-$descuento = new Clase_Descuentos();
-header('Content-Type: application/json');
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (isset($data['op'])) {
-        switch ($data['op']) {
-            case "todos":
-                $datos = $descuento->todos();
-                if ($datos !== false) {
-                    http_response_code(200); // OK
-                    echo json_encode($datos);
-                } else {
-                    http_response_code(404); // Not Found
-                    echo json_encode(array("error" => "No se encontraron descuentos."));
-                }
-                break;
-
-            case "insertar":
-                if (isset($data["tipo_descuento_desc"], $data["cantidad_descuento"])) {
-                    $tipo_descuento_desc = $data["tipo_descuento_desc"];
-                    $cantidad_descuento = $data["cantidad_descuento"];
-
-                    $resultado = $descuento->insertar($tipo_descuento_desc, $cantidad_descuento);
-                    if ($resultado === "ok") {
-                        http_response_code(201); // Created
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al insertar el descuento: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para insertar el descuento."));
-                }
-                break;
-
-            case "actualizar":
-                if (isset($data["id_tipo_descuento"], $data["tipo_descuento_desc"], $data["cantidad_descuento"])) {
-                    $id_tipo_descuento = $data["id_tipo_descuento"];
-                    $tipo_descuento_desc = $data["tipo_descuento_desc"];
-                    $cantidad_descuento = $data["cantidad_descuento"];
-
-                    $resultado = $descuento->actualizar($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento);
-                    if ($resultado === "ok") {
-                        http_response_code(200); // OK
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al actualizar el descuento: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Faltan parámetros para actualizar el descuento."));
-                }
-                break;
-
-            case "eliminar":
-                if (isset($data["id_tipo_descuento"])) {
-                    $id_tipo_descuento = $data["id_tipo_descuento"];
-                    $resultado = $descuento->eliminar($id_tipo_descuento);
-                    if ($resultado === "ok") {
-                        http_response_code(200); // OK
-                        echo json_encode(array("resultado" => "ok"));
-                    } else {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al eliminar el descuento: " . $resultado));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro 'id_tipo_descuento' para eliminar el descuento."));
-                }
-                break;
-
-            case "detalle":
-                if (isset($data["id_tipo_descuento"])) {
-                    $id_tipo_descuento = $data["id_tipo_descuento"];
-                    try {
-                        $descuentoDetalle = $descuento->buscarPorId($id_tipo_descuento);
-                        if ($descuentoDetalle) {
-                            http_response_code(200); // OK
-                            echo json_encode($descuentoDetalle);
-                        } else {
-                            http_response_code(404); // Not Found
-                            echo json_encode(array("resultado" => "error", "error" => "No se encontró el descuento."));
-                        }
-                    } catch (Exception $e) {
-                        error_log("Error al obtener el detalle del descuento: " . $e->getMessage());
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(array("resultado" => "error", "error" => "Error al obtener el detalle del descuento."));
-                    }
-                } else {
-                    http_response_code(400); // Bad Request
-                    echo json_encode(array("resultado" => "error", "error" => "Falta el parámetro ID para obtener el detalle del descuento."));
-                }
-                break;
-
-            default:
-                http_response_code(400); // Bad Request
-                echo json_encode(array("resultado" => "error", "error" => "Operación no válida."));
-                break;
+class DescuentosController
+{
+    public function getAllDescuentos()
+    {
+        error_log("--------------");
+        $descuentoModel = new Clase_Descuentos();
+        $resultado = $descuentoModel->getAllDescuentos();
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado === false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para cargar los descuentos"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Descuentos cargados con éxito", "data" => json_decode($resultado)));
         }
-    } else {
-        http_response_code(400); // Bad Request
-        echo json_encode(array("resultado" => "error", "error" => "No se especificó la operación."));
     }
-} else {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(array("resultado" => "error", "error" => "Método no permitido."));
+
+    public function insertDescuento($tipo_descuento_desc, $cantidad_descuento)
+    {
+        error_log("--------------");
+        $descuentoModel = new Clase_Descuentos();
+        if (
+            $tipo_descuento_desc === null ||
+            $cantidad_descuento === null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $descuentoModel->registrarDescuento($tipo_descuento_desc, $cantidad_descuento);
+        error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado === false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el descuento"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Descuento registrado con éxito"));
+        }
+    }
+
+    public function updateDescuento($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento)
+    {
+        error_log("--------------");
+        $descuentoModel = new Clase_Descuentos();
+        if (
+            $id_tipo_descuento === null ||
+            $tipo_descuento_desc === null ||
+            $cantidad_descuento === null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $descuentoModel->actualizarDescuento($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento);
+        error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado === false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el descuento"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Descuento actualizado con éxito"));
+        }
+    }
+
+    public function deleteDescuento($id_tipo_descuento)
+    {
+        error_log("--------------");
+        $descuentoModel = new Clase_Descuentos();
+        if ($id_tipo_descuento === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Descuento no seleccionado"));
+        }
+        $resultado = $descuentoModel->eliminarDescuento($id_tipo_descuento);
+        error_log("----------RESULTADO DELETE DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado === false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para eliminar el descuento"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Descuento eliminado con éxito"));
+        }
+    }
+
+    public function getDescuentoById($id_tipo_descuento)
+    {
+        error_log("--------------");
+        $descuentoModel = new Clase_Descuentos();
+        if ($id_tipo_descuento === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "ID de descuento no proporcionado"));
+        }
+        $resultado = $descuentoModel->getDescuentoById($id_tipo_descuento);
+        error_log("----------RESULTADO SEARCH DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado !== false) {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Descuento encontrado con éxito", "data" => json_decode($resultado)));
+        } else {
+            return json_encode(array("respuesta" => "0", "mensaje" => "No se encontró el descuento"));
+        }
+    }
 }
 ?>

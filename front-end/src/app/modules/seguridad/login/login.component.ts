@@ -11,6 +11,8 @@ import { UserMessageService } from '../../shared/services/user-message.service';
 import { Constantes } from '../../config/constantes';
 import { Subject, takeUntil } from 'rxjs';
 import { LocalStorageEncryptationService } from '../../shared/services/local-storage-encryptation.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -37,7 +39,8 @@ export class LoginComponent implements OnDestroy {
     private http: HttpClient,
     private requesService: RequestService,
     private usermessage: UserMessageService,
-    private localencript: LocalStorageEncryptationService
+    private localencript: LocalStorageEncryptationService,
+    private router: Router
   ) { }
 
   changePasswordVisibility() {
@@ -65,6 +68,7 @@ export class LoginComponent implements OnDestroy {
             this.localencript.setLocalStorage(Constantes.usuarioKey, value.data.usuario);
             this.localencript.setLocalStorage(Constantes.perfilKey, value.data.perfil);
             console.log(value, this.localencript.getLocalStorage(Constantes.usuarioKey));
+            this.router.navigateByUrl('/bds');
           },
           error: (error) => {
             this.usermessage.getToastMessage('error', error);

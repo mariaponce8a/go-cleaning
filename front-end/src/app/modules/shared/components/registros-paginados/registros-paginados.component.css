@@ -1,0 +1,52 @@
+.edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondaryLigth);
+}
+
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(172, 15, 54);
+}
+
+
+.edit:hover {
+  background-color: var(--secondaryDark);
+  transition: 0.3s;
+}
+
+.delete:hover {
+  background-color: rgb(126, 10, 39);
+  transition: 0.3s;
+}
+
+.mat-mdc-icon-button {
+  color: var(--mdc-icon-button-icon-color);
+  height: 30px !important;
+  width: 30px !important;
+  display: flex;
+}
+
+.mat-icon {
+  overflow: inherit !important;
+}
+
+.material-icons {
+  font-size: 20px !important;
+}
+
+.cellButtons {
+  display: flex !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+}
+
+.noDataItem {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+}

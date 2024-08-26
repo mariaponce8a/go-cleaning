@@ -1,0 +1,38 @@
+<div class="contenedorTabla p-3">
+  <div class="tableItemsHeader">
+    <label class="listadoNameStyle">Listados de registros</label>
+  </div>
+  <div class="listadoContStyle">
+    <div class="  table-responsive table-responsiveCustom">
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
+
+      <table mat-table [dataSource]="dataSource">
+        @for (column of titulos; track column) {
+        <ng-container class="rowAlternate" [matColumnDef]="column.value">
+          <mat-header-cell *matHeaderCellDef>{{column.viewValue}}</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element[column.value]}} </mat-cell>
+        </ng-container>
+        }
+        <ng-container matColumnDef="accion">
+          <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+          <mat-cell class="cellButtons" mat-cell *matCellDef="let element">
+            <button class="edit" type="button" mat-icon-button (click)="actionRow('editar',element)">
+              <mat-icon style="color: white;display: flex;align-items: center;">edit
+              </mat-icon>
+            </button>
+
+            <button class="delete" type="button" mat-icon-button (click)="actionRow('eliminar',element)">
+              <mat-icon style="color: white;display: flex;align-items: center;">restore_from_trash
+              </mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell noDataItem" colspan="4">No se encontraron registros</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

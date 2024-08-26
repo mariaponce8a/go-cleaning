@@ -1,0 +1,22 @@
+.colored-cab {
+    height: 200px;
+    width: 100%;
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: center; 
+    flex-direction: column; 
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.tituloColoredCab {
+    color: white;
+    font-size: var(--xxlsize);
+    font-family: var(--semiBoldFont);
+}
+
+.subtituloColoredCab{
+    color: rgba(255, 255, 255, 0.651);
+    font-size: var(--msize);
+    font-family: var(--regularFont);
+}

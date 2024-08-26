@@ -44,30 +44,4 @@ export class LocalStorageEncryptationService {
     return decriptedText;
   }
 
-  // getLocalStorage(name: string) {
-  //   let nameEncrypt = this.utf8_to_b64(name);
-  //   let info = localStorage.getItem(nameEncrypt);
-  //   if (info) {
-  //     return this.b64_to_utf8(info);
-  //   }
-  //   return null;
-  // }
-
-  // setLocalStorage(name: string, info: string) {
-  //   let infoEncypt = this.utf8_to_b64(info);
-  //   let nameEncrypt = this.utf8_to_b64(name);
-  //   localStorage.setItem(nameEncrypt, infoEncypt);
-  // }
-
-  // remove(name: string) {
-  //   let nameEncrypt = this.utf8_to_b64(name);
-  //   localStorage.removeItem(nameEncrypt);
-  // }
-  // private utf8_to_b64(str: any) {
-  //   return window.btoa(encodeURIComponent(str));
-  // }
-
-  // private b64_to_utf8(str: any) {
-  //   return decodeURIComponent(window.atob(str));
-  // }
 }

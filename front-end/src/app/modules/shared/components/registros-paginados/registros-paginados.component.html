@@ -1,42 +1,38 @@
-<div class="  table-responsive table-responsiveCustom">
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
-  <table mat-table class="rowAlternate" mat-table [dataSource]="valores" matSort aria-describedby="Lista de recursos"
-    matSortDisableClear>
+<div class="contenedorTabla p-3">
+  <div class="tableItemsHeader">
+    <label class="listadoNameStyle">Listados de registros</label>
+  </div>
+  <div class="listadoContStyle">
+    <div class="  table-responsive table-responsiveCustom">
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
 
-    <ng-container stickyEnd="true" matColumnDef="accion">
-      <th class="tableCont" mat-header-cell *matHeaderCellDef>Acci&oacute;n</th>
-      <td mat-cell *matCellDef="let element">
-        <div class="btncrudContainer">
-          <!--btn detalle-->
-          <!--btn editar-->
-          <button class="edit" type="button"  mat-icon-button (click)="actionRow('editar',element)">
-            <mat-icon>edit
-            </mat-icon>
-          </button>
-          <!--btn borrar-->
-          <button class="delete" type="button" mat-icon-button
-            (click)="actionRow('eliminar',element)">
-            <mat-icon>restore_from_trash
-            </mat-icon>
-          </button> 
-        </div>
-      </td>
-    </ng-container>
+      <table mat-table [dataSource]="dataSource">
+        @for (column of titulos; track column) {
+        <ng-container class="rowAlternate" [matColumnDef]="column.value">
+          <mat-header-cell *matHeaderCellDef>{{column.viewValue}}</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element[column.value]}} </mat-cell>
+        </ng-container>
+        }
+        <ng-container matColumnDef="accion">
+          <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+          <mat-cell class="cellButtons" mat-cell *matCellDef="let element">
+            <button class="edit" type="button" mat-icon-button (click)="actionRow('editar',element)">
+              <mat-icon style="color: white;display: flex;align-items: center;">edit
+              </mat-icon>
+            </button>
 
-
-    <ng-container *ngFor="let item of titulos;" [matColumnDef]="item.value">
-      <th style="text-align: center;" class="tableCont" mat-header-cell *matHeaderCellDef>
-        {{item.viewValue}}</th>
-      <td mat-cell *matCellDef="let element">{{element[item.value]}}</td>
-    </ng-container>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" 
-        style="text-align: center; font-family: var(--text) !important;">
-        No se encontraron registros
-      </td>
-    </tr>
-
-    <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
-  </table>
+            <button class="delete" type="button" mat-icon-button (click)="actionRow('eliminar',element)">
+              <mat-icon style="color: white;display: flex;align-items: center;">restore_from_trash
+              </mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell noDataItem" colspan="4">No se encontraron registros</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

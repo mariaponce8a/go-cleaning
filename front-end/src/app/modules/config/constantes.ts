@@ -1,3 +1,5 @@
+import { EnvironmentData } from "./environment";
+
 export class Constantes {
 
     public static TIMER_REFRESH_TOKEN: number = 600000; //milisegundos
@@ -8,10 +10,18 @@ export class Constantes {
     public static tokenKey: string = 'auth';
     public static usuarioKey: string = 'usuarioValue';
     public static perfilKey: string = 'perfilvalue';
+    public static env = EnvironmentData.globalUrl;
     // mensajes generales
     public static messageGeneral: string = 'Estimado cliente, intente de nuevo más tarde.'
     public static formInvalidMessage: string = 'Por favor complete los campos correctamente.';
 
-    // APIS USUARIO PLATAFORMA
+
+    // //APIS SEGURIDAD
     public static apiLogin: string = 'http://localhost/proyecto-integrador-burbujas-seda/login';
+    // APIS USUARIO PLATAFORMA
+    public static apiGetAllUsers: string = 'http://localhost/proyecto-integrador-burbujas-seda/consultarUsuarios';
+    // // APIS USUARIO PLATAFORMA
+    // public static apiGetAllUsers: string = this.env.host + this.env.name + '/consultarUsuarios';
+
+    // public static apiLogin: string = this.env.host + this.env.name + '/login';
 }

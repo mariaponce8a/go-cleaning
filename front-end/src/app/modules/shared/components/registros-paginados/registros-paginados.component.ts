@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatProgressBarModule,
     ReactiveFormsModule,
     MatIconModule,
+    HttpClientModule,
     CommonModule
   ]
 })
@@ -39,14 +41,17 @@ export class RegistrosPaginadosComponent implements OnInit {
   displayColumns: Array<string> = [];
 
   ngOnInit(): void {
-    this.displayColumns.push('accion');
+
+    this.onFillData();
   }
 
   actionRow(type: string, rowData: any) {
 
   }
 
-
+  ngOnChanges() {
+    this.onFillData();
+  }
 
   onFillData(): void {
     if (this.valores != null) {
@@ -54,6 +59,7 @@ export class RegistrosPaginadosComponent implements OnInit {
       for (let title of this.titulos) {
         this.displayColumns.push(title.value);
       }
+      this.displayColumns.push('accion');
       this.dataSource.data = this.valores;
     }
   }

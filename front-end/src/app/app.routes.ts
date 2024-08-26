@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './modules/seguridad/login/login.component';
 import { MenuComponent } from './modules/menu/menu.component';
+import path from 'path';
 
 export const routes: Routes = [
     {
@@ -14,7 +15,10 @@ export const routes: Routes = [
         path: 'bds',
         component: MenuComponent,
         children: [
-            
+            {
+                path: 'usuarios',
+                loadComponent: () => import('./modules/components/usuarios-plataforma/listado-usuarios/listado-usuarios.component').then(c => c.ListadoUsuariosComponent),     
+            } 
         ]
     }
 

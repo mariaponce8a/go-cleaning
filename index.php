@@ -2,6 +2,8 @@
 require_once('./vendor/autoload.php');
 require_once('./back-end/controllers/usuarios.controller.php');
 require_once('./back-end/controllers/servicios.controller.php');
+require_once('./back-end/controllers/clientes.controller.php');
+require_once('./back-end/controllers/descuentos.controller.php');
 
 
 use Firebase\JWT\JWT;
@@ -190,9 +192,9 @@ Flight::route('PUT /actualizarServicio', function () {
 });
 
 // Ruta para eliminar un servicio (DELETE)
-Flight::route('DELETE /eliminarServicio', function () {
+Flight::route('PUT /eliminarServicio', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
+    if ($tokenDesdeCabecera == false) {
         $servicios_controller = new Servicios_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
@@ -230,6 +232,149 @@ Flight::route('GET /buscarServicioPorDescripcion', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
+Flight::route('POST /registrarCliente', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera !== false) {
+        $cliente_controller = new Clientes_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $identificacion = $data['identificacion'] ?? null;
+        $tipo_identificacion = $data['tipo_identificacion'] ?? null;
+        $nombre = $data['nombre'] ?? null;
+        $apellido = $data['apellido'] ?? null;
+        $telefono = $data['telefono'] ?? null;
+        $correo = $data['correo'] ?? null;
+
+        $respuesta = $cliente_controller->registrarCliente($identificacion, $tipo_identificacion, $nombre, $apellido, $telefono, $correo);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /actualizarCliente', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $cliente_controller = new Clientes_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_cliente = $data['id_cliente'] ?? null;
+        $identificacion = $data['identificacion'] ?? null;
+        $tipo_identificacion = $data['tipo_identificacion'] ?? null;
+        $nombre = $data['nombre'] ?? null;
+        $apellido = $data['apellido'] ?? null;
+        $telefono = $data['telefono'] ?? null;
+        $correo = $data['correo'] ?? null;
+
+        $respuesta = $cliente_controller->actualizarCliente($id_cliente, $identificacion, $tipo_identificacion, $nombre, $apellido, $telefono, $correo);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /eliminarCliente', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $cliente_controller = new Clientes_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_cliente = $data['id_cliente'] ?? null;
+
+        $respuesta = $cliente_controller->eliminarCliente($id_cliente);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('GET /consultarClientes', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $cliente_controller = new Clientes_controller();
+        $respuesta = $cliente_controller->getAllClientes();
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Ruta para registrar un nuevo descuento
+Flight::route('POST /registrarDescuento', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == false) {
+        $descuento_controller = new Descuentos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $descripcion = $data['descripcion_descuento'] ?? null;
+        $porcentaje = $data['porcentaje_descuento'] ?? null;
+        $fecha_inicio = $data['fecha_inicio'] ?? null;
+        $fecha_fin = $data['fecha_fin'] ?? null;
+        $activo = $data['activo'] ?? null;
+
+        $respuesta = $descuento_controller->insertDescuento($descripcion, $porcentaje, $fecha_inicio, $fecha_fin, $activo);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Ruta para actualizar un descuento existente
+Flight::route('PUT /actualizaDescuento', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $descuento_controller = new Descuentos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_descuento = $data['id_descuento'] ?? null;
+        $descripcion = $data['descripcion_descuento'] ?? null;
+        $porcentaje = $data['porcentaje_descuento'] ?? null;
+        $fecha_inicio = $data['fecha_inicio'] ?? null;
+        $fecha_fin = $data['fecha_fin'] ?? null;
+        $activo = $data['activo'] ?? null;
+
+        $respuesta = $descuento_controller->updateDescuento($id_descuento, $descripcion, $porcentaje, $fecha_inicio, $fecha_fin, $activo);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Ruta para eliminar un descuento
+Flight::route('PUT /eliminarDescuento', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $descuento_controller = new Descuentos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_descuento = $data['id_descuento'] ?? null;
+
+        $respuesta = $descuento_controller->deleteDescuento($id_descuento);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Ruta para consultar todos los descuentos
+Flight::route('GET /consultarDescuentos', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $descuento_controller = new Descuentos_controller();
+        $respuesta = $descuento_controller->getAllDescuentos();
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
 
 
 Flight::start();

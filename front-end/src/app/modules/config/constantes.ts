@@ -25,4 +25,14 @@ export class Constantes {
   public static apiGetAllServices: string = 
         this.env.host+this.env.name+ '/consultarServicios' ;
 
+  // APIS  clientes
+  public static apiGetAllClientes: string = 
+        this.env.host+this.env.name+ '/consultarClientes' ;
+
+  // APIS  clientes
+  public static apiGetAllDescuentos: string = 
+        this.env.host+this.env.name+ '/consultarDescuentos' ;
+
+       
+
 }

@@ -21,11 +21,11 @@ export const routes: Routes = [
             } ,
             {
                 path: 'clientes',
-                loadComponent: () => import('./modules/components/clientes/clientes.component').then(c => c.ClientesComponent)
+                loadComponent: () => import('./modules/components/clientes/listado-clientes/clientes.component').then(c=> c.ListadoClientesComponent)
             } ,
             {
                 path: 'descuentos',
-                loadComponent: () => import('./modules/components/descuentos/descuentos.component').then(c=> c.DescuentosComponent)
+                loadComponent: () => import('./modules/components/descuentos/listado-descuentos/descuentos.component').then(c=> c.ListadoDescuentosComponent)
             } ,
             {
                 path: 'servicios',

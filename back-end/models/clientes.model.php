@@ -3,12 +3,12 @@ require_once('./back-end/config/conexion.php');
 
 class Clase_Clientes
 {
-    public function getAllClientes()
+    public function getAllClientes() 
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "SELECT * FROM tb_clientes_registrados";
+            $query = "select * FROM tb_clientes_registrados";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {

@@ -25,3 +25,18 @@ export interface IserviciosPlataforma {
   costo_unitario?: number;
   validar_pesaje?: any; // llega un numero pero se lo reemplaza por un string
 }
+
+export interface IclientesPlataforma {
+  id_cliente: number;
+  identificacion_cliente: string;
+  tipo_identificacion_cliente: string;
+  nombre_cliente: string;
+  apellido_cliente: string;
+  telefono_cliente: string;
+  correo_cliente: string;
+}
+export interface IdescuentosPlataforma {
+  id_tipo_descuento: number;         
+  tipo_descuento_desc: string;       
+  cantidad_descuento: number;
+}

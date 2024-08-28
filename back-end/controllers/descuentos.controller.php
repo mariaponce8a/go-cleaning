@@ -1,7 +1,7 @@
 <?php
-require_once('../models/descuentos.model.php');
+require_once('./back-end/models/descuentos.model.php');
 
-class DescuentosController
+class Descuentos_controller
 {
     public function getAllDescuentos()
     {

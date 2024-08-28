@@ -1,72 +1,72 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
 import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
-import {
-  ITitulosTabla,
-  IserviciosPlataforma,
-} from '../../../shared/interface/datamodels.interface';
+import { ITitulosTabla,IclientesPlataforma } from '../../../shared/interface/datamodels.interface';
 import { RequestService } from '../../../shared/services/request.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-listado-servicios',
+  selector: 'app-listado-clientes',
   standalone: true,
   imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
-  templateUrl: './servicios.component.html',
-  styleUrl: './servicios.component.css',
+  templateUrl: './clientes.component.html',
+  styleUrl: './clientes.component.css',
 })
-export class ListadoServiciosComponent implements OnInit, OnDestroy {
-  //   {
-  //     "id_servicio": "2",
-  //     "descripcion_servicio": "lavar ropa",
-  //     "costo_unitario": "12.00",
-  //     "validar_pesaje": "1
-  // }
+export class ListadoClientesComponent implements OnInit, OnDestroy {
+  
   titulosTabla: ITitulosTabla[] = [
     {
-      value: 'descripcion_servicio',
-      viewValue: 'Descripción',
+      value: 'identificacion_cliente',
+      viewValue: 'Identificación',
     },
     {
-      value: 'costo_unitario',
-      viewValue: 'Costo Unitario',
+      value: 'tipo_identificacion_cliente',
+      viewValue: 'Tipo de Identificación',
     },
     {
-      value: 'validar_pesaje',
-      viewValue: 'Validar Pesaje',
+      value: 'nombre_cliente',
+      viewValue: 'Nombre',
+    },
+    {
+      value: 'apellido_cliente',
+      viewValue: 'Apellido',
+    },
+    {
+      value: 'telefono_cliente',
+      viewValue: 'Teléfono',
+    },
+    {
+      value: 'correo_cliente',
+      viewValue: 'Correo Electrónico',
     },
   ];
-
-  valoresDeTabla: IserviciosPlataforma[] = [];
+  valoresDeTabla: IclientesPlataforma[] = [];
   destroy$ = new Subject<void>();
   loadingTable: boolean = false;
 
   constructor(private requestService: RequestService, private router: Router) {}
 
   ngOnInit(): void {
-    this.getAllServices();
+    this.getAllClientes();
   }
 
-  getAllServices() {
+  getAllClientes() {
     this.loadingTable = true;
     this.requestService
-      .get(Constantes.apiGetAllServices)
+      .get(Constantes.apiGetAllClientes)  // Asegúrate de que la URL esté correctamente definida en Constantes
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
 
-          let arrayAjustado: IserviciosPlataforma[] = [];
+          // Si necesitas transformar algún dato, hazlo aquí.
+          let arrayAjustado: IclientesPlataforma[] = [];
           for (let item of this.valoresDeTabla) {
             let body = item;
-            if (body.validar_pesaje == 1) {
-              body.validar_pesaje = 'Validar';
-            } else {
-              body.validar_pesaje = 'No validar';
-            }
+            // Puedes realizar transformaciones aquí si es necesario.
             arrayAjustado.push(body);
           }
           this.valoresDeTabla = arrayAjustado;

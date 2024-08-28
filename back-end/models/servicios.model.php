@@ -8,10 +8,10 @@ class Clase_Servicios
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "SELECT * FROM tb_servicios";
+            $query = "select * from tb_servicios";
             $exeResult = mysqli_query($conexion, $query);
 
-            if ($exeResult === false) {
+            if ($exeResult == false) {
                 throw new Exception("Problemas al cargar los servicios");
             } else {
                 $services = array();

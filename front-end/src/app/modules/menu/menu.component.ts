@@ -43,7 +43,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Clientes',
       icon: 'account_circle',
-      pagina: '',
+      pagina: 'bds/clientes',
       perfil: ''
     },
     {
@@ -67,13 +67,13 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Tipos descuentos',
       icon: 'attach_money',
-      pagina: '',
+      pagina: 'bds/descuentos',
       perfil: ''
     },
     {
       descripcion: 'Servicios',
       icon: 'local_laundry_service',
-      pagina: '',
+      pagina: 'bds/servicios',
       perfil: ''
     },
     {

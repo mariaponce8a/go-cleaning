@@ -18,7 +18,19 @@ export const routes: Routes = [
             {
                 path: 'usuarios',
                 loadComponent: () => import('./modules/components/usuarios-plataforma/listado-usuarios/listado-usuarios.component').then(c => c.ListadoUsuariosComponent),     
-            } 
+            } ,
+            {
+                path: 'clientes',
+                loadComponent: () => import('./modules/components/clientes/clientes.component').then(c => c.ClientesComponent)
+            } ,
+            {
+                path: 'descuentos',
+                loadComponent: () => import('./modules/components/descuentos/descuentos.component').then(c=> c.DescuentosComponent)
+            } ,
+            {
+                path: 'servicios',
+                loadComponent: () => import('./modules/components/servicios/listado-servicios/servicios.component').then(c=> c.ListadoServiciosComponent)
+            } ,
         ]
     }
 

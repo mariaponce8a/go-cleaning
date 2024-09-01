@@ -19,10 +19,7 @@ import { Router } from '@angular/router';
 })
 export class ListadoDescuentosComponent implements OnInit, OnDestroy {
   titulosTabla: ITitulosTabla[] = [
-    {
-      value: 'id_tipo_descuento',
-      viewValue: 'ID Tipo Descuento',
-    },
+
     {
       value: 'tipo_descuento_desc',
       viewValue: 'Descripción Tipo Descuento',

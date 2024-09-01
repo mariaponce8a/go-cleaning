@@ -18,16 +18,34 @@ $dotenv->safeLoad();
 
 function getValidToken()
 {
-    $key = $_SERVER['TOKEN_KEY'];
-    $headers = apache_request_headers();
-    $authorization = $headers["Authorization"];
-    $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
-    if ($decodedToken) {
-        error_log(json_encode($decodedToken));
-        return $decodedToken;
+    $respuesta_token = false;
+    $os = PHP_OS_FAMILY;
+
+    if ($os === 'Windows') {
+        $key = $_SERVER['TOKEN_KEY'];
+        $headers = apache_request_headers();
+        error_log("------------------------ENCABEZADOS " . implode(",", $headers));
+        $authorization = $headers["Authorization"];
+        $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
+        if ($decodedToken) {
+            error_log(json_encode($decodedToken));
+            $respuesta_token = $decodedToken;
+        } else {
+            $respuesta_token = false;
+        }
     } else {
-        return false;
+
+        $key = $_SERVER['TOKEN_KEY'];
+        $authorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        error_log("AUTORIZACIOOOOOOOOOONNNNN " . $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+        if ($authorization) {
+            error_log(json_encode($authorization));
+            $respuesta_token =  $authorization;
+        } else {
+            $respuesta_token = false;
+        }
     }
+    return $respuesta_token;
 }
 
 Flight::before('start', function () {

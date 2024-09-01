@@ -31,6 +31,22 @@ export const routes: Routes = [
                 path: 'servicios',
                 loadComponent: () => import('./modules/components/servicios/listado-servicios/servicios.component').then(c=> c.ListadoServiciosComponent)
             } ,
+            {
+                path: 'materiales',
+                loadComponent: () => import('./modules/components/materiales/listado-materiales/materiales.component').then(c=> c.ListadoMaterialesComponent)
+            } ,
+            {
+                path: 'estados',
+                loadComponent: () => import('./modules/components/estados/listado-estados/estados.component').then(c=> c.ListadoEstadosComponent)
+            } ,
+            {
+                path: 'recomendaciones',
+                loadComponent: () => import('./modules/components/recomendaciones/listado-recomendaciones/recomendaciones.component').then(c=> c.ListadoRecomendacionesComponent)
+            } ,
+            {
+                path: 'asignaciones',
+                loadComponent: () => import('./modules/components/asignaciones/listado-asignaciones/asignaciones.component').then(c=> c.ListadoAsignacionEmpleadoComponent)
+            } ,
         ]
     }
 

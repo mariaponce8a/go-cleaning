@@ -55,13 +55,13 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Productividad',
       icon: 'work',
-      pagina: '',
+      pagina: 'bds/asignaciones',
       perfil: ''
     },
     {
       descripcion: 'Recomendaciones',
       icon: 'grade',
-      pagina: '',
+      pagina: 'bds/recomendaciones',
       perfil: ''
     },
     {
@@ -79,9 +79,21 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Materiales',
       icon: 'bubble_chart',
-      pagina: '',
+      pagina: 'bds/materiales',
       perfil: ''
-    }
+    },
+    {
+      descripcion: 'Recomendacion Lavado',
+      icon: 'dry_cleaning',
+      pagina: 'bds/recomendaciones',
+      perfil: ''
+    },
+    {
+      descripcion: 'Estados',
+      icon: 'donut_large',
+      pagina: 'bds/estados',
+      perfil: ''
+    },
   ];
 
   constructor(

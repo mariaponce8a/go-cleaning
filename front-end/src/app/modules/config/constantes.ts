@@ -29,10 +29,29 @@ export class Constantes {
   public static apiGetAllClientes: string = 
         this.env.host+this.env.name+ '/consultarClientes' ;
 
-  // APIS  clientes
+  // APIS  Descuentos
   public static apiGetAllDescuentos: string = 
         this.env.host+this.env.name+ '/consultarDescuentos' ;
 
-       
+  // APIS  Materiales
+ public static apiGetAllMaterials: string = 
+ this.env.host+this.env.name+ '/consultarMateriales' ;
+
+ // APIS  Estados 
+ public static apiGetAllEstados: string = 
+ this.env.host+this.env.name+ '/consultarEstados' ;
+
+ // APIS  Recomendaciones 
+ public static apiGetAllRecommendations: string = 
+ this.env.host+this.env.name+ '/consultarRecomendaciones' ;
+
+ // APIS  asignaciones
+ public static apiGetAllAsignaciones: string = 
+ this.env.host+this.env.name+ '/consultarRecomendaciones' ;
+
+
+ 
+ 
+
 
 }

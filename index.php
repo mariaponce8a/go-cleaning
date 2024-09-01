@@ -4,6 +4,10 @@ require_once('./back-end/controllers/usuarios.controller.php');
 require_once('./back-end/controllers/servicios.controller.php');
 require_once('./back-end/controllers/clientes.controller.php');
 require_once('./back-end/controllers/descuentos.controller.php');
+require_once('./back-end/controllers/material.controllers.php');
+require_once('./back-end/controllers/estados.controllers.php');
+require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
+require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
 
 
 use Firebase\JWT\JWT;
@@ -374,6 +378,259 @@ Flight::route('GET /consultarDescuentos', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
+// materialesssssssssssssssssssssssssssssssssssssssssssss
+Flight::route('POST /registrarMaterial', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera !== false) {
+        $material_controller = new Materiales_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $descripcion_material = $data['descripcion_material'] ?? null;
+
+        $respuesta = $material_controller->insertMaterial($descripcion_material);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+Flight::route('PUT /actualizaMaterial', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $material_controller = new Materiales_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_material = $data['id_material'] ?? null;
+        $descripcion_material = $data['descripcion_material'] ?? null;
+
+        $respuesta = $material_controller->updateMaterial($id_material, $descripcion_material);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+Flight::route('DELETE /eliminarMaterial', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $material_controller = new Materiales_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_material = $data['id_material'] ?? null;
+
+        $respuesta = $material_controller->deleteMaterial($id_material);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+Flight::route('GET /consultarMateriales', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $material_controller = new Materiales_controller();
+        $respuesta = $material_controller->getAllMaterials();
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+// estadossssssssssssssssssssssssssssssssssssssssssssss
+// Registrar un nuevo estado
+Flight::route('POST /registrarEstado', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera !== false) {
+        $estado_controller = new Estados_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $descripcion_estado = $data['descripcion_estado'] ?? null;
+
+        $respuesta = $estado_controller->insertState($descripcion_estado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Actualizar un estado existente
+Flight::route('PUT /actualizaEstado', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estado_controller = new Estados_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_estado = $data['id_estado'] ?? null;
+        $descripcion_estado = $data['descripcion_estado'] ?? null;
+
+        $respuesta = $estado_controller->updateState($id_estado, $descripcion_estado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Eliminar un estado existente
+Flight::route('DELETE /eliminarEstado', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estado_controller = new Estados_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_estado = $data['id_estado'] ?? null;
+
+        $respuesta = $estado_controller->deleteState($id_estado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// Consultar todos los estados
+Flight::route('GET /consultarEstados', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estado_controller = new Estados_controller();
+        $respuesta = $estado_controller->getAllStates();
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+// RECOMENDACIONESSSSSSSSSSSSSSS
+Flight::route('POST /registrarRecomendacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera !== false) {
+        $recomendacion_controller = new RecomendacionLavado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $fk_id_material = $data['fk_id_material'] ?? null;
+        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+
+        $respuesta = $recomendacion_controller->insertRecommendation($fk_id_material, $fk_id_servicio);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /actualizaRecomendacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $recomendacion_controller = new RecomendacionLavado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_recomendacion = $data['id_recomendacion'] ?? null;
+        $fk_id_material = $data['fk_id_material'] ?? null;
+        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+
+        $respuesta = $recomendacion_controller->updateRecommendation($id_recomendacion, $fk_id_material, $fk_id_servicio);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /eliminarRecomendacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $recomendacion_controller = new RecomendacionLavado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_recomendacion = $data['id_recomendacion'] ?? null;
+
+        $respuesta = $recomendacion_controller->deleteRecommendation($id_recomendacion);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('GET /consultarRecomendaciones/@id_recomendacion_lavado', function ($id_recomendacion_lavado) {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $recomendacion_controller = new RecomendacionLavado_controller();
+        $respuesta = $recomendacion_controller->getRecommendationDetail($id_recomendacion_lavado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+// asignacionessssssssssssssssssssssssss
+Flight::route('POST /registrarAsignacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera !== false) {
+        $asignaciones_controller = new AsignacionesEmpleado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
+        $fecha_hora_inicio_asignacion = $data['fecha_hora_inicio_asignacion'] ?? null;
+        $fecha_hora_fin_asignacion = $data['fecha_hora_fin_asignacion'] ?? null;
+        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
+        $fk_id_estado = $data['fk_id_estado'] ?? null;
+
+        $respuesta = $asignaciones_controller->insertAssignment($fk_id_usuario, $fecha_hora_inicio_asignacion, $fecha_hora_fin_asignacion, $fk_id_pedido, $fk_id_estado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /actualizaAsignacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $asignaciones_controller = new AsignacionesEmpleado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_asignaciones = $data['id_asignaciones'] ?? null;
+        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
+        $fecha_hora_inicio_asignacion = $data['fecha_hora_inicio_asignacion'] ?? null;
+        $fecha_hora_fin_asignacion = $data['fecha_hora_fin_asignacion'] ?? null;
+        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
+        $fk_id_estado = $data['fk_id_estado'] ?? null;
+
+        $respuesta = $asignaciones_controller->updateAssignment($id_asignaciones, $fk_id_usuario, $fecha_hora_inicio_asignacion, $fecha_hora_fin_asignacion, $fk_id_pedido, $fk_id_estado);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+Flight::route('DELETE /eliminarAsignacion', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $asignaciones_controller = new AsignacionesEmpleado_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_asignaciones = $data['id_asignaciones'] ?? null;
+
+        $respuesta = $asignaciones_controller->deleteAssignment($id_asignaciones);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+Flight::route('GET /consultarAsignaciones', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $asignaciones_controller = new AsignacionesEmpleado_controller();
+        $respuesta = $asignaciones_controller->getAllAssignments();
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+
 
 
 

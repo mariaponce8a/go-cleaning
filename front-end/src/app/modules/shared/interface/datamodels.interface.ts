@@ -40,3 +40,26 @@ export interface IdescuentosPlataforma {
   tipo_descuento_desc: string;       
   cantidad_descuento: number;
 }
+export interface ImaterialesPlataforma {
+  id_material: number;
+  descripcion_material: string;
+}
+export interface IEstadosPlataforma {
+  id_estado: number;
+  descripcion_estado: string;
+}
+
+export interface IRecomendacionesPlataforma {
+  id_recomendacion: number;
+  fk_id_material: any;
+  fk_id_servicio: any;
+}
+export interface IAsignacionEmpleadosPlataforma {
+  id_asignaciones: number;
+  fk_id_usuario: number;
+  fecha_hora_inicio_asignacion: string; 
+  fecha_hora_fin_asignacion?: string;   
+  fk_id_pedido: number;
+  fk_id_estado?: number;               
+}
+

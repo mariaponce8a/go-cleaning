@@ -3,6 +3,11 @@
     <label class="listadoNameStyle">Listados de registros</label>
   </div>
   <div class="listadoContStyle">
+
+    <button type="button" class="buttonBack mb-4 " (click)="actionRow('crear', {})">
+      Crear registro
+    </button>
+
     <div class="  table-responsive table-responsiveCustom">
       <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
 

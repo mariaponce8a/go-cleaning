@@ -50,7 +50,7 @@ export class RequestService {
     }
 
     return this.http
-      .put<any>(context, request, this.httpHeaders())
+      .put<any>(context, request)
       .pipe();
   }
 
@@ -73,7 +73,7 @@ export class RequestService {
       Accept: 'application/json',
     };
 
-    if (this.auth.tokenAuth !== null) {
+    if (this.localStorageEncryptation.getLocalStorage(Constantes.tokenKey) !== null) {
       const pair = {
         Authorization: this.localStorageEncryptation.getLocalStorage(
           Constantes.tokenKey
@@ -92,23 +92,4 @@ export class RequestService {
     };
   }
 
-  // private handleError(error: HttpErrorResponse) {
-  //   let messageUser: string;
-  //   let status = error.status;
-  //   let codeError = 'EAP001';
-  //   if (status === 0) {
-  //     messageUser = Constantes.messageGeneral;
-  //   } else {
-  //     if (error.error == null) {
-  //       messageUser = Constantes.messageGeneral;
-  //     } else {
-  //       codeError = error.error.code;
-  //       messageUser = error.error.message;
-  //     }
-  //   }
-
-  //   return throwError(
-  //     () => new RequestException(status, codeError, messageUser)
-  //   );
-  // }
 }

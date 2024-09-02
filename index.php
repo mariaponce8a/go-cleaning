@@ -1,6 +1,7 @@
 <?php
 require_once('./vendor/autoload.php');
 require_once('./back-end/controllers/usuarios.controller.php');
+require_once('./back-end/controllers/pedidos.controller.php');
 require_once('./back-end/controllers/servicios.controller.php');
 require_once('./back-end/controllers/clientes.controller.php');
 require_once('./back-end/controllers/descuentos.controller.php');
@@ -121,7 +122,7 @@ Flight::route('PUT /actualizaUsuario', function () {
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $id_usuario = $data['id'] ?? null;
+        $id_usuario = $data['id_usuario'] ?? null;
         $usuario = $data['usuario'] ?? null;
         $clave = $data['clave'] ?? null;
         $nombre = $data['nombre'] ?? null;
@@ -142,7 +143,6 @@ Flight::route('PUT /eliminarUsuario', function () {
         $user_controller = new Usuarios_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
-
         $id_usuario = $data['id'] ?? null;
 
         $respuesta = $user_controller->deleteUsuario($id_usuario);
@@ -647,7 +647,16 @@ Flight::route('GET /consultarAsignaciones', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
-
+Flight::route('GET /consultarPedidos', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $respuesta = $controller->getAllPedidos();
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
 
 
 

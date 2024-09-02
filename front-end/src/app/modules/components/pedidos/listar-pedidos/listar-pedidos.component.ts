@@ -1,50 +1,77 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MaterialModule } from '../../../desginModules/material.module';
 import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
 import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
-import { IaccionBotones, ITitulosTabla, IusuariosPlataforma } from '../../../shared/interface/datamodels.interface';
-import { RequestService } from '../../../shared/services/request.service';
+import { MatDialog } from '@angular/material/dialog';
+
 import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
+import { ITitulosTabla, IaccionBotones, IpedidosJoin } from '../../../shared/interface/datamodels.interface';
+import { RequestService } from '../../../shared/services/request.service';
+import { UserMessageService } from '../../../shared/services/user-message.service';
 import { Router } from '@angular/router';
 
-import { FormUsuariosComponent } from '../form-usuarios/form-usuarios.component';
-import { MaterialModule } from '../../../desginModules/material.module';
-import { MatDialog } from '@angular/material/dialog';
-import { UserMessageService } from '../../../shared/services/user-message.service';
-
 @Component({
-  selector: 'app-listado-usuarios',
+  selector: 'app-listar-pedidos',
   standalone: true,
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
     ColoredBodyHeaderComponent
   ],
-  templateUrl: './listado-usuarios.component.html',
-  styleUrl: './listado-usuarios.component.css'
+  templateUrl: './listar-pedidos.component.html',
+  styleUrl: './listar-pedidos.component.css'
 })
-export class ListadoUsuariosComponent implements OnInit, OnDestroy {
+export class ListarPedidosComponent implements OnInit, OnDestroy {
 
   titulosTabla: ITitulosTabla[] = [
     {
+      value: "fecha_pedido",
+      viewValue: "Fecha pedido"
+    },
+    {
       value: "usuario",
-      viewValue: "Usuario"
+      viewValue: "Empleado"
     },
     {
-      value: "nombre",
-      viewValue: "Nombre"
+      value: "cantidad_articulos",
+      viewValue: "Cantidad de artículos"
     },
     {
-      value: "apellido",
-      viewValue: "Apellido"
+      value: "identificacion_cliente",
+      viewValue: "ID: Cliente"
     },
     {
-      value: "perfil",
-      viewValue: "Perfil"
+      value: "nombre_cliente",
+      viewValue: "Nombre cliente"
     },
+    {
+      value: "apellido_cliente",
+      viewValue: "Apellido cliente"
+    },
+    {
+      value: "tipo_descuento_desc",
+      viewValue: "Descuento"
+    },
+    {
+      value: "pedido_subtotal",
+      viewValue: "Sub total"
+    },
+    {
+      value: "valor_pago",
+      viewValue: "Total"
+    },
+    {
+      value: "estado_pago",
+      viewValue: "Pago"
+    },
+    {
+      value: "tipo_entrega",
+      viewValue: "Entrega"
+    }
   ]
 
-  valoresDeTabla: IusuariosPlataforma[] = [];
+  valoresDeTabla: IpedidosJoin[] = [];
   destroy$ = new Subject<void>();
   loadingTable: boolean = false;
 
@@ -56,28 +83,18 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getAllUsers();
+    this.getAllPedidos();
   }
 
-  getAllUsers() {
+  getAllPedidos() {
     this.loadingTable = true;
-    this.requestService.get(Constantes.apiGetAllUsers)
+    this.requestService.get(Constantes.apiGetAllPedidos)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
-          let arrayAjustado: IusuariosPlataforma[] = [];
-          for (let item of this.valoresDeTabla) {
-            let body = item;
-            if (body.perfil == 'E') {
-              body.perfil = 'Empleado';
-            } else {
-              body.perfil = 'Administrador';
-            }
-            arrayAjustado.push(body);
-          }
-          this.valoresDeTabla = arrayAjustado;
+
         },
         error: () => {
           this.loadingTable = false;
@@ -90,31 +107,9 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
     let dialogRef;
     switch (evento.tipo) {
       case 'editar':
-        dialogRef = this.dialog.open(FormUsuariosComponent, {
-          data: evento,
-          width: '600px',
-          disableClose: true,
-        })
-
-        dialogRef.afterClosed().subscribe((r) => {
-          if (r == 'ok') {
-            this.getAllUsers();
-          }
-        })
 
         break;
       case 'crear':
-        dialogRef = this.dialog.open(FormUsuariosComponent, {
-          data: evento,
-          width: '600px',
-          disableClose: true,
-        })
-
-        dialogRef.afterClosed().subscribe((r) => {
-          if (r == 'ok') {
-            this.getAllUsers();
-          }
-        })
 
         break;
 
@@ -124,12 +119,12 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
         }
         this.usermessage.questionMessage(Constantes.deleteQuestion).then((r) => {
           if (r.isConfirmed) {
-            this.requestService.put(body, Constantes.apiDeleteUser)
+            this.requestService.put(body, 'insertar api eliminar')
               .pipe(takeUntil(this.destroy$))
               .subscribe({
                 next: (value) => {
                   this.usermessage.getToastMessage('success', Constantes.deleteResponseMsg).fire();
-                  this.getAllUsers();
+                  this.getAllPedidos();
                 },
                 error: (error) => {
                   this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();

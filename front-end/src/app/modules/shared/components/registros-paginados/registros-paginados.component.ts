@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ITitulosTabla } from '../../interface/datamodels.interface';
+import { IaccionBotones, ITitulosTabla } from '../../interface/datamodels.interface';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from '../../../desginModules/material.module';
+import { GlobalButtonsComponent } from '../global-buttons/global-buttons.component';
 
 
 @Component({
@@ -19,14 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrls: ['./registros-paginados.component.css'],
   standalone: true,
   imports: [
-    MatTableModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatProgressBarModule,
-    ReactiveFormsModule,
-    MatIconModule,
+    MaterialModule,
+    GlobalButtonsComponent,
     HttpClientModule,
     CommonModule
   ]
@@ -38,15 +34,19 @@ export class RegistrosPaginadosComponent implements OnInit {
   @Input() isLoadingTable!: boolean;
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;
+  @Output() accionBotones: EventEmitter<IaccionBotones> = new EventEmitter();
   displayColumns: Array<string> = [];
 
   ngOnInit(): void {
-
     this.onFillData();
   }
 
   actionRow(type: string, rowData: any) {
-
+    let data: IaccionBotones = {
+      tipo: type,
+      fila: rowData
+    }
+    this.accionBotones.emit(data);
   }
 
   ngOnChanges() {

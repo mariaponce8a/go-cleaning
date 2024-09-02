@@ -15,43 +15,71 @@ export class Constantes {
     'Estimado cliente, intente de nuevo más tarde.';
   public static formInvalidMessage: string =
     'Por favor complete los campos correctamente.';
+  public static formQuestion: string =
+    '¿Está seguro que desea guardar el registro?';
+  public static deleteQuestion: string =
+    '¿Está seguro que desea eliminar el registro?';
+  public static createResponseMsg: string =
+    'Registro creado con éxito';
+  public static updateResponseMsg: string =
+    'Registro actualizado con éxito';
+  public static deleteResponseMsg: string =
+    'Registro eliminado con éxito';
+  public static errorResponseMsg: string =
+    'Porblemas para procesar la acción, intentelo más tarde.';
+  //labels generales
+  public static modalHeaderMensajeEditar: string = 'Formulario edición'
+  public static modalHeaderMensajeCrear: string = 'Formulario creación'
 
-  // //APIS SEGURIDAD
+  //----------- APIS SEGURIDAD
   public static apiLogin: string = this.env.host + this.env.name + '/login';
-  // APIS USUARIO PLATAFORMA
+  //----------- APIS USUARIO PLATAFORMA
   public static apiGetAllUsers: string =
     this.env.host + this.env.name + '/consultarUsuarios';
-  // APIS  SERVICIOS
-  public static apiGetAllServices: string = 
-        this.env.host+this.env.name+ '/consultarServicios' ;
+  public static apiUpdateUser: string =
+    this.env.host + this.env.name + '/actualizaUsuario';
+  public static apiCreateUser: string =
+    this.env.host + this.env.name + '/registrarUsuario';
+  public static apiDeleteUser: string =
+    this.env.host + this.env.name + '/eliminarUsuario';
 
-  // APIS  clientes
-  public static apiGetAllClientes: string = 
-        this.env.host+this.env.name+ '/consultarClientes' ;
-
-  // APIS  Descuentos
-  public static apiGetAllDescuentos: string = 
-        this.env.host+this.env.name+ '/consultarDescuentos' ;
-
-  // APIS  Materiales
- public static apiGetAllMaterials: string = 
- this.env.host+this.env.name+ '/consultarMateriales' ;
-
- // APIS  Estados 
- public static apiGetAllEstados: string = 
- this.env.host+this.env.name+ '/consultarEstados' ;
-
- // APIS  Recomendaciones 
- public static apiGetAllRecommendations: string = 
- this.env.host+this.env.name+ '/consultarRecomendaciones' ;
-
- // APIS  asignaciones
- public static apiGetAllAsignaciones: string = 
- this.env.host+this.env.name+ '/consultarRecomendaciones' ;
+  //----------- APIS PEDIDOS
+  public static apiGetAllPedidos: string =
+    this.env.host + this.env.name + '/consultarPedidos';
 
 
- 
- 
+    
+  //----------- APIS  SERVICIOS
+  public static apiGetAllServices: string =
+    this.env.host + this.env.name + '/consultarServicios';
+
+  //----------- APIS  clientes
+  public static apiGetAllClientes: string =
+    this.env.host + this.env.name + '/consultarClientes';
+
+  //----------- APIS  Descuentos
+  public static apiGetAllDescuentos: string =
+    this.env.host + this.env.name + '/consultarDescuentos';
+
+  //----------- APIS  Materiales
+  public static apiGetAllMaterials: string =
+    this.env.host + this.env.name + '/consultarMateriales';
+
+  //----------- APIS  Estados 
+  public static apiGetAllEstados: string =
+    this.env.host + this.env.name + '/consultarEstados';
+
+  //----------- APIS  Recomendaciones 
+  public static apiGetAllRecommendations: string =
+    this.env.host + this.env.name + '/consultarRecomendaciones';
+
+  //----------- APIS  asignaciones
+  public static apiGetAllAsignaciones: string =
+    this.env.host + this.env.name + '/consultarRecomendaciones';
+
+
+
+
 
 
 }

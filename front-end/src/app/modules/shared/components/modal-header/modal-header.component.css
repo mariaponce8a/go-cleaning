@@ -1,0 +1,15 @@
+.contModalHeader {
+    width: 100%;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5faf8;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.tituloModal {
+    font-size: var(--msize);
+    font-family: var(--semiBoldFont);
+    color: var(--secondary);
+}

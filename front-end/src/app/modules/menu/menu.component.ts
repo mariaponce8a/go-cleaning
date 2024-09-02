@@ -37,7 +37,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Pedidos',
       icon: 'shopping_cart',
-      pagina: '',
+      pagina: 'bds/pedidos',
       perfil: ''
     },
     {
@@ -53,7 +53,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       perfil: 'A'
     },
     {
-      descripcion: 'Productividad',
+      descripcion: 'Asignaciones',
       icon: 'work',
       pagina: 'bds/asignaciones',
       perfil: ''

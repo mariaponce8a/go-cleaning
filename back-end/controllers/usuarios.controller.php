@@ -59,6 +59,7 @@ class Usuarios_controller
     {
         error_log("--------------");
         $usuarioModel = new usuarios_model();
+        error_log("------------------------------------------------------ id: " . $id . " nombre: " . $nombre . " apellido: " . $apellido . " perfil: " . $perfil . " usuario: " . $usuario . " clave: " . $clave);
         if (
             $id === null ||
             $usuario === null  ||

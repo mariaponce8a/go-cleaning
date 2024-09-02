@@ -16,6 +16,10 @@ export const routes: Routes = [
         component: MenuComponent,
         children: [
             {
+                path: 'pedidos',
+                loadComponent: () => import('./modules/components/pedidos/listar-pedidos/listar-pedidos.component').then(c => c.ListarPedidosComponent),     
+            } ,
+            {
                 path: 'usuarios',
                 loadComponent: () => import('./modules/components/usuarios-plataforma/listado-usuarios/listado-usuarios.component').then(c => c.ListadoUsuariosComponent),     
             } ,

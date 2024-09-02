@@ -27,7 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const token = this.localStorageEncryptation.getLocalStorage(
-      Constantes.authorization
+      Constantes.tokenKey
     );
     let newReq = request.clone();
 

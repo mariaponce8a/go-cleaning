@@ -1,3 +1,8 @@
+.buttonBack {
+  max-width: 150px;
+  font-weight: 700;
+}
+
 .edit {
   display: flex;
   align-items: center;

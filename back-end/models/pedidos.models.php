@@ -2,56 +2,36 @@
 require_once('./back-end/config/conexion.php');
 
 
-class usuarios_model
+class pedidos_model
 {
 
-    public function iniciarSesion($usuario, $clave)
+    public function getAllPedidos()
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $clave_cifrada_ingresada = hash('sha256', $clave);
-            $consulta = "SELECT * FROM tb_usuarios_plataforma where usuario = ? and clave = ?";
-            $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param("ss", $usuario, $clave_cifrada_ingresada);
-
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                // error_log( $resultado);
-                if ($resultado->num_rows > 0) {
-                    $data_nav_token = $resultado->fetch_assoc();
-                    return json_encode(array("perfil" => $data_nav_token['perfil'], "usuario" => $data_nav_token['usuario']));
-                } else {
-                    throw new Exception("Usuario o clave incorrectos.");
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error en login desde modelo: " . $e->getMessage());
-            return $e->getMessage();
-        } finally {
-            if (isset($conexion)) {
-                $conexion->close();
-            }
-        }
-    }
-
-    public function getAllUsers()
-    {
-        try {
-            $con = new Clase_Conectar();
-            $conexion = $con->Procedimiento_Conectar();
-            $query = "select * from tb_usuarios_plataforma";
+            $query = "select
+            p.id_pedido_cabecera, p.fecha_pedido, p.fk_id_usuario,
+            u.usuario , p.cantidad_articulos,
+            p.fk_id_cliente, c.identificacion_cliente, c.correo_cliente , c.nombre_cliente, c.apellido_cliente,
+            p.fk_id_descuentos, d.tipo_descuento_desc , d.cantidad_descuento , p.pedido_subtotal, p.estado_pago, p.valor_pago,
+            p.fecha_hora_recoleccion_estimada, p.direccion_recoleccion, p.fecha_hora_entrega_estimada,
+            p.direccion_entrega, p.tipo_entrega
+            from tb_pedido p
+            inner join tb_usuarios_plataforma u on u.id_usuario = p.fk_id_usuario
+            inner join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
+            inner join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {
-                throw new Exception("Problemas al cargar los usuarios");
+                throw new Exception("Problemas al cargar el pedido");
             } else {
-                $users = array();
+                $data = array();
                 while ($fila = mysqli_fetch_assoc($exeResult)) {
-                    $users[] = $fila;
+                    $data[] = $fila;
                 }
 
-                return json_encode($users);
+                return json_encode($data);
             }
         } catch (Exception $e) {
             error_log($e->getMessage());

@@ -571,11 +571,11 @@ Flight::route('PUT /eliminarRecomendacion', function () {
     }
 });
 
-Flight::route('GET /consultarRecomendaciones/@id_recomendacion_lavado', function ($id_recomendacion_lavado) {
+Flight::route('GET /consultarRecomendaciones', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $recomendacion_controller = new RecomendacionLavado_controller();
-        $respuesta = $recomendacion_controller->getRecommendationDetail($id_recomendacion_lavado);
+        $respuesta = $recomendacion_controller->getAllRecommendations();
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));

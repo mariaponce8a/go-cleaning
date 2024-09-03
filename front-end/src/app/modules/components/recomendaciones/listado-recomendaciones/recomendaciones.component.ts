@@ -19,17 +19,14 @@ import { Router } from '@angular/router';
 })
 export class ListadoRecomendacionesComponent implements OnInit, OnDestroy {
   titulosTabla: ITitulosTabla[] = [
+    
     {
-      value: 'id_recomendacion',
-      viewValue: 'ID Recomendación',
+      value: 'descripcion_material',
+      viewValue: 'Material',
     },
     {
-      value: ' id_material',
-      viewValue: 'ID Material',
-    },
-    {
-      value: 'id_servicio',  
-      viewValue: 'ID Servicio',
+      value: 'descripcion_servicio',  
+      viewValue: 'Servicio',
     },
   ];
 

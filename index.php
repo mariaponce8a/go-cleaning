@@ -400,55 +400,57 @@ Flight::route('GET /consultarDescuentos', function () {
 // materialesssssssssssssssssssssssssssssssssssssssssssss
 Flight::route('POST /registrarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
-        $material_controller = new Materiales_controller();
+    if ($tokenDesdeCabecera == true) {
+        $materiales_controller = new Materiales_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
         $descripcion_material = $data['descripcion_material'] ?? null;
 
-        $respuesta = $material_controller->insertMaterial($descripcion_material);
+        $respuesta = $materiales_controller->insertMaterial($descripcion_material);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
-Flight::route('PUT /actualizaMaterial', function () {
+
+Flight::route('PUT /editarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
-        $material_controller = new Materiales_controller();
+        $materiales_controller = new Materiales_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
         $id_material = $data['id_material'] ?? null;
         $descripcion_material = $data['descripcion_material'] ?? null;
 
-        $respuesta = $material_controller->updateMaterial($id_material, $descripcion_material);
+        $respuesta = $materiales_controller->updateMaterial($id_material, $descripcion_material);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
-Flight::route('DELETE /eliminarMaterial', function () {
+Flight::route('PUT /eliminarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
-        $material_controller = new Materiales_controller();
+        $materiales_controller = new Materiales_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
         $id_material = $data['id_material'] ?? null;
 
-        $respuesta = $material_controller->deleteMaterial($id_material);
+        $respuesta = $materiales_controller->deleteMaterial($id_material);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
 Flight::route('GET /consultarMateriales', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
-        $material_controller = new Materiales_controller();
-        $respuesta = $material_controller->getAllMaterials();
+        $materiales_controller = new Materiales_controller();
+        $respuesta = $materiales_controller->getAllMaterials();
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -622,7 +624,7 @@ Flight::route('PUT /actualizaAsignacion', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
-Flight::route('DELETE /eliminarAsignacion', function () {
+Flight::route('PUT /eliminarAsignacion', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $asignaciones_controller = new AsignacionesEmpleado_controller();

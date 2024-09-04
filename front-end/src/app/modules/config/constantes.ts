@@ -64,6 +64,13 @@ export class Constantes {
   //----------- APIS  Materiales
   public static apiGetAllMaterials: string =
     this.env.host + this.env.name + '/consultarMateriales';
+    public static apiUpdateMaterial: string =
+    this.env.host + this.env.name + '/editarMaterial';
+  public static apiCreateMaterial: string =
+    this.env.host + this.env.name + '/registrarMaterial';
+  public static apiDeleteMaterial: string =
+    this.env.host + this.env.name + '/eliminarMaterial';
+
 
   //----------- APIS  Estados 
   public static apiGetAllEstados: string =

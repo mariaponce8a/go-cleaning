@@ -34,22 +34,27 @@ class Materiales_controller
     }
 
     public function updateMaterial($id_material, $descripcion_material)
-    {
-        error_log("--------------");
-        $materialModel = new Clase_Material();
-        if ($id_material === null || 
-        $descripcion_material === null
-        ) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
-        }
-        $resultado = $materialModel->actualizar($id_material, $descripcion_material);
-        error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-        if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el material"));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Material actualizado con éxito"));
-        }
+{
+    error_log("--------------");
+    $materialModel = new Clase_Material();
+
+    error_log("------------------------------------------------------ id_material: " . $id_material . " descripcion_material: " . $descripcion_material);
+
+    if ($id_material === null || $descripcion_material === null) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
     }
+
+    $resultado = $materialModel->actualizar($id_material, $descripcion_material);
+
+    error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
+
+    if ($resultado == false) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el material"));
+    } else {
+        return json_encode(array("respuesta" => "1", "mensaje" => "Material actualizado con éxito"));
+    }
+}
+
 
     public function deleteMaterial($id_material)
     {

@@ -524,33 +524,33 @@ Flight::route('GET /consultarEstados', function () {
 // RECOMENDACIONESSSSSSSSSSSSSSS
 Flight::route('POST /registrarRecomendacion', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
+    if ($tokenDesdeCabecera == true) {
         $recomendacion_controller = new RecomendacionLavado_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $fk_id_material = $data['fk_id_material'] ?? null;
-        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+        $descripcion_material = $data['descripcion_material'] ?? null;
+        $descripcion_servicio = $data['descripcion_servicio'] ?? null;
 
-        $respuesta = $recomendacion_controller->insertRecommendation($fk_id_material, $fk_id_servicio);
+        $respuesta = $recomendacion_controller->insertRecommendation($descripcion_material, $descripcion_servicio);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
 
-Flight::route('PUT /actualizaRecomendacion', function () {
+Flight::route('PUT /actualizarRecomendacion', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $recomendacion_controller = new RecomendacionLavado_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $id_recomendacion = $data['id_recomendacion'] ?? null;
-        $fk_id_material = $data['fk_id_material'] ?? null;
-        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+        $id_recomendacion_lavado = $data['id_recomendacion_lavado'] ?? null;
+        $descripcion_material = $data['descripcion_material'] ?? null;
+        $descripcion_servicio = $data['descripcion_servicio'] ?? null;
 
-        $respuesta = $recomendacion_controller->updateRecommendation($id_recomendacion, $fk_id_material, $fk_id_servicio);
+        $respuesta = $recomendacion_controller->updateRecommendation($id_recomendacion_lavado, $descripcion_material, $descripcion_servicio);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -564,9 +564,9 @@ Flight::route('PUT /eliminarRecomendacion', function () {
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $id_recomendacion = $data['id_recomendacion'] ?? null;
+        $id_recomendacion_lavado = $data['id_recomendacion_lavado'] ?? null;
 
-        $respuesta = $recomendacion_controller->deleteRecommendation($id_recomendacion);
+        $respuesta = $recomendacion_controller->deleteRecommendation($id_recomendacion_lavado);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));

@@ -84,6 +84,12 @@ export class Constantes {
   //----------- APIS  Recomendaciones 
   public static apiGetAllRecommendations: string =
     this.env.host + this.env.name + '/consultarRecomendaciones';
+    public static apiUpdateRecomendaciones: string =
+    this.env.host + this.env.name + '/actualizarRecomendacion';
+  public static apiCreateRecomendaciones: string =
+    this.env.host + this.env.name + '/registrarRecomendacion';
+  public static apiDeleteRecomendaciones: string =
+    this.env.host + this.env.name + '/eliminarRecomendacion';
 
   //----------- APIS  asignaciones
   public static apiGetAllAsignaciones: string =

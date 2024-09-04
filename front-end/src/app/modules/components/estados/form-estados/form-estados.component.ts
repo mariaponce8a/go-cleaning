@@ -52,7 +52,7 @@ export class FormEstadosComponent implements OnInit, OnDestroy {
     id_estado: new FormControl('', []),
     descripcion_estado: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[a-zA-Z ]*$') // Solo permite letras y espacios
+      Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
     ])
   })
   

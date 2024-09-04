@@ -78,7 +78,7 @@ export interface IestadosPlataforma {
   descripcion_estado: string;
 }
 
-export interface IRecomendacionesPlataforma {
+export interface IrecomendacionesPlataforma {
   id_recomendacion: number;
   fk_id_material: any;
   fk_id_servicio: any;

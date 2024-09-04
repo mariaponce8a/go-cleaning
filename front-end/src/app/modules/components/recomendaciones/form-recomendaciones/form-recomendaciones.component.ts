@@ -6,14 +6,14 @@ import { MaterialModule } from '../../../desginModules/material.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ModalHeaderComponent } from '../../../shared/components/modal-header/modal-header.component';
-import { IaccionBotones, ImaterialesPlataforma } from '../../../shared/interface/datamodels.interface';
+import { IaccionBotones, IrecomendacionesPlataforma } from '../../../shared/interface/datamodels.interface';
 import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 
 @Component({
-  selector: 'app-form-materiales',
+  selector: 'app-form-estados',
   standalone: true,
   imports: [
     ModalHeaderComponent,
@@ -21,16 +21,16 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
     ColoredBodyHeaderComponent,
     GlobalButtonsComponent
   ],
-  templateUrl: './form-materiales.component.html',
-  styleUrl: './form-materiales.component.css'
+  templateUrl: './form-recomendaciones.component.html',
+  styleUrl: './form-recomendaciones.component.css'
 })
-export class FormMaterialesComponent implements OnInit, OnDestroy {
+export class FormRecomendacionesComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   constructor(
     private usermessage: UserMessageService,
     private requestservice: RequestService,
     private router: Router,
-    public dialogRef: MatDialogRef<FormMaterialesComponent>,
+    public dialogRef: MatDialogRef<FormRecomendacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IaccionBotones,
   ) { }
   tituloPorAccion: string = 'Formulario';
@@ -49,8 +49,12 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
   }
 
   form = new FormGroup({
-    id_material: new FormControl('', []),
+    id_recomendacion_lavado: new FormControl('', []),
     descripcion_material: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
+    ]),
+    descripcion_servicio: new FormControl('', [
       Validators.required,
       Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
     ])
@@ -67,9 +71,9 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
     this.dialogRef.close('ok');
   }
 
-  editarMaterial(body: any) {
+  actualizarRecomendacion(body: any) {
     console.log('Datos a enviar para editar:', body);
-    this.requestservice.put(body, Constantes.apiUpdateMaterial)
+    this.requestservice.put(body, Constantes.apiUpdateRecomendaciones)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
@@ -82,8 +86,8 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
       })
   }
 
-  registrarMaterial(body: any) {
-    this.requestservice.post(body, Constantes.apiCreateMaterial)
+  registrarRecomendacion(body: any) {
+    this.requestservice.post(body, Constantes.apiCreateRecomendaciones)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
@@ -110,10 +114,10 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
         if (this.data.tipo == 'editar') {
-          this.editarMaterial(body);
+          this.actualizarRecomendacion(body);
         }
         else {
-          this.registrarMaterial(body);
+          this.registrarRecomendacion(body);
         }
       }
     })

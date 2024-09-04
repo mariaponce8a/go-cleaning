@@ -9,18 +9,28 @@ class Clase_AsignacionesEmpleado
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
 
-            $consulta = "SELECT a.id_asignaciones,
-                                up.usuario AS nombre_usuario,
-                                a.fecha_hora_inicio_asignacion,
-                                a.fecha_hora_fin_asignacion,
-                                a.fk_id_pedido,
-                                e.descripcion_estado
-                        FROM
-                            tb_asignaciones_empleado a
-                        JOIN
-                            tb_usuarios_plataforma up ON a.fk_id_usuario = up.id_usuario
-                        JOIN
-                            tb_estados e ON a.fk_id_estado = e.id_estado;";
+            $consulta = "SELECT
+                        a.id_asignaciones,
+                        up.usuario AS usuario,
+                        a.fecha_hora_inicio_asignacion AS fecha_inicio,
+                        a.fecha_hora_fin_asignacion AS fecha_fin,
+                        a.fk_id_pedido AS id_pedido_cabecera,
+                        c.identificacion_cliente AS identificacion_cliente,
+                        c.nombre_cliente AS nombre_cliente,
+                        c.apellido_cliente AS apellido_cliente, 
+                        s.descripcion_servicio AS descripcion_servicio,
+                        pc.cantidad_articulos AS cantidad_articulos,
+                        pd.descripcion_articulo AS descripcion_articulo,
+                        pd.libras AS libras,
+                        e.descripcion_estado AS descripcion_estado
+                    FROM
+                        tb_asignaciones_empleado a
+                        JOIN tb_usuarios_plataforma up ON a.fk_id_usuario = up.id_usuario
+                        JOIN tb_estados e ON a.fk_id_estado = e.id_estado
+                        JOIN tb_pedido pc ON a.fk_id_pedido = pc.id_pedido_cabecera
+                        JOIN tb_clientes_registrados c ON pc.fk_id_cliente = c.id_cliente
+                        JOIN tb_pedido_detalle pd ON pc.id_pedido_cabecera = pd.fk_id_pedido
+                        JOIN tb_servicios s ON pd.fk_id_servicio = s.id_servicio";;
             
             $stmt = $conexion->prepare($consulta);
             $stmt->execute();

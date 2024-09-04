@@ -19,7 +19,7 @@ class AsignacionesEmpleado_controller
     {
         error_log("Insertando una nueva asignación");
         $asignacionesModel = new Clase_AsignacionesEmpleado();
-        if ($usuario === null || $fecha_inicio === null || $fecha_fin === null || $id_pedido_cabecera === null || $descripcion_estado === null) {
+        if ($usuario === null || $fecha_inicio === null || $id_pedido_cabecera === null || $descripcion_estado === null) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Faltan parámetros para insertar la asignación."));
         }
         $resultado = $asignacionesModel->insertar($usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
@@ -34,7 +34,7 @@ class AsignacionesEmpleado_controller
     {
         error_log("Actualizando la asignación con ID: " . $id_asignaciones);
         $asignacionesModel = new Clase_AsignacionesEmpleado();
-        if ($id_asignaciones === null || $usuario === null || $fecha_inicio === null || $fecha_fin === null || $id_pedido_cabecera === null || $descripcion_estado === null) {
+        if ($id_asignaciones === null || $usuario === null || $fecha_inicio === null || $id_pedido_cabecera === null || $descripcion_estado === null) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Faltan parámetros para actualizar la asignación."));
         }
         $resultado = $asignacionesModel->actualizar($id_asignaciones, $usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);

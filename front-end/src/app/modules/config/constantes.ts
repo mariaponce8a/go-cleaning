@@ -93,8 +93,13 @@ export class Constantes {
 
   //----------- APIS  asignaciones
   public static apiGetAllAsignaciones: string =
-    this.env.host + this.env.name + '/consultarRecomendaciones';
-
+    this.env.host + this.env.name + '/consultarAsignaciones';
+    public static apiUpdateAsignaciones: string =
+    this.env.host + this.env.name + '/actualizarAsignacion';
+  public static apiCreateAsignaciones: string =
+    this.env.host + this.env.name + '/registrarAsignacion';
+  public static apiDeleteAsignaciones: string =
+    this.env.host + this.env.name + '/eliminarAsignacion';
 
 
 

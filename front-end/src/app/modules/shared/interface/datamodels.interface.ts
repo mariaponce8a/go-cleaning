@@ -1,6 +1,6 @@
 export interface ITitulosTabla {
   value: string; //valor visible
-  viewValue: string; //valor de referencia
+  viewValue: string;
 }
 
 export interface IaccionBotones {
@@ -84,11 +84,11 @@ export interface IrecomendacionesPlataforma {
   fk_id_servicio: any;
 }
 export interface IAsignacionEmpleadosPlataforma {
-  id_asignaciones: number;
-  fk_id_usuario: number;
+  id_asignaciones: string;
+  fk_id_usuario: string;
   fecha_hora_inicio_asignacion: string;
   fecha_hora_fin_asignacion?: string;
-  fk_id_pedido: number;
-  fk_id_estado?: number;
+  fk_id_pedido: string;
+  fk_id_estado?: string;
 }
 

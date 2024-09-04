@@ -586,25 +586,24 @@ Flight::route('GET /consultarRecomendaciones', function () {
 // asignacionessssssssssssssssssssssssss
 Flight::route('POST /registrarAsignacion', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
+    if ($tokenDesdeCabecera == true) {
         $asignaciones_controller = new AsignacionesEmpleado_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
-        $fecha_hora_inicio_asignacion = $data['fecha_hora_inicio_asignacion'] ?? null;
-        $fecha_hora_fin_asignacion = $data['fecha_hora_fin_asignacion'] ?? null;
-        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
-        $fk_id_estado = $data['fk_id_estado'] ?? null;
+        $usuario = $data['usuario'] ?? null;
+        $fecha_inicio = $data['fecha_inicio'] ?? null;
+        $fecha_fin = isset($data['fecha_fin']) ? $data['fecha_fin'] : null;        $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
+        $descripcion_estado = $data['descripcion_estado'] ?? null;
 
-        $respuesta = $asignaciones_controller->insertAssignment($fk_id_usuario, $fecha_hora_inicio_asignacion, $fecha_hora_fin_asignacion, $fk_id_pedido, $fk_id_estado);
+        $respuesta = $asignaciones_controller->insertAssignment($usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
 
-Flight::route('PUT /actualizaAsignacion', function () {
+Flight::route('PUT /actualizarAsignacion', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $asignaciones_controller = new AsignacionesEmpleado_controller();
@@ -612,13 +611,13 @@ Flight::route('PUT /actualizaAsignacion', function () {
         $data = json_decode($body, true);
 
         $id_asignaciones = $data['id_asignaciones'] ?? null;
-        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
-        $fecha_hora_inicio_asignacion = $data['fecha_hora_inicio_asignacion'] ?? null;
-        $fecha_hora_fin_asignacion = $data['fecha_hora_fin_asignacion'] ?? null;
-        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
-        $fk_id_estado = $data['fk_id_estado'] ?? null;
+        $usuario = $data['usuario'] ?? null;
+        $fecha_inicio = $data['fecha_inicio'] ?? null;
+        $fecha_fin = $data['fecha_fin'] ?? null;
+        $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
+        $descripcion_estado = $data['descripcion_estado'] ?? null;
 
-        $respuesta = $asignaciones_controller->updateAssignment($id_asignaciones, $fk_id_usuario, $fecha_hora_inicio_asignacion, $fecha_hora_fin_asignacion, $fk_id_pedido, $fk_id_estado);
+        $respuesta = $asignaciones_controller->updateAssignment($id_asignaciones, $usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));

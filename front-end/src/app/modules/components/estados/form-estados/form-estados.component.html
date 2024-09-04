@@ -1,0 +1,20 @@
+<app-modal-header [tituloHeader]="tituloPorAccion"
+    (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+<form [formGroup]="form" class="formmularioCont">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Estados</mat-label>
+            <input matInput maxlength="60" placeholder="Estados" formControlName="descripcion_estado" />
+            @if (this.form.controls.descripcion_estado.hasError('required')) {
+            <mat-error>Estado requerido</mat-error> 
+            }
+            @if (this.form.controls.descripcion_estado.hasError('pattern')) {
+                <mat-error>Solo se permiten letras y espacios</mat-error> 
+                }
+        </mat-form-field>
+    </div>
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+
+</form>

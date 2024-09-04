@@ -73,7 +73,7 @@ export interface ImaterialesPlataforma {
   id_material: number;
   descripcion_material: string;
 }
-export interface IEstadosPlataforma {
+export interface IestadosPlataforma {
   id_estado: number;
   descripcion_estado: string;
 }

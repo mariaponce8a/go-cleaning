@@ -75,7 +75,12 @@ export class Constantes {
   //----------- APIS  Estados 
   public static apiGetAllEstados: string =
     this.env.host + this.env.name + '/consultarEstados';
-
+    public static apiUpdateEstados: string =
+    this.env.host + this.env.name + '/actualizarEstado';
+  public static apiCreateEstados: string =
+    this.env.host + this.env.name + '/registrarEstado';
+  public static apiDeleteEstados: string =
+    this.env.host + this.env.name + '/eliminarEstado';
   //----------- APIS  Recomendaciones 
   public static apiGetAllRecommendations: string =
     this.env.host + this.env.name + '/consultarRecomendaciones';

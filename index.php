@@ -460,7 +460,7 @@ Flight::route('GET /consultarMateriales', function () {
 // Registrar un nuevo estado
 Flight::route('POST /registrarEstado', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
+    if ($tokenDesdeCabecera == true) {
         $estado_controller = new Estados_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
@@ -475,7 +475,7 @@ Flight::route('POST /registrarEstado', function () {
 });
 
 // Actualizar un estado existente
-Flight::route('PUT /actualizaEstado', function () {
+Flight::route('PUT /actualizarEstado', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $estado_controller = new Estados_controller();
@@ -493,7 +493,7 @@ Flight::route('PUT /actualizaEstado', function () {
 });
 
 // Eliminar un estado existente
-Flight::route('DELETE /eliminarEstado', function () {
+Flight::route('PUT /eliminarEstado', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $estado_controller = new Estados_controller();

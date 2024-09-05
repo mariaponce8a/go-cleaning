@@ -44,22 +44,72 @@ class pedidos_model
     }
 
 
-    public function registrarUsuario($nombre, $apellido, $perfil, $usuario, $clave)
-    {
+    public function registrarPedido(
+        $fecha_pedido,
+        $fk_id_usuario, //i
+        $cantidad_articulos, //i
+        $fk_id_cliente, //i
+        $fk_id_descuentos, //i
+        $pedido_subtotal, //f
+        $estado_pago,  //s
+        $valor_pago, //f
+        $fecha_hora_recoleccion_estimada, //s
+        $direccion_recoleccion, //s
+        $fecha_hora_entrega_estimada, //s
+        $direccion_entrega, //s
+        $tipo_entrega //s
+    ) {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $clave_cifrada_ingresada = hash('sha256', $clave);
-            $query = "insert into tb_usuarios_plataforma (usuario, nombre, apellido, perfil, clave) values (?,?,?,?,?);";
+            $query = "
+            INSERT INTO tb_pedido
+            (
+            fecha_pedido, fk_id_usuario, cantidad_articulos,
+            fk_id_cliente, fk_id_descuentos, pedido_subtotal,
+            estado_pago, valor_pago, fecha_hora_recoleccion_estimada,
+            direccion_recoleccion, fecha_hora_entrega_estimada, direccion_entrega, tipo_entrega
+            )
+              VALUES
+            (
+                ?, -- Para la fecha actual del pedido
+                ?, -- ID del usuario (valor ficticio)
+                ?, -- Cantidad de artículos (valor ficticio)
+                ?, -- ID del cliente (valor ficticio)
+                ?, -- ID del descuento (valor ficticio)
+                ?, -- Subtotal del pedido
+                ?, -- Estado del pago F , P o C (PAGO AL FINALIZAR, PAGO PARCIAL y PAGO COMPLETO)
+                ?, -- Valor del pago
+                ?, -- Fecha y hora de recolección estimada
+                ?, -- Dirección de recolección
+                ?, -- Fecha y hora de entrega estimada
+                ?, -- Dirección de entrega
+                ?  -- Tipo de entrega  D o L (DOMICILIO o LOCAL)
+            )";
             $stmt = $conexion->prepare($query);
-            $stmt->bind_param("sssss", $usuario, $nombre, $apellido, $perfil, $clave_cifrada_ingresada);
+            $stmt->bind_param(
+                "siiiifsfsssss",
+                $fecha_pedido,
+                $fk_id_usuario,
+                $cantidad_articulos,
+                $fk_id_cliente,
+                $fk_id_descuentos,
+                $pedido_subtotal,
+                $estado_pago,
+                $valor_pago,
+                $fecha_hora_recoleccion_estimada,
+                $direccion_recoleccion,
+                $fecha_hora_entrega_estimada,
+                $direccion_entrega,
+                $tipo_entrega
+            );
 
             if ($stmt->execute()) {
                 $resultado = $stmt->get_result();
-                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL PEDIDOS" . $resultado);
                 return true;
             } else {
-                throw new Exception("Problemas al registrar el usuario");
+                throw new Exception("Problemas al registrar el pedido");
             }
         } catch (Exception $e) {
             error_log($e->getMessage());

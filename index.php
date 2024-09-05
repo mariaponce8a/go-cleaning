@@ -658,6 +658,48 @@ Flight::route('GET /consultarPedidos', function () {
     }
 });
 
+Flight::route('POST /registrarPedido', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $fecha_pedido = $data['fecha_pedido'] ?? null;
+        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
+        $cantidad_articulos = $data['cantidad_articulos'] ?? null;
+        $fk_id_cliente = $data['fk_id_cliente'] ?? null;
+        $fk_id_descuentos = $data['fk_id_descuentos'] ?? null;
+        $pedido_subtotal = $data['pedido_subtotal'] ?? null;
+        $estado_pago = $data['estado_pago'] ?? null;
+        $valor_pago = $data['valor_pago'] ?? null;
+        $fecha_hora_recoleccion_estimada = $data['fecha_hora_recoleccion_estimada'] ?? null;
+        $direccion_recoleccion = $data['direccion_recoleccion'] ?? null;
+        $fecha_hora_entrega_estimada = $data['fecha_hora_entrega_estimada'] ?? null;
+        $direccion_entrega = $data['direccion_entrega'] ?? null;
+        $tipo_entrega = $data['tipo_entrega'] ?? null;
+
+        $respuesta = $controller->insertPedidos(
+            $fecha_pedido,
+            $fk_id_usuario,
+            $cantidad_articulos,
+            $fk_id_cliente,
+            $fk_id_descuentos,
+            $pedido_subtotal,
+            $estado_pago,
+            $valor_pago,
+            $fecha_hora_recoleccion_estimada,
+            $direccion_recoleccion,
+            $fecha_hora_entrega_estimada,
+            $direccion_entrega,
+            $tipo_entrega
+        );
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
 
 
 

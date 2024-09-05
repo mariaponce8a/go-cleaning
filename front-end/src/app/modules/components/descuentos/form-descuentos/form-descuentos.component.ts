@@ -6,7 +6,7 @@ import { MaterialModule } from '../../../desginModules/material.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ModalHeaderComponent } from '../../../shared/components/modal-header/modal-header.component';
-import { IaccionBotones, IRecomendacionesPlataforma} from '../../../shared/interface/datamodels.interface';
+import { IaccionBotones, IdescuentosPlataforma} from '../../../shared/interface/datamodels.interface';
 import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';

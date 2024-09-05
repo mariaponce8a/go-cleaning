@@ -6,20 +6,20 @@
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Descripción del Servicio</mat-label>
             <input matInput maxlength="100" placeholder="Descripción" formControlName="descripcion_servicio" />
-            <mat-error *ngIf="form.controls.descripcion_servicio.hasError('required')">
-                Descripción requerida
-            </mat-error>
+            @if (this.form.controls.descripcion_servicio.hasError('required')) {
+                <mat-error>Servicio requerida</mat-error>
+                }
         </mat-form-field>
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Costo Unitario</mat-label>
             <input matInput type="number" step="0.01" placeholder="Costo Unitario" formControlName="costo_unitario" />
-            <mat-error *ngIf="form.controls.costo_unitario.hasError('required')">
-                Costo Unitario requerido
-            </mat-error>
-            <mat-error *ngIf="form.controls.costo_unitario.hasError('pattern')">
-                Formato incorrecto, debe ser un número
-            </mat-error>
+            @if (this.form.controls.costo_unitario.hasError('required')) {
+                <mat-error>Valor requerida</mat-error>
+                }
+            @if (this.form.controls.costo_unitario.hasError('pattern')){
+                <mat-error>Formato incorrecto</mat-error>
+            }
         </mat-form-field>
     </div>
 
@@ -27,12 +27,12 @@
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Validar Pesaje</mat-label>
             <mat-select formControlName="validar_pesaje">
-                <mat-option [value]="true">Sí</mat-option>
-                <mat-option [value]="false">No</mat-option>
+                <mat-option value="Si">Si</mat-option>
+                <mat-option value="No">No</mat-option>
             </mat-select>
-            <mat-error *ngIf="form.controls.validar_pesaje.hasError('required')">
-                Debe seleccionar una opción
-            </mat-error>
+            @if (this.form.controls.validar_pesaje.hasError('required')) {
+                <mat-error>Debe seleccionar una opción</mat-error>
+                }
         </mat-form-field>
     </div>
     

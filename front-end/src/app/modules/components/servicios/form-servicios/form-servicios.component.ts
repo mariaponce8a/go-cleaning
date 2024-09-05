@@ -26,6 +26,7 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
 })
 export class FormServiciosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
+  
   constructor(
     private usermessage: UserMessageService,
     private requestservice: RequestService,
@@ -36,12 +37,20 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
   tituloPorAccion: string = 'Formulario';
   hide: boolean = false;
 
+
+
   ngOnInit(): void {
+    console.log(this.data.fila);  // Verifica si validar_pesaje tiene el valor correcto
     console.log(this.data);
     if (this.data.tipo == 'editar') {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
-    } else {
+      const filaConValorTransformado = {
+        ...this.data.fila,
+        validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si'
+      };
+  
+      this.form.patchValue(filaConValorTransformado);    } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
     }
   } 
@@ -49,7 +58,7 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     id_servicio: new FormControl(''),
     descripcion_servicio: new FormControl('', [Validators.required]),
     costo_unitario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]),
-    validar_pesaje: new FormControl(false)
+    validar_pesaje: new FormControl('', [Validators.required])
   });
 
   

@@ -29,7 +29,7 @@ class Servicios_controller
         }
         $resultado = $servicioModel->registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje);
         error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Servicio insertado con éxito") {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el servicio"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Servicio registrado con éxito"));

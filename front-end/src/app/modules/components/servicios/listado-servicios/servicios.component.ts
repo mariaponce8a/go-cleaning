@@ -24,12 +24,7 @@ import { UserMessageService } from '../../../shared/services/user-message.servic
   styleUrl: './servicios.component.css',
 })
 export class ListadoServiciosComponent implements OnInit, OnDestroy {
-  //   {  
-  //     "id_servicio": "2",
-  //     "descripcion_servicio": "lavar ropa",
-  //     "costo_unitario": "12.00",
-  //     "validar_pesaje": "1
-  // }
+  
   titulosTabla: ITitulosTabla[] = [
     {
       value: 'descripcion_servicio',

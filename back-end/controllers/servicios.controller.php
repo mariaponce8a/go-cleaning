@@ -2,7 +2,7 @@
 require_once('./back-end/models/servicios.model.php');
 
 class Servicios_controller
-{
+{    
     public function getAllServices()
     {
         error_log("--------------");
@@ -23,11 +23,11 @@ class Servicios_controller
         if (
             $descripcion_servicio === null ||
             $costo_unitario === null ||
-            $validar_pesaje === null
+            $validar_pesaje === null 
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
-        $resultado = $servicioModel->insertService($descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $resultado = $servicioModel->registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje);
         error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
         if (json_decode($resultado)->mensaje !== "Servicio insertado con éxito") {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el servicio"));
@@ -48,9 +48,9 @@ class Servicios_controller
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
-        $resultado = $servicioModel->updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $resultado = $servicioModel->actualizarServicios ($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
         error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Servicio actualizado con éxito") {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el servicio"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Servicio actualizado con éxito"));
@@ -61,12 +61,14 @@ class Servicios_controller
     {
         error_log("--------------");
         $servicioModel = new Clase_Servicios();
-        if ($id_servicio === null) {
+        if (
+            $id_servicio === null
+            ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Servicio no seleccionado"));
         }
-        $resultado = $servicioModel->deleteService($id_servicio);
+        $resultado = $servicioModel->eliminarServicios ($id_servicio);
         error_log("----------RESULTADO DELETE DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Servicio eliminado con éxito") {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para eliminar el servicio"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Servicio eliminado con éxito"));

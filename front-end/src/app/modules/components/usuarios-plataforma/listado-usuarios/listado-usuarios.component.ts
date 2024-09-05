@@ -18,7 +18,7 @@ import { UserMessageService } from '../../../shared/services/user-message.servic
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
-    ColoredBodyHeaderComponent
+    ColoredBodyHeaderComponent 
   ],
   templateUrl: './listado-usuarios.component.html',
   styleUrl: './listado-usuarios.component.css'
@@ -48,13 +48,10 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   loadingTable: boolean = false;
 
-  constructor(
-    private requestService: RequestService,
+  constructor(private requestService: RequestService,
     private router: Router,
     private usermessage: UserMessageService,
-    private dialog: MatDialog
-  ) { }
-
+    private dialog: MatDialog) {}
   ngOnInit(): void {
     this.getAllUsers();
   }
@@ -72,7 +69,7 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
             let body = item;
             if (body.perfil == 'E') {
               body.perfil = 'Empleado';
-            } else {
+            } else {   
               body.perfil = 'Administrador';
             }
             arrayAjustado.push(body);
@@ -117,7 +114,7 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
         })
 
         break;
-
+     
       case 'eliminar':
         let body = {
           id: evento.fila.id_usuario

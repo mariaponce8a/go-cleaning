@@ -3,6 +3,7 @@ import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-b
 import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
 import {
   ITitulosTabla,
+  IaccionBotones,
   IdescuentosPlataforma,
 } from '../../../shared/interface/datamodels.interface';
 import { RequestService } from '../../../shared/services/request.service';
@@ -10,10 +11,21 @@ import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
 import { Router } from '@angular/router';
 
+import { FormServiciosComponent } from '../../servicios/form-servicios/form-servicios.component';
+import { MaterialModule } from '../../../desginModules/material.module';
+import { MatDialog } from '@angular/material/dialog';
+import { UserMessageService } from '../../../shared/services/user-message.service';
+import { FormDescuentosComponent } from '../form-descuentos/form-descuentos.component';
+
+
 @Component({
   selector: 'app-listado-descuentos',
   standalone: true,
-  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [
+    MaterialModule,
+    RegistrosPaginadosComponent,
+    ColoredBodyHeaderComponent 
+  ],
   templateUrl: './descuentos.component.html',
   styleUrl: './descuentos.component.css',
 })
@@ -34,30 +46,96 @@ export class ListadoDescuentosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   loadingTable: boolean = false;
 
-  constructor(private requestService: RequestService, private router: Router) {}
+  constructor(private requestService: RequestService,
+    private router: Router,
+    private usermessage: UserMessageService,
+    private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.getAllDiscounts();
+    this.getAllDiscounts();  
   }
 
   getAllDiscounts() {
     this.loadingTable = true;
-    this.requestService
-      .get(Constantes.apiGetAllDescuentos)
+    this.requestService.get(Constantes.apiGetAllDescuentos)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
+          let arrayAjustado: any[] = [];
+          for (let item of this.valoresDeTabla) {
+            let body = item;
+            arrayAjustado.push(body);
+          }
+          this.valoresDeTabla = arrayAjustado;
         },
         error: () => {
           this.loadingTable = false;
-        },
+        }
       });
   }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  
+  manejarEventosBotones(evento: IaccionBotones) {
+    console.log(evento);
+    let dialogRef;
+    switch (evento.tipo) {
+      case 'editar':
+        dialogRef = this.dialog.open(FormDescuentosComponent, {
+          data: evento,
+          width: '600px',
+          disableClose: true,
+        });
+  
+        dialogRef.afterClosed().subscribe((r) => {
+          if (r == 'ok') {
+            this.getAllDiscounts();
+          }
+        });
+  
+        break;
+      case 'crear':
+        dialogRef = this.dialog.open(FormDescuentosComponent, {
+          data: evento,
+          width: '600px',
+          disableClose: true,
+        });
+  
+        dialogRef.afterClosed().subscribe((r) => {
+          if (r == 'ok') {
+            this.getAllDiscounts();
+          }
+        });
+  
+        break;
+     
+        case 'eliminar':
+          let body = {
+            id_tipo_descuento: evento.fila.id_tipo_descuento
+          }
+          this.usermessage.questionMessage(Constantes.deleteQuestion).then((r) => {
+            if (r.isConfirmed) {
+              this.requestService.put(body, Constantes.apiDeleteDescuentos)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe({
+                  next: (value) => {
+                    this.usermessage.getToastMessage('success', Constantes.deleteResponseMsg).fire();
+                    this.getAllDiscounts();
+                  },
+                  error: (error) => {
+                    this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
+                  }
+                })
+            }
+          })
+          break;
+  
+      }
+  
+    }
+  
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
   }
-}

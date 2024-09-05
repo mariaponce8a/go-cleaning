@@ -1,7 +1,7 @@
 <?php
 require_once('./back-end/config/conexion.php');
 
-class Clase_Clientes
+class Clase_Clientes 
 {
     public function getAllClientes() 
     {
@@ -17,7 +17,7 @@ class Clase_Clientes
                 $clientes = array();
                 while ($fila = mysqli_fetch_assoc($exeResult)) {
                     $clientes[] = $fila;
-                }
+                }   
 
                 return json_encode($clientes);
             }
@@ -36,11 +36,13 @@ class Clase_Clientes
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "INSERT INTO tb_clientes_registrados (identificacion_cliente, tipo_identificacion_cliente, nombre_cliente, apellido_cliente, telefono_cliente, correo_cliente) VALUES (?,?,?,?,?,?)";
+            $query = "insert into tb_clientes_registrados (identificacion_cliente, tipo_identificacion_cliente, nombre_cliente, apellido_cliente, telefono_cliente, correo_cliente) VALUES (?,?,?,?,?,?)";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("ssssss", $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
 
             if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al registrar el cliente");
@@ -50,7 +52,7 @@ class Clase_Clientes
             return false;
         } finally {
             if (isset($conexion)) {
-                $conexion->close();
+                $conexion->close();   
             }
         }
     }
@@ -60,11 +62,13 @@ class Clase_Clientes
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "UPDATE tb_clientes_registrados SET identificacion_cliente = ?, tipo_identificacion_cliente = ?, nombre_cliente = ?, apellido_cliente = ?, telefono_cliente = ?, correo_cliente = ? WHERE id_cliente = ?";
+            $query = "update tb_clientes_registrados set identificacion_cliente = ?, tipo_identificacion_cliente = ?, nombre_cliente = ?, apellido_cliente = ?, telefono_cliente = ?, correo_cliente = ? WHERE id_cliente = ?";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("ssssssi", $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente, $id_cliente);
 
             if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al actualizar el cliente");
@@ -84,11 +88,13 @@ class Clase_Clientes
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "DELETE FROM tb_clientes_registrados WHERE id_cliente = ?";
+            $query = "delete from tb_clientes_registrados where id_cliente = ?";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("i", $id_cliente);
 
             if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al eliminar el cliente");
@@ -108,7 +114,7 @@ class Clase_Clientes
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "SELECT * FROM tb_clientes_registrados WHERE nombre_cliente LIKE ?";
+            $query = "select * FROM tb_clientes_registrados WHERE nombre_cliente LIKE ?";
             $stmt = $conexion->prepare($query);
             $nombreBusqueda = "%" . $nombre_cliente . "%";
             $stmt->bind_param("s", $nombreBusqueda);

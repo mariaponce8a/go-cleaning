@@ -30,41 +30,46 @@ class Clase_Servicios
         }
     }
 
-    public function insertService($descripcion_servicio, $costo_unitario, $validar_pesaje)
+    public function registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "INSERT INTO tb_servicios (descripcion_servicio, costo_unitario, validar_pesaje) VALUES (?, ?, ?)";
+            $query = "insert into tb_servicios (descripcion_servicio, costo_unitario, validar_pesaje) VALUES (?, ?, ?)";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("sdi", $descripcion_servicio, $costo_unitario, $validar_pesaje);
 
             if ($stmt->execute()) {
-                return json_encode(array("mensaje" => "Servicio insertado con éxito"));
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
+                return true;
             } else {
                 throw new Exception("Problemas al insertar el servicio");
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
-            return json_encode(array("error" => $e->getMessage()));
+            return false;
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
-            }
+            }    
         }
-    }
+    } 
 
-    public function updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje)
+
+    public function actualizarServicios($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje)
     {
-        try {
+        try { 
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "UPDATE tb_servicios SET descripcion_servicio = ?, costo_unitario = ?, validar_pesaje = ? WHERE id_servicio = ?";
+            $query = "update tb_servicios SET descripcion_servicio = ?, costo_unitario = ?, validar_pesaje = ? WHERE id_servicio = ?";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("sdii", $descripcion_servicio, $costo_unitario, $validar_pesaje, $id_servicio);
 
             if ($stmt->execute()) {
-                return json_encode(array("mensaje" => "Servicio actualizado con éxito"));
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
+                return true;
             } else {
                 throw new Exception("Problemas al actualizar el servicio");
             }
@@ -73,22 +78,24 @@ class Clase_Servicios
             return json_encode(array("error" => $e->getMessage()));
         } finally {
             if (isset($conexion)) {
-                $conexion->close();
+                $conexion->close();  
             }
-        }
+        }  
     }
 
-    public function deleteService($id_servicio)
+    public function eliminarServicios($id_servicio)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "DELETE FROM tb_servicios WHERE id_servicio = ?";
+            $query = "delete from tb_servicios where id_servicio = ?";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("i", $id_servicio);
 
             if ($stmt->execute()) {
-                return json_encode(array("mensaje" => "Servicio eliminado con éxito"));
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
+                return true;
             } else {
                 throw new Exception("Problemas al eliminar el servicio");
             }

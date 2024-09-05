@@ -1,7 +1,7 @@
 <?php
 require_once('./back-end/models/clientes.model.php');
 
-class Clientes_controller
+class Clientes_controller     
 {
     public function getAllClientes()
     {
@@ -16,10 +16,15 @@ class Clientes_controller
         }
     }
 
-    public function registrarCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
+    public function insertCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
     {
+        // Registrar un log inicial
         error_log("--------------");
+    
+        // Crear una instancia del modelo de clientes
         $clienteModel = new Clase_Clientes();
+    
+        // Validar que todos los campos requeridos estén presentes
         if (
             $identificacion_cliente === null ||
             $tipo_identificacion_cliente === null ||
@@ -30,6 +35,8 @@ class Clientes_controller
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
+    
+        // Intentar registrar el cliente a través del modelo
         $resultado = $clienteModel->registrarCliente(
             $identificacion_cliente,
             $tipo_identificacion_cliente,
@@ -38,18 +45,29 @@ class Clientes_controller
             $telefono_cliente,
             $correo_cliente
         );
+    
+        // Registrar el resultado de la operación en el log
         error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Cliente registrado con éxito") {
+    
+        // Verificar si el registro fue exitoso y devolver la respuesta correspondiente
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al registrar el cliente"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Cliente registrado con éxito"));
         }
     }
-
-    public function actualizarCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
+    
+    public function updateCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
     {
         error_log("--------------");
         $clienteModel = new Clase_Clientes();
+        error_log("------------------------------------------------------ id: " . $id_cliente. 
+          " identificacion_cliente: " . $identificacion_cliente . 
+          " tipo_identificacion_cliente: " . $tipo_identificacion_cliente . 
+          "nombre_cliente: " . $nombre_cliente . 
+          " apellido_cliente: " . $apellido_cliente . 
+          " telefono_cliente: " . $telefono_cliente . 
+          " correo_cliente: " . $correo_cliente);
         if (
             $id_cliente === null ||
             $identificacion_cliente === null ||
@@ -71,14 +89,14 @@ class Clientes_controller
             $correo_cliente
         );
         error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Cliente actualizado con éxito") {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al actualizar el cliente"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Cliente actualizado con éxito"));
         }
     }
 
-    public function eliminarCliente($id_cliente)
+    public function deleteCliente($id_cliente)
     {
         error_log("--------------");
         $clienteModel = new Clase_Clientes();
@@ -87,7 +105,7 @@ class Clientes_controller
         }
         $resultado = $clienteModel->eliminarCliente($id_cliente);
         error_log("----------RESULTADO DELETE DESDE CONTROLLER: " . $resultado);
-        if (json_decode($resultado)->mensaje !== "Cliente eliminado con éxito") {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al eliminar el cliente"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Cliente eliminado con éxito"));

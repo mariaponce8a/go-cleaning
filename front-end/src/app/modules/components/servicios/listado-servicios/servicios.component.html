@@ -4,8 +4,7 @@
   [icon]="'local_laundry_service'"
 ></app-colored-body-header>
 
-<app-registros-paginados
-  [isLoadingTable]="loadingTable"
+<app-registros-paginados (accionBotones)="manejarEventosBotones($event)" [isLoadingTable]="loadingTable"
   [titulos]="titulosTabla"
   [valores]="valoresDeTabla"
 ></app-registros-paginados>

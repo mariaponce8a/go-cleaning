@@ -1,9 +1,9 @@
 <?php
-require_once('./back-end/config/conexion.php');
-
+require_once('./back-end/config/conexion.php');    
+ 
 
 class usuarios_model
-{
+{   
 
     public function iniciarSesion($usuario, $clave)
     {
@@ -74,7 +74,7 @@ class usuarios_model
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("sssss", $usuario, $nombre, $apellido, $perfil, $clave_cifrada_ingresada);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute()) {   
                 $resultado = $stmt->get_result();
                 error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
@@ -87,9 +87,9 @@ class usuarios_model
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
-            }
+            }    
         }
-    }
+    } 
 
     public function actualizarUsuario($id, $nombre, $apellido, $perfil, $usuario, $clave)
     {
@@ -110,12 +110,12 @@ class usuarios_model
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
-            return false;
+            return false; 
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
             }
-        }
+        }    
     }
 
 

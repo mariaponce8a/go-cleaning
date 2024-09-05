@@ -26,7 +26,7 @@ export class Constantes {
   public static deleteResponseMsg: string =
     'Registro eliminado con éxito';
   public static errorResponseMsg: string =
-    'Porblemas para procesar la acción, intentelo más tarde.';
+    'Problemas para procesar la acción, intentelo más tarde.';
   //labels generales
   public static modalHeaderMensajeEditar: string = 'Formulario edición'
   public static modalHeaderMensajeCrear: string = 'Formulario creación'
@@ -39,10 +39,10 @@ export class Constantes {
   public static apiUpdateUser: string =
     this.env.host + this.env.name + '/actualizaUsuario';
   public static apiCreateUser: string =
-    this.env.host + this.env.name + '/registrarUsuario';
+    this.env.host + this.env.name + '/registrarUsuario';  
   public static apiDeleteUser: string =
     this.env.host + this.env.name + '/eliminarUsuario';
-
+ 
   //----------- APIS PEDIDOS
   public static apiGetAllPedidos: string =
     this.env.host + this.env.name + '/consultarPedidos';
@@ -52,14 +52,34 @@ export class Constantes {
   //----------- APIS  SERVICIOS
   public static apiGetAllServices: string =
     this.env.host + this.env.name + '/consultarServicios';
+  public static apiUpdateServices: string =
+    this.env.host + this.env.name + '/actualizarServicios';
+  public static apiCreateServices: string =
+    this.env.host + this.env.name + '/registrarServicios';
+  public static apiDeleteServices: string =
+    this.env.host + this.env.name + '/eliminarServicio';   
 
   //----------- APIS  clientes
   public static apiGetAllClientes: string =
     this.env.host + this.env.name + '/consultarClientes';
+   public static apiUpdateCliente: string =
+    this.env.host + this.env.name + '/actualizarCliente';
+
+   public static apiCreateCliente: string =
+    this.env.host + this.env.name + '/registrarCliente';
+
+    public static apiDeleteCliente: string =
+    this.env.host + this.env.name + '/eliminarCliente';
 
   //----------- APIS  Descuentos
   public static apiGetAllDescuentos: string =
     this.env.host + this.env.name + '/consultarDescuentos';
+    public static apiUpdateDescuentos: string =
+    this.env.host + this.env.name + '/actualizarDescuentos';
+  public static apiCreateDescuentos: string =
+    this.env.host + this.env.name + '/registrarDescuentos';  
+  public static apiDeleteDescuentos: string =
+    this.env.host + this.env.name + '/eliminarDescuentos';
 
   //----------- APIS  Materiales
   public static apiGetAllMaterials: string =

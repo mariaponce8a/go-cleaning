@@ -30,7 +30,7 @@ class Descuentos_controller
         $resultado = $descuentoModel->registrarDescuento($tipo_descuento_desc, $cantidad_descuento);
         error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
         
-        if ($resultado === false) {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el descuento"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Descuento registrado con éxito"));
@@ -48,17 +48,17 @@ class Descuentos_controller
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
-        $resultado = $descuentoModel->actualizarDescuento($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento);
+        $resultado = $descuentoModel->actualizarDescuento ($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento);
         error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
         
-        if ($resultado === false) {
+        if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el descuento"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Descuento actualizado con éxito"));
         }
     }
 
-    public function deleteDescuento($id_tipo_descuento)
+    public function deleteDescuentos($id_tipo_descuento)
     {
         error_log("--------------");
         $descuentoModel = new Clase_Descuentos();

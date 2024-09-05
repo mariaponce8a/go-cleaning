@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
 import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
 import {
+  IaccionBotones,
   ITitulosTabla,
   IserviciosPlataforma,
 } from '../../../shared/interface/datamodels.interface';
@@ -10,15 +11,20 @@ import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
 import { Router } from '@angular/router';
 
+import { FormServiciosComponent } from '../form-servicios/form-servicios.component';
+import { MaterialModule } from '../../../desginModules/material.module';
+import { MatDialog } from '@angular/material/dialog';   
+import { UserMessageService } from '../../../shared/services/user-message.service';
+
 @Component({
   selector: 'app-listado-servicios',
   standalone: true,
-  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [ MaterialModule, RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
   templateUrl: './servicios.component.html',
   styleUrl: './servicios.component.css',
 })
 export class ListadoServiciosComponent implements OnInit, OnDestroy {
-  //   {
+  //   {  
   //     "id_servicio": "2",
   //     "descripcion_servicio": "lavar ropa",
   //     "costo_unitario": "12.00",
@@ -43,16 +49,19 @@ export class ListadoServiciosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   loadingTable: boolean = false;
 
-  constructor(private requestService: RequestService, private router: Router) {}
-
+  constructor(
+    private requestService: RequestService,
+    private router: Router,
+    private usermessage: UserMessageService,
+    private dialog: MatDialog
+  ) { }
   ngOnInit(): void {
     this.getAllServices();
   }
 
   getAllServices() {
     this.loadingTable = true;
-    this.requestService
-      .get(Constantes.apiGetAllServices)
+    this.requestService.get(Constantes.apiGetAllServices)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
@@ -77,8 +86,68 @@ export class ListadoServiciosComponent implements OnInit, OnDestroy {
       });
   }
 
+  manejarEventosBotones(evento: IaccionBotones) {
+    console.log(evento);
+    let dialogRef;
+    switch (evento.tipo) {
+      case 'editar':
+        dialogRef = this.dialog.open(FormServiciosComponent, {
+          data: evento,
+          width: '600px',
+          disableClose: true,
+        })
+
+        dialogRef.afterClosed().subscribe((r) => {
+          if (r == 'ok') {
+            this.getAllServices();
+          }
+        })
+
+        break;
+      case 'crear':
+        dialogRef = this.dialog.open(FormServiciosComponent, {
+          data: evento,
+          width: '600px',
+          disableClose: true,
+        })
+
+        dialogRef.afterClosed().subscribe((r) => {
+          if (r == 'ok') {
+            this.getAllServices();
+          }
+        })
+
+        break;
+     
+      case 'eliminar':
+        let body = {
+          id_servicio: evento.fila.id_servicio
+        }
+        this.usermessage.questionMessage(Constantes.deleteQuestion).then((r) => {
+          if (r.isConfirmed) {
+            this.requestService.put(body, Constantes.apiDeleteServices)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (value) => {
+                  this.usermessage.getToastMessage('success', Constantes.deleteResponseMsg).fire();
+                  this.getAllServices();
+                },
+                error: (error) => {
+                  this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
+                }
+              })
+          }
+        })
+        break;
+
+    }
+
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
 }
+

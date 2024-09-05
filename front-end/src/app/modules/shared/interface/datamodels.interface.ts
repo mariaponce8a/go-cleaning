@@ -49,14 +49,14 @@ export interface IpedidosJoin {
 }
 
 export interface IserviciosPlataforma {
-  id_servicio: number;
+  id_servicio: string | number;
   descripcion_servicio: string;
   costo_unitario?: number;
   validar_pesaje?: any; // llega un numero pero se lo reemplaza por un string
 }
 
 export interface IclientesPlataforma {
-  id_cliente: number;
+  id_cliente: string | number;
   identificacion_cliente: string;
   tipo_identificacion_cliente: string;
   nombre_cliente: string;
@@ -65,7 +65,7 @@ export interface IclientesPlataforma {
   correo_cliente: string;
 }
 export interface IdescuentosPlataforma {
-  id_tipo_descuento: number;
+  id_tipo_descuento: string | number;
   tipo_descuento_desc: string;
   cantidad_descuento: number;
 }

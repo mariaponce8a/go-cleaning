@@ -8,7 +8,7 @@ class Clase_Descuentos
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "SELECT * FROM tb_tipo_descuentos";
+            $query = "select * from tb_tipo_descuentos";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult === false) {
@@ -42,12 +42,14 @@ class Clase_Descuentos
                 throw new Exception("El valor de cantidad_descuento debe ser un número entre -9.99 y 9.99.");
             }
 
-            $query = "INSERT INTO tb_tipo_descuentos (tipo_descuento_desc, cantidad_descuento) VALUES (?, ?)";
+            $query = "insert into tb_tipo_descuentos (tipo_descuento_desc, cantidad_descuento) values (?, ?)";
             $stmt = $conexion->prepare($query);
             $cantidad_descuento = floatval($cantidad_descuento);
             $stmt->bind_param("sd", $tipo_descuento_desc, $cantidad_descuento);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute()) {   
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al registrar el descuento");
@@ -73,12 +75,14 @@ class Clase_Descuentos
                 throw new Exception("El valor de cantidad_descuento debe ser un número entre -9.99 y 9.99.");
             }
 
-            $query = "UPDATE tb_tipo_descuentos SET tipo_descuento_desc=?, cantidad_descuento=? WHERE id_tipo_descuento=?";
+            $query = "update tb_tipo_descuentos set tipo_descuento_desc=?, cantidad_descuento=? where id_tipo_descuento=?";
             $stmt = $conexion->prepare($query);
             $cantidad_descuento = floatval($cantidad_descuento);
             $stmt->bind_param("sdi", $tipo_descuento_desc, $cantidad_descuento, $id_tipo_descuento);
 
             if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al actualizar el descuento");
@@ -98,11 +102,13 @@ class Clase_Descuentos
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "DELETE FROM tb_tipo_descuentos WHERE id_tipo_descuento = ?";
+            $query = "delete from tb_tipo_descuentos WHERE id_tipo_descuento = ?";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("i", $id_tipo_descuento);
 
             if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
                 return true;
             } else {
                 throw new Exception("Problemas al eliminar el descuento");

@@ -63,18 +63,16 @@ export class ListadoClientesComponent implements OnInit, OnDestroy {
   getAllClientes() {
     this.loadingTable = true;
     this.requestService
-      .get(Constantes.apiGetAllClientes)  // Asegúrate de que la URL esté correctamente definida en Constantes
+      .get(Constantes.apiGetAllClientes)  
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
 
-          // Si necesitas transformar algún dato, hazlo aquí.
           let arrayAjustado: IclientesPlataforma[] = [];
           for (let item of this.valoresDeTabla) {
             let body = item;
-            // Puedes realizar transformaciones aquí si es necesario.
             arrayAjustado.push(body);
           }
           this.valoresDeTabla = arrayAjustado;

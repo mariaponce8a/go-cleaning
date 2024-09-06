@@ -101,6 +101,7 @@ export class Constantes {
     this.env.host + this.env.name + '/registrarEstado';
   public static apiDeleteEstados: string =
     this.env.host + this.env.name + '/eliminarEstado';
+    
   //----------- APIS  Recomendaciones 
   public static apiGetAllRecommendations: string =
     this.env.host + this.env.name + '/consultarRecomendaciones';

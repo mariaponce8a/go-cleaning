@@ -58,43 +58,37 @@ class Clientes_controller
     }
     
     public function updateCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
-    {
-        error_log("--------------");
-        $clienteModel = new Clase_Clientes();
-        error_log("------------------------------------------------------ id: " . $id_cliente. 
-          " identificacion_cliente: " . $identificacion_cliente . 
-          " tipo_identificacion_cliente: " . $tipo_identificacion_cliente . 
-          "nombre_cliente: " . $nombre_cliente . 
-          " apellido_cliente: " . $apellido_cliente . 
-          " telefono_cliente: " . $telefono_cliente . 
-          " correo_cliente: " . $correo_cliente);
-        if (
-            $id_cliente === null ||
-            $identificacion_cliente === null ||
-            $tipo_identificacion_cliente === null ||
-            $nombre_cliente === null ||
-            $apellido_cliente === null ||
-            $telefono_cliente === null ||
-            $correo_cliente === null
-        ) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
-        }
-        $resultado = $clienteModel->actualizarCliente(
-            $id_cliente,
-            $identificacion_cliente,
-            $tipo_identificacion_cliente,
-            $nombre_cliente,
-            $apellido_cliente,
-            $telefono_cliente,
-            $correo_cliente
-        );
-        error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-        if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al actualizar el cliente"));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Cliente actualizado con éxito"));
-        }
+{
+    error_log("--------------");
+    $clienteModel = new Clase_Clientes();
+    if (
+        $id_cliente === null ||
+        $identificacion_cliente === null ||
+        $tipo_identificacion_cliente === null ||
+        $nombre_cliente === null ||
+        $apellido_cliente === null ||
+        $telefono_cliente === null ||
+        $correo_cliente === null
+    ) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
     }
+    $resultado = $clienteModel->actualizarCliente(
+        $id_cliente,
+        $identificacion_cliente,
+        $tipo_identificacion_cliente,
+        $nombre_cliente,
+        $apellido_cliente,
+        $telefono_cliente,
+        $correo_cliente
+    );
+    error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
+    if ($resultado === false) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al actualizar el cliente"));
+    } else {
+        return json_encode(array("respuesta" => "1", "mensaje" => "Cliente actualizado con éxito"));
+    }
+}
+
 
     public function deleteCliente($id_cliente)
     {
@@ -128,4 +122,4 @@ class Clientes_controller
         }
     }
 }
-?>
+

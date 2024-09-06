@@ -257,7 +257,7 @@ Flight::route('GET /buscarServicioPorDescripcion', function () {
 
 Flight::route('POST /registrarCliente', function () {
     $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== true) {
+    if ($tokenDesdeCabecera == true) {
         $cliente_controller = new Clientes_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
@@ -283,7 +283,7 @@ Flight::route('PUT /actualizarCliente', function () {
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
-        $id_cliente = $data['id_cliente'] ?? null;
+        $id_cliente = $data['id_cliente'];
         $identificacion_cliente = $data['identificacion_cliente'] ?? null;
         $tipo_identificacion_cliente = $data['tipo_identificacion_cliente'] ?? null;
         $nombre_cliente = $data['nombre_cliente'] ?? null;
@@ -291,13 +291,13 @@ Flight::route('PUT /actualizarCliente', function () {
         $telefono_cliente = $data['telefono_cliente'] ?? null;
         $correo_cliente = $data['correo_cliente'] ?? null;
 
-
-        $respuesta = $cliente_controller->updateCliente ($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
+        $respuesta = $cliente_controller-> updateCliente ($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
 
 Flight::route('PUT /eliminarCliente', function () {
     $tokenDesdeCabecera = getValidToken();

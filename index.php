@@ -593,7 +593,8 @@ Flight::route('POST /registrarAsignacion', function () {
 
         $usuario = $data['usuario'] ?? null;
         $fecha_inicio = $data['fecha_inicio'] ?? null;
-        $fecha_fin = isset($data['fecha_fin']) ? $data['fecha_fin'] : null;        $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
+        $fecha_fin = isset($data['fecha_fin']) ? $data['fecha_fin'] : null;
+        $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
         $descripcion_estado = $data['descripcion_estado'] ?? null;
 
         $respuesta = $asignaciones_controller->insertAssignment($usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
@@ -702,6 +703,90 @@ Flight::route('POST /registrarPedido', function () {
 });
 
 
+Flight::route('PUT /actualizarPedido', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
+        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
+        $cantidad_articulos = $data['cantidad_articulos'] ?? null;
+        $fk_id_cliente = $data['fk_id_cliente'] ?? null;
+        $fk_id_descuentos = $data['fk_id_descuentos'] ?? null;
+        $pedido_subtotal = $data['pedido_subtotal'] ?? null;
+        $estado_pago = $data['estado_pago'] ?? null;
+        $valor_pago = $data['valor_pago'] ?? null;
+        $fecha_hora_recoleccion_estimada = $data['fecha_hora_recoleccion_estimada'] ?? null;
+        $direccion_recoleccion = $data['direccion_recoleccion'] ?? null;
+        $fecha_hora_entrega_estimada = $data['fecha_hora_entrega_estimada'] ?? null;
+        $direccion_entrega = $data['direccion_entrega'] ?? null;
+        $tipo_entrega = $data['tipo_entrega'] ?? null;
+
+        $respuesta = $controller->updatePedidos(
+            $id_pedido_cabecera,
+            $fk_id_usuario,
+            $cantidad_articulos,
+            $fk_id_cliente,
+            $fk_id_descuentos,
+            $pedido_subtotal,
+            $estado_pago,
+            $valor_pago,
+            $fecha_hora_recoleccion_estimada,
+            $direccion_recoleccion,
+            $fecha_hora_entrega_estimada,
+            $direccion_entrega,
+            $tipo_entrega
+        );
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('PUT /eliminarPedido', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $idPedidoCabecera = $data['id_pedido_cabecera'] ?? null;
+
+        $respuesta = $controller->deletePedido($idPedidoCabecera);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('POST /registrarItemPedido', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+        $libras = $data['libras'] ?? null;
+        $precio_servicio = $data['precio_servicio'] ?? null;
+        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
+        $descripcion_articulo = $data['descripcion_articulo'] ?? null;
+
+
+        $respuesta = $controller->insertItemsPedidos(
+            $fk_id_servicio,
+            $libras,
+            $precio_servicio,
+            $fk_id_pedido,
+            $descripcion_articulo
+        );
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
 
 
 Flight::start();

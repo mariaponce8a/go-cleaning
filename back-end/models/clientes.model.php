@@ -79,7 +79,6 @@ class Clase_Clientes
             if ($stmt->affected_rows > 0) {
                 return true;
             } else {
-                // No se actualizó ningún registro
                 throw new Exception("No se actualizó ningún registro. Verifique el ID del cliente.");
             }
         } else {

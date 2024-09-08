@@ -1,10 +1,11 @@
-<app-modal-header [tituloHeader]="tituloPorAccion" (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+<app-modal-header [tituloHeader]="tituloPorAccion" 
+(accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
 
 <form [formGroup]="form" class="formularioCont">
     <div class="formGroupCont">
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Descripción del Descuento</mat-label>
-            <input matInput maxlength="100" placeholder="Descripción del Descuento" formControlName="tipo_descuento_desc" />
+            <input matInput maxlength="20" placeholder="Descripción del Descuento" formControlName="tipo_descuento_desc" />
             <mat-error *ngIf="form.controls.tipo_descuento_desc.hasError('required')">
                 Descripción requerida
             </mat-error>

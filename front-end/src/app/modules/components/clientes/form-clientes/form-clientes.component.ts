@@ -24,6 +24,8 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
   templateUrl: './form-clientes.component.html',
   styleUrl: './form-clientes.component.css'
 })
+
+
 export class FormClientesComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   constructor(
@@ -42,11 +44,37 @@ export class FormClientesComponent implements OnInit, OnDestroy {
     if (this.data.tipo == 'editar') {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
+      this.form.controls.identificacion_cliente.valueChanges.subscribe(value => {
+        this.validarIdentificacion();
+      });
     } else {
-      this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
+      this.form.controls.identificacion_cliente.valueChanges.subscribe(value => {
+            this.validarIdentificacion();
+          });
     }
   }
-
+  
+  validarIdentificacion = () => {
+    const tipoIdentificacion = this.form.controls.tipo_identificacion_cliente.value;
+    const identificacion = this.form.controls.identificacion_cliente.value;
+  
+    this.form.controls.identificacion_cliente.setErrors(null);
+  
+    if (tipoIdentificacion === 'CI' && identificacion !== null) {
+      if (identificacion.length !== 10 || isNaN(Number(identificacion))) {
+        this.form.controls.identificacion_cliente.setErrors({ ciInvalido: true });
+      }
+    } else if (tipoIdentificacion === 'RUC' && identificacion !== null) {
+      if (identificacion.length !== 13 || !identificacion.endsWith('001')) {
+        this.form.controls.identificacion_cliente.setErrors({ rucIncorrecto: true });
+      }
+    } else if (tipoIdentificacion === 'PASAPORTE' && identificacion !== null) {
+      const pasaporteRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
+      if (!pasaporteRegex.test(identificacion)) {
+        this.form.controls.identificacion_cliente.setErrors({ pasaporteInvalido: true });
+      }
+    }
+  }
   form = new FormGroup({
     id_cliente: new FormControl(''),
     identificacion_cliente: new FormControl('', [Validators.required]),
@@ -55,7 +83,9 @@ export class FormClientesComponent implements OnInit, OnDestroy {
     apellido_cliente: new FormControl('', [Validators.required]),
     telefono_cliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     correo_cliente: new FormControl('', [Validators.required, Validators.email]),
-  });
+    });
+
+  
 
   cerrarModalSinInformacion(cerrar: boolean) {
     if (cerrar) {

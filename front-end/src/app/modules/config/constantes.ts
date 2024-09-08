@@ -62,9 +62,8 @@ export class Constantes {
   //----------- APIS  clientes
   public static apiGetAllClientes: string =
     this.env.host + this.env.name + '/consultarClientes';
-   public static apiUpdateCliente: string =
+    public static apiUpdateCliente: string =
     this.env.host + this.env.name + '/actualizarCliente';
-
    public static apiCreateCliente: string =
     this.env.host + this.env.name + '/registrarCliente';
 
@@ -101,6 +100,7 @@ export class Constantes {
     this.env.host + this.env.name + '/registrarEstado';
   public static apiDeleteEstados: string =
     this.env.host + this.env.name + '/eliminarEstado';
+    
   //----------- APIS  Recomendaciones 
   public static apiGetAllRecommendations: string =
     this.env.host + this.env.name + '/consultarRecomendaciones';

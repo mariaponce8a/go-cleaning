@@ -6,17 +6,21 @@
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Identificación</mat-label>
             <input matInput maxlength="13" placeholder="Identificación" formControlName="identificacion_cliente" />
-            <mat-error *ngIf="form.controls.identificacion_cliente.hasError('required')">
-                Identificación requerida
-            </mat-error>
+            @if (this.form.controls.identificacion_cliente.hasError('required')) {
+                <mat-error>Debe ingresar la identificación</mat-error>
+                }
         </mat-form-field>
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Tipo de Identificación</mat-label>
-            <input matInput maxlength="100" placeholder="Tipo de Identificación" formControlName="tipo_identificacion_cliente" />
-            <mat-error *ngIf="form.controls.tipo_identificacion_cliente.hasError('required')">
-                Tipo de identificación requerido
-            </mat-error>
+            <mat-select formControlName="tipo_identificacion_cliente">
+                <mat-option value="CI">CI</mat-option>
+                <mat-option value="RUC">RUC</mat-option>
+                <mat-option value="Pasaporte">Pasaporte</mat-option>
+            </mat-select>           
+            @if (this.form.controls.tipo_identificacion_cliente.hasError('required')) {
+                <mat-error>Debe seleccionar un tipo de identificación</mat-error>
+                }
         </mat-form-field>
     </div>
 
@@ -24,17 +28,17 @@
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Nombre</mat-label>
             <input matInput maxlength="100" placeholder="Nombre" formControlName="nombre_cliente" />
-            <mat-error *ngIf="form.controls.nombre_cliente.hasError('required')">
-                Nombre requerido
-            </mat-error>
+            @if (this.form.controls.nombre_cliente.hasError('required')) {
+                <mat-error>Nombre requerido</mat-error>
+                }
         </mat-form-field>
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Apellido</mat-label>
             <input matInput maxlength="45" placeholder="Apellido" formControlName="apellido_cliente" />
-            <mat-error *ngIf="form.controls.apellido_cliente.hasError('required')">
-                Apellido requerido
-            </mat-error>
+            @if (this.form.controls.apellido_cliente.hasError('required')) {
+                <mat-error>Apellido requerido</mat-error>
+                }
         </mat-form-field>
     </div>
 
@@ -42,23 +46,23 @@
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Teléfono</mat-label>
             <input matInput maxlength="10" placeholder="Teléfono" formControlName="telefono_cliente" />
-            <mat-error *ngIf="form.controls.telefono_cliente.hasError('required')">
-                Teléfono requerido
-            </mat-error>
-            <mat-error *ngIf="form.controls.telefono_cliente.hasError('pattern')">
-                Teléfono debe tener 10 dígitos
-            </mat-error>
+            @if (this.form.controls.telefono_cliente.hasError('required')) {
+                <mat-error>Teléfono requerido</mat-error>
+                }
+            @if (this.form.controls.telefono_cliente.hasError('pattern')) {
+                <mat-error>El teléfono debe contener 10 dígitos</mat-error>
+                }
         </mat-form-field>
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Correo</mat-label>
             <input matInput maxlength="100" placeholder="Correo" formControlName="correo_cliente" />
-            <mat-error *ngIf="form.controls.correo_cliente.hasError('required')">
-                Correo requerido
-            </mat-error>
-            <mat-error *ngIf="form.controls.correo_cliente.hasError('email')">
-                Ingrese un correo electrónico válido
-            </mat-error>
+            @if (this.form.controls.correo_cliente.hasError('required')) {
+                <mat-error>Correo requerido</mat-error>
+                }
+            @if (this.form.controls.correo_cliente.hasError('email')) {
+                <mat-error>Correo inválido</mat-error>
+                }
         </mat-form-field>
     </div>
 

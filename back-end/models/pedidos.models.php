@@ -239,7 +239,7 @@ class pedidos_model
                 $descripcion_articulo
             );
             $stmt->execute();
-            if (!$stmt->get_result()) {
+            if ($stmt->get_result() == false) {
                 throw new Exception("Problemas al registrar el item de pedido");
             } else {
                 return true;

@@ -81,7 +81,7 @@ class Pedidos_controller
         $fk_id_pedido,
         $descripcion_articulo
     ) {
-        error_log("--------------");
+        error_log("-------------- BODY DE PEDIDOS DETALLE: ". $fk_id_servicio." - ".$libras." - ".$precio_servicio." - ".$fk_id_pedido." - ".$descripcion_articulo);
         $model = new pedidos_model();
         if (
             $fk_id_servicio == null ||

@@ -45,7 +45,6 @@ class pedidos_model
 
 
     public function registrarPedido(
-        $fecha_pedido,
         $fk_id_usuario, //i
         $cantidad_articulos, //i
         $fk_id_cliente, //i
@@ -72,24 +71,11 @@ class pedidos_model
             )
               VALUES
             (
-                ?, -- Para la fecha actual del pedido
-                ?, -- ID del usuario (valor ficticio)
-                ?, -- Cantidad de artículos (valor ficticio)
-                ?, -- ID del cliente (valor ficticio)
-                ?, -- ID del descuento (valor ficticio)
-                ?, -- Subtotal del pedido
-                ?, -- Estado del pago F , P o C (PAGO AL FINALIZAR, PAGO PARCIAL y PAGO COMPLETO)
-                ?, -- Valor del pago
-                ?, -- Fecha y hora de recolección estimada
-                ?, -- Dirección de recolección
-                ?, -- Fecha y hora de entrega estimada
-                ?, -- Dirección de entrega
-                ?  -- Tipo de entrega  D o L (DOMICILIO o LOCAL)
+               CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?
             )";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param(
-                "siiiifsfsssss",
-                $fecha_pedido,
+                "iiiidsdsssss",
                 $fk_id_usuario,
                 $cantidad_articulos,
                 $fk_id_cliente,
@@ -103,7 +89,6 @@ class pedidos_model
                 $direccion_entrega,
                 $tipo_entrega
             );
-
             if ($stmt->execute()) {
                 $resultado = $stmt->get_result();
                 error_log("?????????????????????RESULTADO INSERT DESDE MODEL PEDIDOS" . $resultado);
@@ -121,24 +106,99 @@ class pedidos_model
         }
     }
 
-    public function actualizarUsuario($id, $nombre, $apellido, $perfil, $usuario, $clave)
+    public function actualizarPedido(
+        $id_pedido_cabecera, //i
+        $fk_id_usuario, //i
+        $cantidad_articulos, //i
+        $fk_id_cliente, //i
+        $fk_id_descuentos, //i
+        $pedido_subtotal, //f
+        $estado_pago,  //s
+        $valor_pago, //f
+        $fecha_hora_recoleccion_estimada, //s
+        $direccion_recoleccion, //s
+        $fecha_hora_entrega_estimada, //s
+        $direccion_entrega, //s
+        $tipo_entrega //s
+    ) {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            $conexion->begin_transaction();
+            $query = "
+            UPDATE tb_pedido
+            SET
+            fk_id_usuario = ?, cantidad_articulos = ?,
+            fk_id_cliente = ?, fk_id_descuentos = ?, pedido_subtotal = ?,
+            estado_pago = ?, valor_pago = ?, fecha_hora_recoleccion_estimada = ?,
+            direccion_recoleccion = ?, fecha_hora_entrega_estimada = ?, direccion_entrega = ?, tipo_entrega = ? 
+            where id_pedido_cabecera = ?";
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param(
+                "iiiidsdsssssi",
+                $fk_id_usuario,
+                $cantidad_articulos,
+                $fk_id_cliente,
+                $fk_id_descuentos,
+                $pedido_subtotal,
+                $estado_pago,
+                $valor_pago,
+                $fecha_hora_recoleccion_estimada,
+                $direccion_recoleccion,
+                $fecha_hora_entrega_estimada,
+                $direccion_entrega,
+                $tipo_entrega,
+                $id_pedido_cabecera
+            );
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                $conexion->commit();
+                error_log("?????????????????????RESULTADO UPDATE DESDE MODEL PEDIDOS" . $resultado);
+                return true;
+            } else {
+                throw new Exception("Problemas al actualizar el pedido");
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $conexion->rollback();
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+
+    public function eliminarPedido($id_pedido_cabecera)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $clave_cifrada_ingresada = hash('sha256', $clave);
-            $query = "update tb_usuarios_plataforma set usuario = ?, nombre =?, apellido=?, perfil=? , clave=? WHERE id_usuario= ?";
-            $stmt = $conexion->prepare($query);
-            $stmt->bind_param("ssssss", $usuario, $nombre, $apellido, $perfil, $clave_cifrada_ingresada, $id);
 
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
-                return true;
+            $conexion->begin_transaction();
+
+            // Borrar de la segunda tabla
+            $query2 = "DELETE FROM tb_pedido_detalle WHERE fk_id_pedido = ?";
+            $stmt2 = $conexion->prepare($query2);
+            $stmt2->bind_param("i", $id_pedido_cabecera);
+            $stmt2->execute();
+
+            // Borrar de la primera tabla
+            $query1 = "DELETE FROM tb_pedido WHERE id_pedido_cabecera = ?";
+            $stmt1 = $conexion->prepare($query1);
+            $stmt1->bind_param("i", $id_pedido_cabecera);
+            $stmt1->execute();
+
+            // Confirmar la transacción
+            $conexion->commit();
+            if (!$stmt1  || ! $stmt2) {
+                throw new Exception(false);
             } else {
-                throw new Exception("Problemas al actualizar el usuario");
+                return true;
             }
         } catch (Exception $e) {
+            $conexion->rollback();
             error_log($e->getMessage());
             return false;
         } finally {
@@ -149,21 +209,40 @@ class pedidos_model
     }
 
 
-    public function eliminarUsuario($id)
-    {
+    public function agregarItemsAPedido(
+        $fk_id_servicio,
+        $libras,
+        $precio_servicio,
+        $fk_id_pedido,
+        $descripcion_articulo
+    ) {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "delete from tb_usuarios_plataforma where id_usuario = ?";
+            $query = "
+           INSERT INTO tb_pedido_detalle (
+            fk_id_servicio, 
+            libras, 
+            precio_servicio, 
+            fk_id_pedido, 
+            descripcion_articulo
+            ) VALUES (
+                ?,?,?,?,?
+            )";
             $stmt = $conexion->prepare($query);
-            $stmt->bind_param("i", $id);
-
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
-                return true;
+            $stmt->bind_param(
+                "iddis",
+                $fk_id_servicio,
+                $libras,
+                $precio_servicio,
+                $fk_id_pedido,
+                $descripcion_articulo
+            );
+            $stmt->execute();
+            if ($stmt->get_result() == false) {
+                throw new Exception("Problemas al registrar el item de pedido");
             } else {
-                throw new Exception("Problemas al eliminar el usuario");
+                return true;
             }
         } catch (Exception $e) {
             error_log($e->getMessage());

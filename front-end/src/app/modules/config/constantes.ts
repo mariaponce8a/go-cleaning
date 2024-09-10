@@ -62,9 +62,8 @@ export class Constantes {
   //----------- APIS  clientes
   public static apiGetAllClientes: string =
     this.env.host + this.env.name + '/consultarClientes';
-   public static apiUpdateCliente: string =
+    public static apiUpdateCliente: string =
     this.env.host + this.env.name + '/actualizarCliente';
-
    public static apiCreateCliente: string =
     this.env.host + this.env.name + '/registrarCliente';
 

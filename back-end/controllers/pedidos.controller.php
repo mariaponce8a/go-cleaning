@@ -107,6 +107,44 @@ class Pedidos_controller
         }
     }
 
+    
+    public function actualizarItemsPedidos(
+        $id_pedido_detalle,
+        $fk_id_servicio,
+        $libras,
+        $precio_servicio,
+        $fk_id_pedido,
+        $descripcion_articulo
+    ) {
+        error_log("-------------- BODY DE PEDIDOS DETALLE: ". $fk_id_servicio." - ".$libras." - ".$precio_servicio." - ".$fk_id_pedido." - ".$descripcion_articulo);
+        $model = new pedidos_model();
+        if (
+            $id_pedido_detalle == null ||
+            $fk_id_servicio == null ||
+            $libras == null ||
+            $precio_servicio == null ||
+            $fk_id_pedido == null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $model->editarItemsAPedido(
+            $id_pedido_detalle,
+            $fk_id_servicio,
+            $libras,
+            $precio_servicio,
+            $fk_id_pedido,
+            $descripcion_articulo
+        );
+
+        error_log("----------RESULTADO INSERT items DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el item pedido".$descripcion_articulo));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
+        }
+    }
+
+
     public function updatePedidos(
         $id_pedido_cabecera,
         $fk_id_usuario,

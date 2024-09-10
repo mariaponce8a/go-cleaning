@@ -238,11 +238,58 @@ class pedidos_model
                 $fk_id_pedido,
                 $descripcion_articulo
             );
-            $stmt->execute();
-            if ($stmt->get_result() == false) {
-                throw new Exception("Problemas al registrar el item de pedido");
-            } else {
+
+            if ($stmt->execute()) {
                 return true;
+            } else {
+                throw new Exception("Problemas al registrar el item de pedido");
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+
+    public function editarItemsAPedido(
+        $id_pedido_detalle,
+        $fk_id_servicio,
+        $libras,
+        $precio_servicio,
+        $fk_id_pedido,
+        $descripcion_articulo
+    ) {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            $query = "
+           UPDATE tb_pedido_detalle SET 
+            fk_id_servicio = ?, 
+            libras = ?, 
+            precio_servicio = ?, 
+            fk_id_pedido = ?, 
+            descripcion_articulo = ? 
+            where id_pedido_detalle = ?
+            ";
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param(
+                "iddisi",
+                $fk_id_servicio,
+                $libras,
+                $precio_servicio,
+                $fk_id_pedido,
+                $descripcion_articulo,
+                $id_pedido_detalle
+            );
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                throw new Exception("Problemas al actualizar el item de pedido");
             }
         } catch (Exception $e) {
             error_log($e->getMessage());

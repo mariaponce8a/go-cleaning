@@ -782,5 +782,34 @@ Flight::route('POST /registrarItemPedido', function () {
     }
 });
 
+Flight::route('PUT /editarItemPedido', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_pedido_detalle = $data['id_pedido_detalle'] ?? null;
+        $fk_id_servicio = $data['fk_id_servicio'] ?? null;
+        $libras = $data['libras'] ?? null;
+        $precio_servicio = $data['precio_servicio'] ?? null;
+        $fk_id_pedido = $data['fk_id_pedido'] ?? null;
+        $descripcion_articulo = $data['descripcion_articulo'] ?? null;
+
+
+        $respuesta = $controller->actualizarItemsPedidos(
+            $id_pedido_detalle,
+            $fk_id_servicio,
+            $libras,
+            $precio_servicio,
+            $fk_id_pedido,
+            $descripcion_articulo
+        );
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
 
 Flight::start();

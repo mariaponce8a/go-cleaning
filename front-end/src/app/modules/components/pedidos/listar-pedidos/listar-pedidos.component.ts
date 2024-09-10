@@ -110,7 +110,8 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
 
         break;
       case 'crear':
-
+        console.log('entre')
+        this.router.navigateByUrl('bds/pedidos/formulario');
         break;
 
       case 'eliminar':

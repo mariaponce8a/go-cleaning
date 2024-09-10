@@ -11,6 +11,7 @@ import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-form-descuentos',
@@ -19,7 +20,8 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
-    GlobalButtonsComponent
+    GlobalButtonsComponent,
+    CommonModule
   ],
   templateUrl: './form-descuentos.component.html',
   styleUrl: './form-descuentos.component.css'   // Cambiado a `styleUrls`

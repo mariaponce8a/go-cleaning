@@ -53,6 +53,7 @@ export interface IserviciosPlataforma {
   descripcion_servicio: string;
   costo_unitario?: number;
   validar_pesaje?: any; // llega un numero pero se lo reemplaza por un string
+  maximo_articulos?:number | string | null;
 }
 
 export interface IclientesPlataforma {

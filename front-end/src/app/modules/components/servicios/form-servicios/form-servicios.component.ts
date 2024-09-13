@@ -12,6 +12,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 
+
+
 @Component({
   selector: 'app-form-servicios',
   standalone: true,
@@ -47,7 +49,8 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
       this.form.patchValue(this.data.fila);
       const filaConValorTransformado = {
         ...this.data.fila,
-        validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si'
+        validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si',
+        maximo_articulos: this.data.fila.maximos_articulos ?? undefined
       };
   
       this.form.patchValue(filaConValorTransformado);    } else {
@@ -58,7 +61,12 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     id_servicio: new FormControl(''),
     descripcion_servicio: new FormControl('', [Validators.required]),
     costo_unitario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]),
-    validar_pesaje: new FormControl('', [Validators.required])
+    validar_pesaje: new FormControl('', [Validators.required]),
+    maximo_articulos: new FormControl('', [
+      Validators.pattern('^[0-9]*$'), // Solo números
+      Validators.min(1), // Valor mínimo 1
+      Validators.max(150) // Valor máximo 150 
+    ])
   });
 
   

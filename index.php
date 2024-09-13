@@ -185,8 +185,9 @@ Flight::route('POST /registrarServicios', function () {
         $descripcion_servicio = $data['descripcion_servicio'] ?? null;
         $costo_unitario = $data['costo_unitario'] ?? null;
         $validar_pesaje = $data['validar_pesaje'] ?? null;
+        $maximo_articulos = $data['maximo_articulos'] ?? null;
 
-        $respuesta = $servicios_controller->insertService($descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $respuesta = $servicios_controller->insertService($descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -205,8 +206,9 @@ Flight::route('PUT /actualizarServicios', function () {
         $descripcion_servicio = $data['descripcion_servicio'] ?? null;
         $costo_unitario = $data['costo_unitario'] ?? null;
         $validar_pesaje = $data['validar_pesaje'] ?? null;
+        $maximo_articulos = $data['maximo_articulos'] ?? null;
 
-        $respuesta = $servicios_controller->updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $respuesta = $servicios_controller->updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));

@@ -30,14 +30,14 @@ class Clase_Servicios
         }
     }
 
-    public function registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje)
+    public function registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "insert into tb_servicios (descripcion_servicio, costo_unitario, validar_pesaje) VALUES (?, ?, ?)";
+            $query = "insert into tb_servicios (descripcion_servicio, costo_unitario, validar_pesaje, maximo_articulos) VALUES (?, ?, ?, ?)";
             $stmt = $conexion->prepare($query);
-            $stmt->bind_param("sdi", $descripcion_servicio, $costo_unitario, $validar_pesaje);
+            $stmt->bind_param("sdii", $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos);
 
             if ($stmt->execute()) {
                 $resultado = $stmt->get_result();
@@ -57,14 +57,14 @@ class Clase_Servicios
     } 
 
 
-    public function actualizarServicios($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje)
+    public function actualizarServicios($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos)
     {
         try { 
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "update tb_servicios SET descripcion_servicio = ?, costo_unitario = ?, validar_pesaje = ? WHERE id_servicio = ?";
+            $query = "update tb_servicios SET descripcion_servicio = ?, costo_unitario = ?, validar_pesaje = ?, maximo_articulos = ? WHERE id_servicio = ?";
             $stmt = $conexion->prepare($query);
-            $stmt->bind_param("sdii", $descripcion_servicio, $costo_unitario, $validar_pesaje, $id_servicio);
+            $stmt->bind_param("sdiii", $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos, $id_servicio);
 
             if ($stmt->execute()) {
                 $resultado = $stmt->get_result();

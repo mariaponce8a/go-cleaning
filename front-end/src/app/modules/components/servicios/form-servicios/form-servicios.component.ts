@@ -50,7 +50,7 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
       const filaConValorTransformado = {
         ...this.data.fila,
         validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si',
-        maximo_articulos: this.data.fila.maximos_articulos ?? undefined
+        maximo_articulos: this.data.fila.maximos_articulos ?? null
       };
   
       this.form.patchValue(filaConValorTransformado);    } else {

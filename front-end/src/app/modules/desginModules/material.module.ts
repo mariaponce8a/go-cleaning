@@ -13,8 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatListModule } from '@angular/material/list';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip'; 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
@@ -26,6 +25,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   exports: [
@@ -55,7 +56,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatButtonToggleModule
   ]
 })
 export class MaterialModule { }

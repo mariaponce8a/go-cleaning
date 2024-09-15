@@ -8,6 +8,7 @@ export class Constantes {
   // local storage keys
   public static tokenKey: string = 'auth';
   public static usuarioKey: string = 'usuarioValue';
+  public static idusuarioKey: string = 'idusuarioValue';
   public static perfilKey: string = 'perfilvalue';
   public static env = EnvironmentData.globalUrl;
   // mensajes generales

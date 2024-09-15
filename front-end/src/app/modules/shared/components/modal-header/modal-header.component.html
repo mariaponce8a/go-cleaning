@@ -1,4 +1,6 @@
 <div class="contModalHeader">
-    <label class="tituloModal" >{{tituloHeader}}</label>
-    <button type="button" mat-icon-button (click)="cerrarModal(true)" ><mat-icon>close</mat-icon></button>
+    <label class="tituloModal">{{tituloHeader}}</label>
+    @if (mostrarBtnCerrar) {
+    <button type="button" mat-icon-button (click)="cerrarModal(true)"><mat-icon>close</mat-icon></button>
+    }
 </div>

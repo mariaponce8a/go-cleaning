@@ -1,0 +1,166 @@
+<app-colored-body-header (returnPage)="goBack($event)" [icon]="'keyboard_backspace'" [nombrePagina]="propositoPagina"
+    [subtitulo]="'Realice sus pedidos rápida y facilmente'"></app-colored-body-header>
+<div class="conttoatl">
+    <div class="contFormpedidos">
+        <app-modal-header [tituloHeader]="'Formulario de pedido'" [mostrarBtnCerrar]="false"></app-modal-header>
+        <form [formGroup]="form" class="formmularioCont">
+            <div class="formGroupCont">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Usuario plataforma</mat-label>
+                    <mat-icon style="color: #00000061;" matPrefix>person</mat-icon>
+                    <input matInput formControlName="usuario" />
+                </mat-form-field>
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Cliente</mat-label>
+                    <input (keyup)="cambiandoCliente()" type="text" placeholder="Buscar cliente" aria-label="cedulas"
+                        matInput [formControl]="this.form.controls.identificacionCliente" [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        @for (option of filteredOptions | async; track option) {
+                        <mat-option (onSelectionChange)="getSelectedClient($event)"
+                            [value]="option">{{option}}</mat-option>
+                        }
+                    </mat-autocomplete>
+                    <button type="button" (click)="openAgregarCliente()" mat-icon-button matSuffix
+                        [matTooltip]="'Ingresar cliente nuevo'">
+                        <mat-icon style="color: var(--secondary);">person_add</mat-icon>
+                    </button>
+                    @if (this.clientesExistentesLong == 0) {
+                    <mat-hint>El cliente buscado no existe</mat-hint>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="formGroupCont">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Datos del cliente</mat-label>
+                    <input readonly="true" matInput formControlName="nombreCompletoCliente" />
+                </mat-form-field>
+            </div>
+            <!-- F , P o C (PAGO AL FINALIZAR, PAGO PARCIAL y PAGO COMPLETO) -->
+            @if (habilitarFormularioRestante) {
+            <div class="formGroupCont">
+                <mat-form-field class="w-50" appearance="outline">
+                    <mat-label>Tipo de entrega</mat-label>
+                    <mat-select (selectionChange)="setearDireccionEntrega($event)" formControlName="tipo_entrega">
+                        <mat-option value="D">Domicilio</mat-option>
+                        <mat-option value="L">Local</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Dirección de entrega</mat-label>
+                    <input maxlength="150" matInput formControlName="direccion_entrega" />
+                    <mat-hint>Max.150</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <div class="formGroupCont">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Fecha entrega</mat-label>
+                    <input matInput [matDatepicker]="picker1" formControlName="fecha_entrega_estimada">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-25" appearance="outline">
+                    <mat-label>Hora entrega</mat-label>
+                    <input type="time" matInput formControlName="hora_entrega_estimada" />
+                </mat-form-field>
+            </div>
+
+            <div class="formGroupCont">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Fecha recolección</mat-label>
+                    <input matInput [matDatepicker]="picker2" formControlName="fecha_recoleccion_estimada">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-25" appearance="outline">
+                    <mat-label>Hora recolección</mat-label>
+                    <input type="time" matInput formControlName="hora_recoleccion_estimada" />
+                </mat-form-field>
+            </div>
+
+            <div class="formGroupCont">
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Tipo de Pago</mat-label>
+                    <mat-select formControlName="estado_pago">
+                        <mat-option value="P">Parcial</mat-option>
+                        <mat-option value="C">Completo</mat-option>
+                        <mat-option value="F">Al finalizar</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Adelanto de pago</mat-label>
+                    <input
+                        [readonly]="!this.form.controls.estado_pago.value || this.form.controls.estado_pago.value == 'C' || this.form.controls.estado_pago.value == 'F' "
+                        maxlength="10" matInput formControlName="valor_pago" />
+                </mat-form-field>
+
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Total articulos</mat-label>
+                    <mat-icon matPrefix>shopping_basket</mat-icon>
+                    <input readonly="true" maxlength="4" matInput formControlName="cantidad_articulos" />
+                </mat-form-field>
+            </div>
+
+            <div class="formGroupCont">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Descuentos</mat-label>
+                    <mat-icon matPrefix style="color: var(--secondary);"
+                        matTooltip="'Descuento aplica por decisión del local'">info</mat-icon>
+                    <mat-select formControlName="fk_id_descuentos">
+                        @for (descuento of combosDescuentos; track descuento) {
+                        <mat-option [value]="descuento.id_tipo_descuento">
+                            <mat-icon>discount</mat-icon>
+                            {{descuento.tipo_descuento_desc}}
+                            <br>
+                            <label>% {{descuento.cantidad_descuento}}</label>
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Sub-total</mat-label>
+                    <mat-icon matPrefix>attach_money</mat-icon>
+                    <input readonly="true" maxlength="4" matInput formControlName="pedido_subtotal" />
+                </mat-form-field>
+
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Total</mat-label>
+                    <mat-icon matPrefix>attach_money</mat-icon>
+                    <input readonly="true" maxlength="10" matInput formControlName="total" />
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-button-toggle-group class="mb-2" appearance="standard" name="fontStyle" aria-label="Font Style">
+                    <mat-button-toggle>Agregar servicios</mat-button-toggle>
+                    <mat-button-toggle>Confirmar servicios</mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <div class="serviciosAgg">
+                    @if (itemsDelPedidoArr.length == 0) {
+                    <div class="sinPedidos">No se han agregado servicios</div>
+                    }
+                    @else {
+                    @for (item of itemsDelPedidoArr; track $index) {
+                    <div>
+                        
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+
+            <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+
+            }
+        </form>
+    </div>
+</div>

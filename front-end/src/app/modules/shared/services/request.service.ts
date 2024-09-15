@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpClient,
-  HttpErrorResponse,
+  HttpClient, 
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';

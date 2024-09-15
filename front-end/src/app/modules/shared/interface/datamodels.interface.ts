@@ -16,7 +16,8 @@ export interface IMenu {
 }
 
 export interface IusuariosPlataforma {
-  id_usuario: string | number;
+  id_usuario?: number;
+  fk_id_usuario?: string | number;
   usuario: string;
   nombre: string;
   apellido: string;
@@ -41,6 +42,30 @@ export interface IpedidosJoin {
   pedido_subtotal: string;
   estado_pago: string;
   valor_pago: string;
+  fecha_hora_recoleccion_estimada: string;
+  direccion_recoleccion: string;
+  fecha_hora_entrega_estimada: string;
+  direccion_entrega: string;
+  tipo_entrega: string
+}
+
+export interface IServicioPedido {
+  fk_id_servicio: number;
+  libras: number;
+  precio_servicio: number;
+  fk_id_pedido: number;
+  descripcion_articulo: string;
+}
+
+export interface IpedidosRegistro {
+  fecha_pedido: string;
+  fk_id_usuario: number;
+  cantidad_articulos: number;
+  fk_id_cliente: number;
+  fk_id_descuentos: number;
+  pedido_subtotal: number;
+  estado_pago: string;
+  valor_pago: number;
   fecha_hora_recoleccion_estimada: string;
   direccion_recoleccion: string;
   fecha_hora_entrega_estimada: string;

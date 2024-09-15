@@ -82,7 +82,7 @@ Flight::route('POST /login', function () {
         $now = strtotime("now");
         $key = $_SERVER['TOKEN_KEY'];
         $payload = [
-            'exp' => $now + 3600, // dura 1 hora
+            'exp' => $now + 3600000, // dura 1 hora
             'data' => $respuesta['data']
         ];
         $jwt = JWT::encode($payload, $key, 'HS256');
@@ -271,7 +271,7 @@ Flight::route('POST /registrarCliente', function () {
         $telefono_cliente = $data['telefono_cliente'] ?? null;
         $correo_cliente = $data['correo_cliente'] ?? null;
 
-        $respuesta = $cliente_controller-> insertCliente ($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
+        $respuesta = $cliente_controller->insertCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -293,7 +293,7 @@ Flight::route('PUT /actualizarCliente', function () {
         $telefono_cliente = $data['telefono_cliente'] ?? null;
         $correo_cliente = $data['correo_cliente'] ?? null;
 
-        $respuesta = $cliente_controller-> updateCliente ($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
+        $respuesta = $cliente_controller->updateCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -320,7 +320,7 @@ Flight::route('PUT /eliminarCliente', function () {
 Flight::route('GET /consultarClientes', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
-        $cliente_controller = new Clientes_controller();  
+        $cliente_controller = new Clientes_controller();
         $respuesta = $cliente_controller->getAllClientes();
         echo $respuesta;
     } else {
@@ -593,7 +593,7 @@ Flight::route('POST /registrarAsignacion', function () {
         $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
         $descripcion_estado = $data['descripcion_estado'] ?? null;
 
-        $respuesta = $asignaciones_controller->insertAssignment($usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
+        $respuesta = $asignaciones_controller->insertAssignment( $usuario,  $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
@@ -671,9 +671,13 @@ Flight::route('POST /registrarPedido', function () {
         $pedido_subtotal = $data['pedido_subtotal'] ?? null;
         $estado_pago = $data['estado_pago'] ?? null;
         $valor_pago = $data['valor_pago'] ?? null;
-        $fecha_hora_recoleccion_estimada = $data['fecha_hora_recoleccion_estimada'] ?? null;
+
+        $fecha_recoleccion_estimada = $data['fecha_recoleccion_estimada'] ?? null;
+        $hora_recoleccion_estimada = $data['hora_recoleccion_estimada'] ?? null;
+        $fecha_entrega_estimada = $data['fecha_entrega_estimada'] ?? null;
+        $hora_entrega_estimada = $data['hora_entrega_estimada'] ?? null;
+
         $direccion_recoleccion = $data['direccion_recoleccion'] ?? null;
-        $fecha_hora_entrega_estimada = $data['fecha_hora_entrega_estimada'] ?? null;
         $direccion_entrega = $data['direccion_entrega'] ?? null;
         $tipo_entrega = $data['tipo_entrega'] ?? null;
 
@@ -686,9 +690,11 @@ Flight::route('POST /registrarPedido', function () {
             $pedido_subtotal,
             $estado_pago,
             $valor_pago,
-            $fecha_hora_recoleccion_estimada,
+            $fecha_recoleccion_estimada,
+            $hora_recoleccion_estimada,
             $direccion_recoleccion,
-            $fecha_hora_entrega_estimada,
+            $fecha_entrega_estimada,
+            $hora_entrega_estimada,
             $direccion_entrega,
             $tipo_entrega
         );

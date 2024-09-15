@@ -45,18 +45,21 @@ class pedidos_model
 
 
     public function registrarPedido(
-        $fk_id_usuario, //i
-        $cantidad_articulos, //i
-        $fk_id_cliente, //i
-        $fk_id_descuentos, //i
-        $pedido_subtotal, //f
-        $estado_pago,  //s
-        $valor_pago, //f
-        $fecha_hora_recoleccion_estimada, //s
-        $direccion_recoleccion, //s
-        $fecha_hora_entrega_estimada, //s
-        $direccion_entrega, //s
-        $tipo_entrega //s
+        $fecha_pedido,
+        $fk_id_usuario,
+        $cantidad_articulos,
+        $fk_id_cliente,
+        $fk_id_descuentos,
+        $pedido_subtotal,
+        $estado_pago,
+        $valor_pago,
+        $fecha_recoleccion_estimada,
+        $hora_recoleccion_estimada,
+        $direccion_recoleccion,
+        $fecha_entrega_estimada,
+        $hora_entrega_estimada,
+        $direccion_entrega,
+        $tipo_entrega
     ) {
         try {
             $con = new Clase_Conectar();
@@ -66,16 +69,18 @@ class pedidos_model
             (
             fecha_pedido, fk_id_usuario, cantidad_articulos,
             fk_id_cliente, fk_id_descuentos, pedido_subtotal,
-            estado_pago, valor_pago, fecha_hora_recoleccion_estimada,
-            direccion_recoleccion, fecha_hora_entrega_estimada, direccion_entrega, tipo_entrega
+            estado_pago, valor_pago, fecha_recoleccion_estimada,
+            hora_recoleccion_estimada , direccion_recoleccion, 
+            fecha_entrega_estimada, hora_entrega_estimada
+            direccion_entrega, tipo_entrega
             )
               VALUES
             (
-               CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?
+               CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?,?,?
             )";
             $stmt = $conexion->prepare($query);
             $stmt->bind_param(
-                "iiiidsdsssss",
+                "iiiidsdsssssss",
                 $fk_id_usuario,
                 $cantidad_articulos,
                 $fk_id_cliente,
@@ -83,9 +88,11 @@ class pedidos_model
                 $pedido_subtotal,
                 $estado_pago,
                 $valor_pago,
-                $fecha_hora_recoleccion_estimada,
+                $fecha_recoleccion_estimada,
+                $hora_recoleccion_estimada,
                 $direccion_recoleccion,
-                $fecha_hora_entrega_estimada,
+                $fecha_entrega_estimada,
+                $hora_entrega_estimada,
                 $direccion_entrega,
                 $tipo_entrega
             );

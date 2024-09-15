@@ -27,9 +27,11 @@ class Pedidos_controller
         $pedido_subtotal,
         $estado_pago,
         $valor_pago,
-        $fecha_hora_recoleccion_estimada,
+        $fecha_recoleccion_estimada,
+        $hora_recoleccion_estimada,
         $direccion_recoleccion,
-        $fecha_hora_entrega_estimada,
+        $fecha_entrega_estimada,
+        $hora_entrega_estimada,
         $direccion_entrega,
         $tipo_entrega
     ) {
@@ -43,14 +45,15 @@ class Pedidos_controller
             $pedido_subtotal == null ||
             $estado_pago == null ||
             $valor_pago == null ||
-            $fecha_hora_recoleccion_estimada == null ||
             $direccion_recoleccion == null ||
-            $fecha_hora_entrega_estimada == null ||
+            $fecha_entrega_estimada == null ||
+            $hora_entrega_estimada == null ||
             $direccion_entrega == null
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
         $resultado = $model->registrarPedido(
+            $fecha_pedido,
             $fk_id_usuario,
             $cantidad_articulos,
             $fk_id_cliente,
@@ -58,9 +61,11 @@ class Pedidos_controller
             $pedido_subtotal,
             $estado_pago,
             $valor_pago,
-            $fecha_hora_recoleccion_estimada,
+            $fecha_recoleccion_estimada,
+            $hora_recoleccion_estimada,
             $direccion_recoleccion,
-            $fecha_hora_entrega_estimada,
+            $fecha_entrega_estimada,
+            $hora_entrega_estimada,
             $direccion_entrega,
             $tipo_entrega
         );
@@ -81,7 +86,7 @@ class Pedidos_controller
         $fk_id_pedido,
         $descripcion_articulo
     ) {
-        error_log("-------------- BODY DE PEDIDOS DETALLE: ". $fk_id_servicio." - ".$libras." - ".$precio_servicio." - ".$fk_id_pedido." - ".$descripcion_articulo);
+        error_log("-------------- BODY DE PEDIDOS DETALLE: " . $fk_id_servicio . " - " . $libras . " - " . $precio_servicio . " - " . $fk_id_pedido . " - " . $descripcion_articulo);
         $model = new pedidos_model();
         if (
             $fk_id_servicio == null ||
@@ -101,13 +106,13 @@ class Pedidos_controller
 
         error_log("----------RESULTADO INSERT items DESDE CONTROLLER: " . $resultado);
         if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el item pedido".$descripcion_articulo));
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el item pedido" . $descripcion_articulo));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
         }
     }
 
-    
+
     public function actualizarItemsPedidos(
         $id_pedido_detalle,
         $fk_id_servicio,
@@ -116,7 +121,7 @@ class Pedidos_controller
         $fk_id_pedido,
         $descripcion_articulo
     ) {
-        error_log("-------------- BODY DE PEDIDOS DETALLE: ". $fk_id_servicio." - ".$libras." - ".$precio_servicio." - ".$fk_id_pedido." - ".$descripcion_articulo);
+        error_log("-------------- BODY DE PEDIDOS DETALLE: " . $fk_id_servicio . " - " . $libras . " - " . $precio_servicio . " - " . $fk_id_pedido . " - " . $descripcion_articulo);
         $model = new pedidos_model();
         if (
             $id_pedido_detalle == null ||
@@ -138,7 +143,7 @@ class Pedidos_controller
 
         error_log("----------RESULTADO INSERT items DESDE CONTROLLER: " . $resultado);
         if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el item pedido".$descripcion_articulo));
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el item pedido" . $descripcion_articulo));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
         }

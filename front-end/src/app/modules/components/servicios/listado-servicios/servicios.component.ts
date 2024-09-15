@@ -38,6 +38,10 @@ export class ListadoServiciosComponent implements OnInit, OnDestroy {
       value: 'validar_pesaje',
       viewValue: 'Validar Pesaje',
     },
+    {
+      value: 'maximo_articulos',
+      viewValue: 'Maximo articulos',
+    },
   ];
 
   valoresDeTabla: IserviciosPlataforma[] = [];
@@ -62,17 +66,26 @@ export class ListadoServiciosComponent implements OnInit, OnDestroy {
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
+          
 
+          
           let arrayAjustado: IserviciosPlataforma[] = [];
           for (let item of this.valoresDeTabla) {
             let body = item;
+            
             if (body.validar_pesaje == 1) {
               body.validar_pesaje = 'Validar';
             } else {
               body.validar_pesaje = 'No validar';
             }
+             // Ajustar el campo maximos_articulos
+             if (body.maximo_articulos === undefined || body.maximo_articulos === null || body.maximo_articulos === '0') {
+              body.maximo_articulos = null; // Asignar nulo si no hay valor
+            }
+  
             arrayAjustado.push(body);
           }
+  
           this.valoresDeTabla = arrayAjustado;
         },
         error: () => {

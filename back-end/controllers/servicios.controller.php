@@ -16,7 +16,7 @@ class Servicios_controller
         }
     }
 
-    public function insertService($descripcion_servicio, $costo_unitario, $validar_pesaje)
+    public function insertService($descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos)
     {
         error_log("--------------");
         $servicioModel = new Clase_Servicios();
@@ -24,10 +24,11 @@ class Servicios_controller
             $descripcion_servicio === null ||
             $costo_unitario === null ||
             $validar_pesaje === null 
+           
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
-        $resultado = $servicioModel->registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $resultado = $servicioModel->registrarServicio ($descripcion_servicio, $costo_unitario, $validar_pesaje,$maximo_articulos);
         error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el servicio"));
@@ -36,7 +37,7 @@ class Servicios_controller
         }
     }
 
-    public function updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje)
+    public function updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos)
     {
         error_log("--------------");
         $servicioModel = new Clase_Servicios();
@@ -44,11 +45,11 @@ class Servicios_controller
             $id_servicio === null ||
             $descripcion_servicio === null ||
             $costo_unitario === null ||
-            $validar_pesaje === null
+            $validar_pesaje === null 
         ) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
-        $resultado = $servicioModel->actualizarServicios ($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje);
+        $resultado = $servicioModel->actualizarServicios ($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje,$maximo_articulos );
         error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el servicio"));

@@ -103,13 +103,13 @@ export class ListadoServiciosComponent implements OnInit, OnDestroy {
           data: evento,
           width: '600px',
           disableClose: true,
-        })
+        });
 
         dialogRef.afterClosed().subscribe((r) => {
           if (r == 'ok') {
             this.getAllServices();
           }
-        })
+        });
 
         break;
       case 'crear':

@@ -11,7 +11,7 @@ import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
-
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -21,7 +21,7 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
-    GlobalButtonsComponent
+    GlobalButtonsComponent  
   ],
   templateUrl: './form-servicios.component.html',
   styleUrls: ['./form-servicios.component.css']
@@ -42,19 +42,20 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log(this.data.fila);  // Verifica si validar_pesaje tiene el valor correcto
     console.log(this.data);
+    console.log(this.data.fila);
     if (this.data.tipo == 'editar') {
-      this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
+      this.tituloPorAccion = this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
+      this.data.fila.maximos_articulos ?? null
       const filaConValorTransformado = {
         ...this.data.fila,
         validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si',
-        maximo_articulos: this.data.fila.maximos_articulos ?? null
       };
   
       this.form.patchValue(filaConValorTransformado);    } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
+      
     }
   } 
   form = new FormGroup({
@@ -66,7 +67,7 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
       Validators.pattern('^[0-9]*$'), // Solo números
       Validators.min(1), // Valor mínimo 1
       Validators.max(150) // Valor máximo 150 
-    ])
+      ]),
   });
 
   
@@ -89,7 +90,7 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
         next: (value) => {
           this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
           this.cerrarModalConInformacion();
-        },
+        },  
         error: (error) => {
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
@@ -118,10 +119,11 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     }
 
     let body = this.form.getRawValue();
+    console.log('Datos a enviar:', body);
 
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
-        if (this.data.tipo === 'editar') {
+        if (this.data.tipo == 'editar') {
           this.editarServicios(body);
         } else {
           this.registrarServicios(body);

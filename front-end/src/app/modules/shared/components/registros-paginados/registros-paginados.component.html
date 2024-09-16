@@ -2,6 +2,16 @@
   <div class="tableItemsHeader">
     <label class="listadoNameStyle">Listados de registros</label>
   </div>
+
+   <!-- Campo de búsqueda -->
+<div class="search-container mb-4">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en los registros">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>
+
   <div class="listadoContStyle">
 
     <button type="button" class="buttonBack mb-4 " (click)="actionRow('crear', {})">

@@ -64,5 +64,9 @@ export class RegistrosPaginadosComponent implements OnInit {
     }
   }
 
-
+// Método para aplicar el filtro de búsqueda
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();  // Aplica el filtro en minúsculas
+}
 }

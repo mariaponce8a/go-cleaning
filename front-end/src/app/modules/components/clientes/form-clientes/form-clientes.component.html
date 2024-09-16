@@ -1,6 +1,14 @@
 <app-modal-header [tituloHeader]="tituloPorAccion"
     (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
 
+    <!-- Campo de búsqueda -->
+<div class="search-container mb-4 d-flex justify-content-center">
+    <mat-form-field class="w-100" appearance="outline" style="max-width: 500px;">
+        <mat-label>Buscar Cliente</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar cliente">
+    </mat-form-field>
+</div>
+
 <form [formGroup]="form" class="formmularioCont">
     <div class="formGroupCont">
         <mat-form-field class="w-100" appearance="outline">

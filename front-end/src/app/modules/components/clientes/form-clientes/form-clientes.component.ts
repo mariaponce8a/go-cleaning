@@ -75,6 +75,13 @@ export class FormClientesComponent implements OnInit, OnDestroy {
       }
     }
   }
+  applyFilter(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const filterValue = input.value.trim().toLowerCase();
+    console.log('Filtro aplicado:', filterValue);
+    // Implementa la lógica de filtrado aquí
+  }
+
   form = new FormGroup({
     id_cliente: new FormControl(''),
     identificacion_cliente: new FormControl('', [Validators.required]),

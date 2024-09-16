@@ -76,7 +76,7 @@ export interface IpedidosRegistro {
 export interface IserviciosPlataforma {
   id_servicio: string | number;
   descripcion_servicio: string;
-  costo_unitario?: number;
+  costo_unitario: number;
   validar_pesaje?: any; // llega un numero pero se lo reemplaza por un string
   maximo_articulos?:number | string | null;
 }

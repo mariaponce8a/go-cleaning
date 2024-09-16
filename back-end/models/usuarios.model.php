@@ -20,7 +20,7 @@ class usuarios_model
                 // error_log( $resultado);
                 if ($resultado->num_rows > 0) {
                     $data_nav_token = $resultado->fetch_assoc();
-                    return json_encode(array("perfil" => $data_nav_token['perfil'], "usuario" => $data_nav_token['usuario']));
+                    return json_encode(array("perfil" => $data_nav_token['perfil'], "usuario" => $data_nav_token['usuario'], "id_usuario" => $data_nav_token['id_usuario']));
                 } else {
                     throw new Exception("Usuario o clave incorrectos.");
                 }

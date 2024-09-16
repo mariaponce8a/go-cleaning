@@ -14,6 +14,7 @@ export class ModalHeaderComponent {
 
   @Input() tituloHeader: string = 'Formulario';
   @Output() accionCerrar: EventEmitter<boolean> = new EventEmitter(false);
+  @Input() mostrarBtnCerrar: boolean = true;
 
   cerrarModal(eventoCerrar: boolean) {
     this.accionCerrar.emit(true);

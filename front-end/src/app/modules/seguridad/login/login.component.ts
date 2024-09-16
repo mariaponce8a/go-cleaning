@@ -53,6 +53,7 @@ export class LoginComponent implements OnDestroy {
   })
 
   public handleAction(event: string) {
+    console.log(event)
     if (event == 'confirm') {
       if (this.formlogin.invalid) {
         this.usermessage.getToastMessage('info', Constantes.formInvalidMessage).fire()
@@ -67,8 +68,10 @@ export class LoginComponent implements OnDestroy {
             this.localencript.setLocalStorage(Constantes.tokenKey, value.data.token);
             this.localencript.setLocalStorage(Constantes.usuarioKey, value.data.usuario);
             this.localencript.setLocalStorage(Constantes.perfilKey, value.data.perfil);
-            console.log(value, this.localencript.getLocalStorage(Constantes.usuarioKey));
+            this.localencript.setLocalStorage(Constantes.idusuarioKey, String(value.data.id_usuario));
+            console.log(value.data.id_usuario)
             this.router.navigateByUrl('/bds');
+
           },
           error: (error) => {
             this.usermessage.getToastMessage('error', error);

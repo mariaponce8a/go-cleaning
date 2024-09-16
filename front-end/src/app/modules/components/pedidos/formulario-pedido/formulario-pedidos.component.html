@@ -1,0 +1,271 @@
+<app-colored-body-header (returnPage)="goBack($event)" [icon]="'keyboard_backspace'" [nombrePagina]="propositoPagina"
+    [subtitulo]="'Realice sus pedidos rápida y facilmente'"></app-colored-body-header>
+<div class="conttoatl">
+    <div class="contFormpedidos">
+        <app-modal-header [tituloHeader]="'Formulario de pedido'" [mostrarBtnCerrar]="false"></app-modal-header>
+        <div class="formmularioCont">
+            <form [formGroup]="form">
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Usuario plataforma</mat-label>
+                        <mat-icon style="color: #00000061;" matPrefix>person</mat-icon>
+                        <input matInput formControlName="usuario" />
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Cliente</mat-label>
+                        <input (keyup)="cambiandoCliente()" type="text" placeholder="Buscar cliente"
+                            aria-label="cedulas" matInput [formControl]="this.form.controls.identificacionCliente"
+                            [matAutocomplete]="auto">
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            @for (option of filteredOptions | async; track option) {
+                            <mat-option (onSelectionChange)="getSelectedClient($event)"
+                                [value]="option">{{option}}</mat-option>
+                            }
+                        </mat-autocomplete>
+                        <button type="button" (click)="openAgregarCliente()" mat-icon-button matSuffix
+                            [matTooltip]="'Ingresar cliente nuevo'">
+                            <mat-icon style="color: var(--secondary);">person_add</mat-icon>
+                        </button>
+                        @if (this.clientesExistentesLong == 0) {
+                        <mat-hint>El cliente buscado no existe</mat-hint>
+                        }
+                        @if (this.form.controls.fk_id_cliente.hasError('required')) {
+                        <mat-error>Debe seleccionar el cliente</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Datos del cliente</mat-label>
+                        <input readonly="true" matInput formControlName="nombreCompletoCliente" />
+                    </mat-form-field>
+                </div>
+                <!-- F , P o C (PAGO AL FINALIZAR, PAGO PARCIAL y PAGO COMPLETO) -->
+                @if (habilitarFormularioRestante) {
+                <div class="formGroupCont">
+                    <mat-form-field class="w-50" appearance="outline">
+                        <mat-label>Tipo de entrega</mat-label>
+                        <mat-select (selectionChange)="setearDireccionEntrega($event)" formControlName="tipo_entrega">
+                            <mat-option value="D">Domicilio</mat-option>
+                            <mat-option value="L">Local</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Dirección de entrega</mat-label>
+                        <input maxlength="150" matInput formControlName="direccion_entrega" />
+                        <mat-hint>Max.150</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Fecha entrega</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="fecha_entrega_estimada">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        @if (fechaEntregaInvalida) {
+                        <mat-error>La fecha de entrega debe ser mayor que la fecha de recolección.</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field class="w-25" appearance="outline">
+                        <mat-label>Hora entrega</mat-label>
+                        <input type="time" matInput formControlName="hora_entrega_estimada" />
+                    </mat-form-field>
+                </div>
+
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Fecha recolección</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="fecha_recoleccion_estimada">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        @if (fechaRecoleccionInvalida) {
+                        <mat-error> La fecha de recolección no puede ser anterior a la fecha actual.</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field class="w-25" appearance="outline">
+                        <mat-label>Hora recolección</mat-label>
+                        <input type="time" matInput formControlName="hora_recoleccion_estimada" />
+                    </mat-form-field>
+                </div>
+
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Dirección de recolección</mat-label>
+                        <input maxlength="150" matInput formControlName="direccion_recoleccion" />
+                        <mat-hint>Max.150</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="formGroupCont">
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Tipo de Pago</mat-label>
+                        <mat-select (selectionChange)="cambiarAdelantoPago($event)" formControlName="estado_pago">
+                            <mat-option value="P">Parcial</mat-option>
+                            <mat-option value="C">Completo</mat-option>
+                            <mat-option value="F">Al finalizar</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Adelanto de pago</mat-label>
+                        <input
+                            [readonly]="!this.form.controls.estado_pago.value || this.form.controls.estado_pago.value == 'C' || this.form.controls.estado_pago.value == 'F' "
+                            maxlength="10" matInput formControlName="valor_pago" />
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Total articulos</mat-label>
+                        <mat-icon matPrefix>shopping_basket</mat-icon>
+                        <input readonly="true" maxlength="4" matInput formControlName="cantidad_articulos"
+                            [value]="totalArticulos" />
+                    </mat-form-field>
+                </div>
+
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Descuentos</mat-label>
+                        <mat-icon matPrefix>discount</mat-icon>
+                        <mat-select (valueChange)="descuentoSeleccionado($event)" formControlName="fk_id_descuentos">
+                            <mat-option>
+                                <mat-icon>discount</mat-icon>
+                                Sin descuento
+                                <br>
+                                <label>% 0</label>
+                            </mat-option>
+                            @for (descuento of combosDescuentos; track descuento) {
+                            <mat-option [value]="descuento.id_tipo_descuento">
+                                <mat-icon>discount</mat-icon>
+                                {{descuento.tipo_descuento_desc}}
+                                <br>
+                                <label>% {{descuento.cantidad_descuento * 100}}</label>
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-hint>Aplican al total del pedido</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Sub-total</mat-label>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input [value]="subtotal" readonly="true" matInput formControlName="pedido_subtotal" />
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Total</mat-label>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input readonly="true" maxlength="10" matInput formControlName="total" />
+                        <mat-hint>Total no incluye iva</mat-hint>
+                    </mat-form-field>
+                </div>
+                }
+            </form>
+            @if (habilitarFormularioRestante) {
+            <div>
+                <button class="mb-2" mat-stroked-button (click)="executeActionItems('add')">
+                    <mat-icon>add</mat-icon>
+                    Agregar servicios</button>
+                <div class="serviciosAgg">
+                    @if (itemList.length == 0) {
+                    <div class="sinPedidos">No se han agregado servicios</div>
+                    }
+                    @else {
+                    @for (items of itemList.controls; track $index) {
+                    <div [formGroup]="items" class="itemPedido">
+                        <div class="w-100 d-flex justify-content-between">
+                            <label>Artículo # {{$index+1}}</label>
+                            <mat-icon (click)="removeItem($index)" style="color: rgb(181, 6, 18);">close</mat-icon>
+                        </div>
+                        <div class="formGroupCont">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Descripción</mat-label>
+                                <input placeholder="Describe el artículo a ingresar" maxlength="150" matInput
+                                    formControlName="descripcion_articulo" />
+                                @if (items.controls['descripcion_articulo'].hasError('required')) {
+                                <mat-error>Ingrese la descripcion de este item</mat-error>
+                                }
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Servicios</mat-label>
+                                <mat-select (selectionChange)="servicioSeleccionado($event, items)"
+                                    formControlName="fk_id_servicio">
+                                    @for (servicio of comboServicios; track servicio) {
+                                    <mat-option [value]="servicio.id_servicio">
+                                        {{servicio.descripcion_servicio}}
+                                        <br>
+                                        <label style="color: rgb(46, 140, 115); font-weight: 400;">$
+                                            {{servicio.costo_unitario}} x {{servicio.validar_pesaje == 0? 'unidad'
+                                            : 'libra'}}</label>
+                                    </mat-option>
+                                    }
+                                </mat-select>
+                                @if (items.controls['fk_id_servicio'].hasError('required')) {
+                                <mat-error>Seleccione un servicio</mat-error>
+                                }
+
+                            </mat-form-field>
+                        </div>
+                        <div class="formGroupCont">
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Cantidad</mat-label>
+                                <input min="0"
+                                    [max]="items.controls['maximo'].value == 0 ? 0 : items.controls['maximo'].value  "
+                                    type="number" (input)="calcularArticuloYsubtotal(items)" matInput
+                                    formControlName="cantidad" />
+                                @if (items.controls['cantidad'].hasError('required')) { <mat-error>
+                                    Debe ingresar una cantidad</mat-error>
+                                }
+
+                                @if (items.controls['maximo'].value == 0) {
+                                <mat-error>Seleccione un servicio, por el momento su maximo es 0</mat-error>
+                                }
+
+                                @if ((items.controls['cantidad'].value > items.controls['maximo'].value) &&
+                                items.controls['maximo'].value != 0 ) {
+                                <mat-error>Máximo de articulos por servicios es:
+                                    {{items.controls['maximo'].value}}</mat-error>
+                                }
+
+                                @if (items.controls['cantidad'].hasError('pattern') &&
+                                (items.controls['cantidad'].value
+                                < items.controls['maximo'].value) && items.controls['maximo'].value !=0 ) { <mat-error>
+                                    No se permiten decimales</mat-error>
+                                    }
+
+
+                            </mat-form-field>
+
+                            @if (items.controls['validarPesaje'].value == 1) {
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Libras</mat-label>
+                                <input matInput (input)=" calcularArticuloYsubtotal(items) " formControlName="libras"
+                                    [value]="items.controls['validarPesaje'].value  == 1 ? items.controls['libras'].value : 0" />
+                            </mat-form-field>
+                            }
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Totalizado</mat-label>
+                                <mat-icon matPrefix>attach_money</mat-icon>
+                                <input readonly="true" formControlName="precio_servicio" matInput />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+
+            <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+            }
+
+        </div>
+    </div>
+</div>

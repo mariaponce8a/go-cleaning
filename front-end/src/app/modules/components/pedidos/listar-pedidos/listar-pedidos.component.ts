@@ -2,14 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../desginModules/material.module';
 import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
 import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
-import { MatDialog } from '@angular/material/dialog';
-
 import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
 import { ITitulosTabla, IaccionBotones, IpedidosJoin } from '../../../shared/interface/datamodels.interface';
 import { RequestService } from '../../../shared/services/request.service';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { Router } from '@angular/router';
+import { FormularioPedidosComponent } from '../formulario-pedido/formulario-pedidos.component';
+import { DataService } from '../../../shared/services/dataTransfer.service';
 
 @Component({
   selector: 'app-listar-pedidos',
@@ -17,7 +17,8 @@ import { Router } from '@angular/router';
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
-    ColoredBodyHeaderComponent
+    ColoredBodyHeaderComponent,
+    FormularioPedidosComponent
   ],
   templateUrl: './listar-pedidos.component.html',
   styleUrl: './listar-pedidos.component.css'
@@ -77,9 +78,9 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
 
   constructor(
     private requestService: RequestService,
-    private router: Router,
     private usermessage: UserMessageService,
-    private dialog: MatDialog
+    private router: Router,
+    private datatransfer: DataService,
   ) { }
 
   ngOnInit(): void {
@@ -103,15 +104,15 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
   }
 
   manejarEventosBotones(evento: IaccionBotones) {
-    console.log(evento);
-    let dialogRef;
+
     switch (evento.tipo) {
       case 'editar':
-
+        this.datatransfer.setDatos(evento);
+        this.router.navigateByUrl('/bds/formulario-pedido');
         break;
       case 'crear':
-        console.log('entre')
-        this.router.navigateByUrl('bds/pedidos/formulario');
+        this.datatransfer.setDatos(evento);
+        this.router.navigateByUrl('/bds/formulario-pedido');
         break;
 
       case 'eliminar':

@@ -1,8 +1,5 @@
-import { Routes } from '@angular/router';
-import { LoginComponent } from './modules/seguridad/login/login.component';
-import { MenuComponent } from './modules/menu/menu.component';
-import path from 'path';
-
+import { Routes } from '@angular/router'; 
+import { MenuComponent } from './modules/menu/menu.component'; 
 export const routes: Routes = [
     {
         path: '', redirectTo: 'login', pathMatch: 'full'
@@ -18,12 +15,10 @@ export const routes: Routes = [
             {
                 path: 'pedidos',
                 loadComponent: () => import('./modules/components/pedidos/listar-pedidos/listar-pedidos.component').then(c => c.ListarPedidosComponent),
-                children: [
-                    {
-                        path: 'formulario',
-                        loadComponent: () => import('./modules/components/pedidos/formulario-pedidos/formulario-pedidos.component').then(c => c.FormularioPedidosComponent)
-                    }
-                ]
+            },
+            {
+                path: 'formulario-pedido',
+                loadComponent: () => import('./modules/components/pedidos/formulario-pedido/formulario-pedidos.component').then(c => c.FormularioPedidosComponent),
             },
             {
                 path: 'usuarios',

@@ -58,12 +58,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       pagina: 'bds/asignaciones',
       perfil: ''
     },
-    {
-      descripcion: 'Recomendaciones',
-      icon: 'grade',
-      pagina: 'bds/recomendaciones',
-      perfil: ''
-    },
+    
     {
       descripcion: 'Tipos descuentos',
       icon: 'attach_money',

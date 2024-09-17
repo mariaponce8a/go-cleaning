@@ -26,6 +26,10 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
 })
 export class FormMaterialesComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
+  imageBase64: string | null = null;
+  selectedFile: File | null = null;
+
+
   constructor(
     private usermessage: UserMessageService,
     private requestservice: RequestService,
@@ -42,6 +46,11 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
     if (this.data.tipo == 'editar') {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
+      console.log('Imagen recibida:', this.data.fila.imagen);
+
+      if (this.data.fila.imagen) {
+        this.imageBase64 = this.data.fila.imagen; // La imagen debe estar en Base64
+      }
     } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
       this.form.controls.descripcion_material.enable();
@@ -53,8 +62,24 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
     descripcion_material: new FormControl('', [
       Validators.required,
       Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
-    ])
-  })
+    ]),
+    imagen: new FormControl('', Validators.required)
+  });
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.imageBase64 = (reader.result as string).split(',')[1]; // Extrae solo la parte Base64
+        this.form.controls.imagen.setValue(this.imageBase64);
+      };
+      reader.readAsDataURL(file); // Lee el archivo y codifícalo como Base64
+    } else {
+      this.form.controls.imagen.setValue(null);
+    }
+  }
+  
   
 
   cerrarModalSinInformacion(cerrar: boolean) {
@@ -73,10 +98,13 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => {
+           console.log('Respuesta del servidor:', value);
+           console.log('Material actualizado:', value.respuesta);
           this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
           this.cerrarModalConInformacion();
         },
         error: (error) => {
+          console.error('Error al editar material:', error);
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
       })
@@ -102,23 +130,23 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
       return;
     }
-
-    let body = this.form.getRawValue();
-    console.log('Datos a enviar:', body); 
-
-
+  
+    const requestBody = {
+      id_material: this.form.controls.id_material.value || '',
+      descripcion_material: this.form.controls.descripcion_material.value || '',
+      imagen: this.imageBase64
+    };
+  
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
-        if (this.data.tipo == 'editar') {
-          this.editarMaterial(body);
-        }
-        else {
-          this.registrarMaterial(body);
+        if (this.data.tipo === 'editar') {
+          this.editarMaterial(requestBody); // Pasar el objeto en lugar del FormData
+        } else {
+          this.registrarMaterial(requestBody); // Pasar el objeto en lugar del FormData
         }
       }
-    })
+    });
   }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

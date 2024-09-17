@@ -1,7 +1,7 @@
 <app-modal-header [tituloHeader]="tituloPorAccion"
     (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
 
-<form [formGroup]="form" class="formmularioCont">
+<form [formGroup]="form" class="formmularioCont" enctype="multipart/form-data">
     <div class="formGroupCont">
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Material</mat-label>
@@ -14,6 +14,14 @@
                 }
         </mat-form-field>
     </div>
+
+    <div class="formGroupCont">
+            <mat-label>Imagen</mat-label>
+            <input type="file" (change)="onFileSelected($event)" />
+            @if (this.form.controls.imagen.hasError('required')) {
+            <mat-error>Imagen requerida</mat-error> 
+            }
+      </div>
 
     <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
 

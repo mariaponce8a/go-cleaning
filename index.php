@@ -10,7 +10,6 @@ require_once('./back-end/controllers/estados.controllers.php');
 require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
 require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
 
-
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -398,17 +397,33 @@ Flight::route('POST /registrarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $materiales_controller = new Materiales_controller();
+        
+        // Decodificar el cuerpo de la solicitud
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
 
         $descripcion_material = $data['descripcion_material'] ?? null;
+        $imagen = $data['imagen'] ?? null; // Ahora la imagen viene en Base64
 
-        $respuesta = $materiales_controller->insertMaterial($descripcion_material);
+        // Validar que la descripción y la imagen estén presentes
+        if (empty($descripcion_material)) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La descripción del material es requerida."));
+            return;
+        }
+        
+        if (empty($imagen)) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen es requerida."));
+            return;
+        }
+
+        // Llamar al método del controlador para registrar el material
+        $respuesta = $materiales_controller->insertMaterial($descripcion_material, $imagen);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
 
 Flight::route('PUT /editarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
@@ -419,13 +434,20 @@ Flight::route('PUT /editarMaterial', function () {
 
         $id_material = $data['id_material'] ?? null;
         $descripcion_material = $data['descripcion_material'] ?? null;
+        $imagen = $data['imagen'] ?? null;
 
-        $respuesta = $materiales_controller->updateMaterial($id_material, $descripcion_material);
+        if (empty($id_material) || empty($descripcion_material)) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "El ID y la descripción del material son requeridos."));
+            return;
+        }
+
+        $respuesta = $materiales_controller->updateMaterial($id_material, $descripcion_material, $imagen);
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
 Flight::route('PUT /eliminarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {

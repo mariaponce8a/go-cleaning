@@ -16,39 +16,52 @@ class Materiales_controller
         }
     }
 
-    public function insertMaterial($descripcion_material)
-    {
-        error_log("--------------");
-        $materialModel = new Clase_Material();
-        if ($descripcion_material === null
-        ) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete la descripción del material."));
-        }
-        $resultado = $materialModel->insertar($descripcion_material);
-        error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
-        if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el material"));
-        } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Material registrado con éxito"));
-        }
+public function insertMaterial($descripcion_material, $imagen)
+{
+    error_log("-------------- Insert Material Method Called ----------------");
+    
+    $materialModel = new Clase_Material();
+    
+    // Validación de campos
+    if (empty($descripcion_material)) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete la descripción del material."));
     }
 
-    public function updateMaterial($id_material, $descripcion_material)
+    // Verificación de imagen en Base64
+    if (empty($imagen)) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "La imagen es requerida."));
+    }
+
+    // Llama al modelo para insertar el material
+    $resultado = $materialModel->insertar($descripcion_material, $imagen);
+    
+    error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
+    
+    if ($resultado === false) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el material"));
+    } else {
+        return json_encode(array("respuesta" => "1", "mensaje" => "Material registrado con éxito"));
+    }
+}
+
+    
+public function updateMaterial($id_material, $descripcion_material, $imagen = null)
 {
-    error_log("--------------");
+    error_log("-------------- Update Material Method Called ----------------");
+
     $materialModel = new Clase_Material();
 
-    error_log("------------------------------------------------------ id_material: " . $id_material . " descripcion_material: " . $descripcion_material);
-
-    if ($id_material === null || $descripcion_material === null) {
+    if (empty($id_material) || empty($descripcion_material)) {
         return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
     }
-
-    $resultado = $materialModel->actualizar($id_material, $descripcion_material);
-
+    if ($imagen !== null && empty($imagen)) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "La imagen es inválida o está vacía."));
+    }
+    $resultado = $materialModel->actualizar($id_material, $descripcion_material, $imagen);
+    
     error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-
-    if ($resultado == false) {
+    
+    if ($resultado === false) {
         return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el material"));
     } else {
         return json_encode(array("respuesta" => "1", "mensaje" => "Material actualizado con éxito"));

@@ -23,10 +23,17 @@
 
       <table mat-table [dataSource]="dataSource">
         @for (column of titulos; track column) {
-        <ng-container class="rowAlternate" [matColumnDef]="column.value">
-          <mat-header-cell *matHeaderCellDef>{{column.viewValue}}</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element[column.value]}} </mat-cell>
-        </ng-container>
+          <ng-container class="rowAlternate" [matColumnDef]="column.value">
+            <mat-header-cell *matHeaderCellDef>{{column.viewValue}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="column.value === 'imagen'; else textCell">
+                <img *ngIf="element.imagen" [src]="element.imagen" alt="Imagen del material" style="max-width: 100px; max-height: 100px;">
+              </ng-container>
+              <ng-template #textCell>
+                {{element[column.value]}}
+              </ng-template>
+            </mat-cell>
+          </ng-container>
         }
         <ng-container matColumnDef="accion">
           <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>

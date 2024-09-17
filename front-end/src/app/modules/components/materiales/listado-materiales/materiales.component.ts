@@ -28,6 +28,10 @@ export class ListadoMaterialesComponent implements OnInit, OnDestroy {
       value: 'descripcion_material',
       viewValue: 'Descripción',
     },
+    {
+      value: 'imagen',
+      viewValue: 'Imagen',
+    }
     
   ];
 

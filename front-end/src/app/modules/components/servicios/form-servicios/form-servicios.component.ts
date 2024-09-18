@@ -1,23 +1,23 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
 import { RequestService } from '../../../shared/services/request.service';
-import { pipe, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ModalHeaderComponent } from '../../../shared/components/modal-header/modal-header.component';
 import { IaccionBotones, IserviciosPlataforma } from '../../../shared/interface/datamodels.interface';
 import { Constantes } from '../../../config/constantes';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-form-servicios',
   standalone: true,
   imports: [
+    CommonModule, // Asegúrate de incluir esto
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common';
 })
 export class FormServiciosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
-  
+
   constructor(
     private usermessage: UserMessageService,
     private requestservice: RequestService,
@@ -36,43 +36,40 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<FormServiciosComponent>,
     @Inject(MAT_DIALOG_DATA) public data:  IaccionBotones,
   ) { }
+  
   tituloPorAccion: string = 'Formulario';
   hide: boolean = false;
-
-
 
   ngOnInit(): void {
     console.log(this.data);
     console.log(this.data.fila);
-    if (this.data.tipo == 'editar') {
-      this.tituloPorAccion = this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
+    if (this.data.tipo === 'editar') {
+      this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
-      this.data.fila.maximos_articulos ?? null
+      this.data.fila.maximos_articulos ?? null;
       const filaConValorTransformado = {
         ...this.data.fila,
         validar_pesaje: this.data.fila.validar_pesaje === 'No validar' ? 'No' : 'Si',
       };
   
-      this.form.patchValue(filaConValorTransformado);    } else {
+      this.form.patchValue(filaConValorTransformado);
+    } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
-      
     }
-  } 
+  }
+
   form = new FormGroup({
     id_servicio: new FormControl(''),
     descripcion_servicio: new FormControl('', [Validators.required]),
     costo_unitario: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]),
     validar_pesaje: new FormControl('', [Validators.required]),
     maximo_articulos: new FormControl('', [
-      Validators.pattern('^[0-9]*$'), // Solo números
-      Validators.min(1), // Valor mínimo 1
-      Validators.max(150) // Valor máximo 150 
-      ]),
+      Validators.pattern('^[0-9]*$'),
+      Validators.min(1),
+      Validators.max(150)
+    ]),
   });
 
-  
-
- 
   cerrarModalSinInformacion(cerrar: boolean) {
     if (cerrar) {
       this.dialogRef.close();
@@ -87,11 +84,11 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     this.requestservice.put(body, Constantes.apiUpdateServices)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (value) => {
+        next: () => {
           this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
           this.cerrarModalConInformacion();
-        },  
-        error: (error) => {
+        },
+        error: () => {
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
       });
@@ -101,14 +98,14 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
     this.requestservice.post(body, Constantes.apiCreateServices)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (value) => {
+        next: () => {
           this.usermessage.getToastMessage('success', Constantes.createResponseMsg).fire();
           this.cerrarModalConInformacion();
         },
-        error: (error) => {
+        error: () => {
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
-      })
+      });
   }
 
   guardar() {
@@ -123,7 +120,7 @@ export class FormServiciosComponent implements OnInit, OnDestroy {
 
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
-        if (this.data.tipo == 'editar') {
+        if (this.data.tipo === 'editar') {
           this.editarServicios(body);
         } else {
           this.registrarServicios(body);

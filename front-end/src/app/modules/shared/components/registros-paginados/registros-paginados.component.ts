@@ -37,6 +37,9 @@ export class RegistrosPaginadosComponent implements OnInit {
   @Output() accionBotones: EventEmitter<IaccionBotones> = new EventEmitter();
   displayColumns: Array<string> = [];
 
+  // Nueva bandera para controlar la visibilidad del filtro
+  public mostrarFiltro: boolean = false;
+
   ngOnInit(): void {
     this.onFillData();
   }
@@ -64,9 +67,14 @@ export class RegistrosPaginadosComponent implements OnInit {
     }
   }
 
-// Método para aplicar el filtro de búsqueda
-applyFilter(event: Event) {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter = filterValue.trim().toLowerCase();  // Aplica el filtro en minúsculas
-}
+  // Método para aplicar el filtro de búsqueda
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();  // Aplica el filtro en minúsculas
+  }
+
+  // Método para alternar la visibilidad del filtro
+  toggleFiltro() {
+    this.mostrarFiltro = !this.mostrarFiltro; // Cambia el estado de la bandera
+  }
 }

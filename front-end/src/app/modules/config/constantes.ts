@@ -28,6 +28,8 @@ export class Constantes {
     'Registro eliminado con éxito';
   public static errorResponseMsg: string =
     'Problemas para procesar la acción, intentelo más tarde.';
+    public static logOutQuestion: string =
+    '¿Está seguro que desea cerrar sesión?';
   //labels generales
   public static modalHeaderMensajeEditar: string = 'Formulario edición'
   public static modalHeaderMensajeCrear: string = 'Formulario creación'
@@ -90,6 +92,8 @@ export class Constantes {
     this.env.host + this.env.name + '/registrarMaterial';
   public static apiDeleteMaterial: string =
     this.env.host + this.env.name + '/eliminarMaterial';
+    public static apiGetMaterial: string =
+    this.env.host + this.env.name + '/consultarMaterial';
 
 
   //----------- APIS  Estados 

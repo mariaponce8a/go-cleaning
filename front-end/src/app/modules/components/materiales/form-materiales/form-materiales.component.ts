@@ -49,7 +49,7 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
       console.log('Imagen recibida:', this.data.fila.imagen);
 
       if (this.data.fila.imagen) {
-        this.imageBase64 = this.data.fila.imagen; // La imagen debe estar en Base64
+        this.imageBase64 = this.data.fila.imagen; 
       }
     } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
@@ -63,22 +63,51 @@ export class FormMaterialesComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
     ]),
-    imagen: new FormControl('', Validators.required)
+    imagen: new FormControl('', [Validators.required])
   });
+
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      // Tipos MIME permitidos
+      const validImageTypes = ['image/jpeg', 'image/png'];
+      const pdfType = 'image/pdf';
+      const heicType = 'image/heic'; 
+  
+      if (file.type === pdfType || file.type === heicType) {
+        this.form.controls.imagen.setErrors({ invalidFileType: true });
+        this.usermessage.getToastMessage('error', 'El archivo PDF o HEIC no es permitido. Solo se permiten imágenes JPEG, JPG y PNG.').fire();
+        this.form.controls.imagen.setValue(null);
+        return; 
+      }
+  
+      if (!validImageTypes.includes(file.type)) {
+        this.form.controls.imagen.setErrors({ invalidFileType: true });
+        this.usermessage.getToastMessage('error', 'Tipo de archivo no permitido. Solo se permiten imágenes JPEG, JPG y PNG.').fire();
+        this.form.controls.imagen.setValue(null);
+        return;
+      }
+
+      if (file.size > 1024 * 1024) {
+        this.form.controls['imagen'].setErrors({ fileTooLarge: true });
+        this.usermessage.getToastMessage('error','La imagen es muy grande').fire();
+
+        return;
+    }
+  
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.imageBase64 = (reader.result as string).split(',')[1]; // Extrae solo la parte Base64
+        this.imageBase64 = (reader.result as string).split(',')[1]; 
         this.form.controls.imagen.setValue(this.imageBase64);
       };
-      reader.readAsDataURL(file); // Lee el archivo y codifícalo como Base64
+      reader.readAsDataURL(file); 
     } else {
       this.form.controls.imagen.setValue(null);
     }
   }
+  
+  
   
   
 

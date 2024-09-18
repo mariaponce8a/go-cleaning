@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Observable, catchError, finalize, map, of, tap } from 'rxjs';
 import { Constantes } from '../../config/constantes';
 import { LocalStorageEncryptationService } from './local-storage-encryptation.service';
-// import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,18 +14,12 @@ export class AuthService {
     private http: HttpClient,
     private localStorageEncryptation: LocalStorageEncryptationService
   ) { }
-
-  // logout(reason: string): Observable<any> {
-  //   return this.http
-  //     .post<any>(`${environment.urlAuth}/v1/authentication/logout`, {})
-  //     .pipe(
-  //       finalize(() => {
-  //         this.router.navigateByUrl("/autenticacion");
-  //         this.removeAll();
-  //         this.setLocalStorageAutomaticLogout(reason);
-  //       })
-  //     );
-  // }
+  
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigateByUrl("/autenticacion");
+    this.removeAll();
+  }
 
   setLocalStorageAutomaticLogout(reason: string) {
     this.localStorageEncryptation.setLocalStorage(
@@ -34,8 +27,16 @@ export class AuthService {
       reason
     );
   }
-  removeAll() {
-
+  removeAll(): void {
+    const keysToRemove = [
+      'auth',
+      'idusuarioValue',
+      'loglevel',
+      'perfilvalue',
+      'usuarioValue'
+    ];
+  
+    keysToRemove.forEach(key => localStorage.removeItem(key));
   }
 
   get tokenAuth() {
@@ -44,6 +45,14 @@ export class AuthService {
     );
   }
 
+
+  isAuthenticated(): boolean {
+    const token = this.tokenAuth;
+    return token !== null && token !== '';
+  }
+
+
+    
   refreshToken(): Observable<boolean> {
     return this.http
       .put<any>(`refreshseseion`, {})
@@ -63,10 +72,11 @@ export class AuthService {
       );
   }
 
-  validateSesion(): Observable<any> {
-    return this.http.post<any>(
-      `url`,
-      {}
-    );
+  validateSesion(token: string): Observable<any> {
+    return this.http.post<any>(`${Constantes.tokenKey}/v1/authentication/validate`, { token })
+      .pipe(
+        catchError(() => of({ isAuthenticated: false })) // Manejar errores retornando un objeto por defecto
+      );
   }
-}
+  }
+

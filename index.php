@@ -416,6 +416,21 @@ Flight::route('POST /registrarMaterial', function () {
             return;
         }
 
+        // Validar el formato de la imagen
+        $imagenDecodificada = base64_decode($imagen);
+        $imagenInfo = getimagesizefromstring($imagenDecodificada);
+        if ($imagenInfo === false) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen no es válida."));
+            return;
+        } elseif ($imagenInfo[2] !== IMAGETYPE_JPEG && $imagenInfo[2] !== IMAGETYPE_PNG) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen debe ser un JPEG o PNG."));
+            return;
+        } elseif (strlen($imagen) > 1024 * 1024) {
+            http_response_code(response_code: 413);
+            echo json_encode(array("estatus" => "0", "mensaje" => "La imagen es demasiado grande."));
+            return;
+        }
+
         // Llamar al método del controlador para registrar el material
         $respuesta = $materiales_controller->insertMaterial($descripcion_material, $imagen);
         echo $respuesta;
@@ -423,7 +438,6 @@ Flight::route('POST /registrarMaterial', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
-
 
 Flight::route('PUT /editarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
@@ -438,6 +452,20 @@ Flight::route('PUT /editarMaterial', function () {
 
         if (empty($id_material) || empty($descripcion_material)) {
             echo json_encode(array("respuesta" => "0", "mensaje" => "El ID y la descripción del material son requeridos."));
+            return;
+        }
+
+        $imagenDecodificada = base64_decode($imagen);
+        $imagenInfo = getimagesizefromstring($imagenDecodificada);
+        if ($imagenInfo === false) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen no es válida."));
+            return;
+        } elseif ($imagenInfo[2] !== IMAGETYPE_JPEG && $imagenInfo[2] !== IMAGETYPE_PNG) {
+            echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen debe ser un JPEG o PNG."));
+            return;
+        } elseif (strlen($imagen) > 1024 * 1024) {
+            http_response_code(response_code: 413);
+            echo json_encode(array("estatus" => "0", "mensaje" => "La imagen es demasiado grande."));
             return;
         }
 
@@ -468,12 +496,27 @@ Flight::route('GET /consultarMateriales', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $materiales_controller = new Materiales_controller();
+        
         $respuesta = $materiales_controller->getAllMaterials();
         echo $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
+Flight::route('GET /consultarMaterial', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera) {
+        $materiales_controller = new Materiales_controller();
+
+        $respuesta = $materiales_controller->getMaterialDetail();
+        
+        echo json_encode($respuesta);
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
 // estadossssssssssssssssssssssssssssssssssssssssssssss
 // Registrar un nuevo estado
 Flight::route('POST /registrarEstado', function () {
@@ -488,7 +531,9 @@ Flight::route('POST /registrarEstado', function () {
         $respuesta = $estado_controller->insertState($descripcion_estado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("estatus" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 

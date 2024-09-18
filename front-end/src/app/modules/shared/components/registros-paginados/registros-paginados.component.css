@@ -63,7 +63,7 @@
 
 .search-field {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .mat-form-field {
@@ -80,9 +80,13 @@
   color: #888888;
 }
 
-input[matInput] {
-  padding: 10px;
+input[matInput] { 
   font-size: 16px;
+}
+
+.buttonConfirm, .buttonBack, .buttonDisabled {
+ 
+  margin: inherit!important; 
 }
 
 

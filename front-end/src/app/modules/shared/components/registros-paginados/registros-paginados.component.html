@@ -3,71 +3,107 @@
     <label class="listadoNameStyle">Listados de registros</label>
   </div>
 
-   
-
-  
   <div class="listadoContStyle">
-    <button type="button" class="buttonBack mb-4 " (click)="actionRow('crear', {})">
-      Crear registro
-    </button>
+    <div
+      style="
+      display: flex;
+    flex-direction: row;
+    gap: 17px;
+    justify-content: flex-start;
+"
+    >
+      <button
+        type="button"
+        class="buttonBack mb-4"
+        (click)="actionRow('crear', {})"
+      >
+        Crear registro
+      </button>
 
-
-    <!-- Botón para alternar la visibilidad del filtro de búsqueda -->
-    <button mat-button (click)="toggleFiltro()">
-      <mat-icon>{{ mostrarFiltro ? 'close' : 'search' }}</mat-icon>
-    </button>
-    
-  <!-- Campo de búsqueda, visible solo si mostrarFiltro es true -->
-<div class="search-field-container" *ngIf="mostrarFiltro">
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en los registros">
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
-</div>
+      <!-- Campo de búsqueda, visible solo si mostrarFiltro es true -->
+      <div class="search-field-container d-flex flex-row g-2">
+        <!-- Botón para alternar la visibilidad del filtro de búsqueda -->
+        <!-- <button mat-button (click)="toggleFiltro()">
+          <mat-icon>{{ mostrarFiltro ? "close" : "search" }}</mat-icon>
+        </button> -->
+        <mat-form-field
+       
+          appearance="outline"
+          class="search-field"
+        >
+          <mat-icon matSuffix>search</mat-icon>
+          <input
+          maxlength="100"
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Buscar en los registros"
+          />
+        </mat-form-field>
+      </div>
+    </div>
 
     <div class="table-responsive table-responsiveCustom">
-      <mat-progress-bar mode="indeterminate" *ngIf="isLoadingTable"></mat-progress-bar>
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="isLoadingTable"
+      ></mat-progress-bar>
 
       <table mat-table [dataSource]="dataSource">
-<<<<<<< HEAD
         @for (column of titulos; track column) {
-          <ng-container class="rowAlternate" [matColumnDef]="column.value">
-            <mat-header-cell *matHeaderCellDef>{{column.viewValue}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <ng-container *ngIf="column.value === 'imagen'; else textCell">
-                <img *ngIf="element.imagen" [src]="element.imagen" alt="Imagen del material" style="max-width: 100px; max-height: 100px;">
-              </ng-container>
-              <ng-template #textCell>
-                {{element[column.value]}}
-              </ng-template>
-            </mat-cell>
-          </ng-container>
-        }
-=======
-        <ng-container *ngFor="let column of titulos" [matColumnDef]="column.value">
-          <mat-header-cell *matHeaderCellDef>{{ column.viewValue }}</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{ element[column.value] }} </mat-cell>
+        <ng-container class="rowAlternate" [matColumnDef]="column.value">
+          <mat-header-cell *matHeaderCellDef>{{
+            column.viewValue
+          }}</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <ng-container *ngIf="column.value === 'imagen'; else textCell">
+              <img
+                *ngIf="element.imagen"
+                [src]="element.imagen"
+                alt="Imagen del material"
+                style="max-width: 100px; max-height: 100px"
+              />
+            </ng-container>
+            <ng-template #textCell>
+              {{ element[column.value] }}
+            </ng-template>
+          </mat-cell>
         </ng-container>
-
->>>>>>> feature/tarea
+        }
         <ng-container matColumnDef="accion">
-          <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+          <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef
+            >Acción</mat-header-cell
+          >
           <mat-cell class="cellButtons" mat-cell *matCellDef="let element">
-            <button class="edit" type="button" mat-icon-button (click)="actionRow('editar', element)">
-              <mat-icon style="color: white;display: flex;align-items: center;">edit</mat-icon>
+            <button
+              class="edit"
+              type="button"
+              mat-icon-button
+              (click)="actionRow('editar', element)"
+            >
+              <mat-icon style="color: white; display: flex; align-items: center"
+                >edit</mat-icon
+              >
             </button>
-            <button class="delete" type="button" mat-icon-button (click)="actionRow('eliminar', element)">
-              <mat-icon style="color: white;display: flex;align-items: center;">restore_from_trash</mat-icon>
+            <button
+              class="delete"
+              type="button"
+              mat-icon-button
+              (click)="actionRow('eliminar', element)"
+            >
+              <mat-icon style="color: white; display: flex; align-items: center"
+                >restore_from_trash</mat-icon
+              >
             </button>
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell noDataItem" colspan="4">No se encontraron registros</td>
+          <td class="mat-cell noDataItem" colspan="4">
+            No se encontraron registros
+          </td>
         </tr>
       </table>
     </div>

@@ -15,7 +15,7 @@ class pedidos_model
             u.usuario , p.cantidad_articulos,
             p.fk_id_cliente, c.identificacion_cliente, c.correo_cliente , c.nombre_cliente, c.apellido_cliente,
             p.fk_id_descuentos, d.tipo_descuento_desc , d.cantidad_descuento , p.pedido_subtotal, p.estado_pago, p.valor_pago,
-            p.fecha_hora_recoleccion_estimada, p.direccion_recoleccion, p.fecha_hora_entrega_estimada,
+            p.fecha_recoleccion_estimada, p.direccion_recoleccion, p.fecha_entrega_estimada,
             p.direccion_entrega, p.tipo_entrega
             from tb_pedido p
             inner join tb_usuarios_plataforma u on u.id_usuario = p.fk_id_usuario

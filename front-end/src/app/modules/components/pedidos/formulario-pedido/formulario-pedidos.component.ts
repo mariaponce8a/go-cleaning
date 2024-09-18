@@ -94,10 +94,10 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     estado_pago: new FormControl(),
     valor_pago: new FormControl(0),
     fecha_recoleccion_estimada: new FormControl(),
-    hora_recoleccion_estimada: new FormControl(),
+    hora_recoleccion_estimada: new FormControl(''),
     direccion_recoleccion: new FormControl(),
-    fecha_entrega_estimada: new FormControl(),
-    hora_entrega_estimada: new FormControl(),
+    fecha_entrega_estimada: new FormControl('', [Validators.required]),
+    hora_entrega_estimada: new FormControl('', [Validators.required]),
     direccion_entrega: new FormControl(),
     tipo_entrega: new FormControl(),
   },
@@ -453,7 +453,7 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let cabeceraPedido = {
+    let pedido = {
       "fecha_pedido": new Date(),
       "fk_id_usuario": this.form.controls.fk_id_usuario.value ?? null,
       "cantidad_articulos": this.form.controls.cantidad_articulos.value ?? null,
@@ -461,21 +461,21 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       "fk_id_descuentos": Number(this.form.controls.fk_id_descuentos.value) ?? null,
       "pedido_subtotal": this.form.controls.pedido_subtotal.value ?? 0,
       "estado_pago": this.form.controls.estado_pago.value ?? null,
-      "valor_pago": this.form.controls.valor_pago.value ?? null,
+      "valor_pago": this.form.controls.valor_pago.value ?? 0,
+      "total": this.form.controls.total.value ?? 0,
       "fecha_recoleccion_estimada": this.form.controls.fecha_recoleccion_estimada.value ?? null,
       "hora_recoleccion_estimada": this.form.controls.hora_recoleccion_estimada.value ?? null,
       "direccion_recoleccion": this.form.controls.direccion_recoleccion.value ?? null,
       "fecha_entrega_estimada": this.form.controls.fecha_entrega_estimada.value ?? null,
       "hora_entrega_estimada": this.form.controls.fecha_entrega_estimada.value ?? null,
       "direccion_entrega": this.form.controls.direccion_entrega.value ?? null,
-      "tipo_entrega": this.form.controls.tipo_entrega.value ?? null
+      "tipo_entrega": this.form.controls.tipo_entrega.value ?? null,
+      "detallePedido": this.formItemList.getRawValue()
     }
 
-    let detallePedido = this.formItemList.getRawValue();
+    console.log(pedido)
 
-    console.log(cabeceraPedido, detallePedido)
-
-    this.usermessage.questionMessage('¿Está seguro que desea modificar el pedido? Una vez aceptado no podrá modificarlo').then(r => {
+    this.usermessage.questionMessage('¿Está seguro que desea guardar el pedido? Una vez aceptado no podrá modificarlo').then(r => {
       if (r.isConfirmed) {
         //TODO : LOGICA DE INSERCION
 

@@ -30,6 +30,10 @@ export class ListadoRecomendacionesComponent implements OnInit, OnDestroy {
       value: 'descripcion_servicio',  
       viewValue: 'Servicio',
     },
+    {
+      value: 'imagen',  
+      viewValue: 'Imagen',
+    },
   ];
 
   valoresDeTabla: IrecomendacionesPlataforma[] = [];

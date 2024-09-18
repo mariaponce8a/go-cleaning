@@ -85,24 +85,19 @@ public function updateMaterial($id_material, $descripcion_material, $imagen = nu
         }
     }
 
-    public function getMaterialDetail($id_material)
-    {
-        error_log("--------------");
-        $materialModel = new Clase_Material();
-        if ($id_material === null) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Falta el parámetro ID para obtener el detalle del material."));
-        }
-        try {
-            $materialDetalle = $materialModel->buscarPorId($id_material);
-            error_log("----------RESULTADO DETALLE DESDE CONTROLLER: " . json_encode($materialDetalle));
-            if ($materialDetalle == false) {
-                return json_encode(array("respuesta" => "0", "mensaje" => "No se encontró el material."));
-            } else {
-                return json_encode(array("respuesta" => "1", "mensaje" => "Detalle del material cargado con éxito", "data" => $materialDetalle));
-            }
-        } catch (Exception $e) {
-            error_log("Error al obtener el detalle del material: " . $e->getMessage());
-            return json_encode(array("respuesta" => "0", "mensaje" => "Error al obtener el detalle del material."));
-        }
+    public function getMaterialDetail()
+{
+    error_log("--------------");
+    $materialModel = new Clase_Material();
+    $resultado = $materialModel->obtenerMateriales();
+    error_log("----------RESULTADO SEARCH DESDE CONTROLLER: " . $resultado);
+    $resultado = json_decode($resultado, true);
+    if (isset($resultado['error'])) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al buscar los materiales por nombre"));
+    } elseif (empty($resultado)) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "No se encontraron materiales"));
+    } else {
+        return json_encode(array("respuesta" => "1", "mensaje" => "Materiales encontrados con éxito", "data" => $resultado));
     }
+}
 }

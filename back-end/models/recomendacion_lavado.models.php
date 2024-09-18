@@ -3,6 +3,7 @@ require_once('./back-end/config/conexion.php');
 
 class Clase_RecomendacionLavado
 {
+
     public function todos()
 {
     try {
@@ -10,14 +11,12 @@ class Clase_RecomendacionLavado
         $conexion = $con->Procedimiento_Conectar();
         
         $consulta = "SELECT r.id_recomendacion_lavado,
+                            m.imagen,  -- Asegúrate de que la imagen se seleccione correctamente
                             m.descripcion_material,
                             s.descripcion_servicio
-                        FROM
-                            tb_recomendacion_lavado r
-                        JOIN
-                            tb_material m ON r.fk_id_material = m.id_material
-                        JOIN
-                            tb_servicios s ON r.fk_id_servicio = s.id_servicio;";
+                        FROM tb_recomendacion_lavado r
+                        JOIN tb_material m ON r.fk_id_material = m.id_material
+                        JOIN tb_servicios s ON r.fk_id_servicio = s.id_servicio;";
         
         $stmt = $conexion->prepare($consulta);
         $stmt->execute();
@@ -25,20 +24,26 @@ class Clase_RecomendacionLavado
         
         $recomendacionLavado = array();
         while ($fila = $resultado->fetch_assoc()) {
+            if (!empty($fila['imagen']) && file_exists($fila['imagen'])) {
+                $imagenBase64 = base64_encode(file_get_contents($fila['imagen']));
+                $fila['imagen'] = 'data:image/jpeg;base64,' . $imagenBase64; // Ajusta el tipo MIME según sea necesario
+            } else {
+                $fila['imagen'] = null; // Manejar el caso donde no hay imagen
+            }
             $recomendacionLavado[] = $fila;
         }
         
         return $recomendacionLavado;
-        } catch (Exception $e) {
-            throw new RuntimeException("Error en la consulta listarTodos() de recomendacion_lavado: " . $e->getMessage(), 500);
-        } finally {
-            if (isset($stmt)) {
-                $stmt->close();
-            }
-            if (isset($conexion)) {
-                $conexion->close();
-            }
+    } catch (Exception $e) {
+        throw new RuntimeException("Error en la consulta listarTodos() de recomendacion_lavado: " . $e->getMessage(), 500);
+    } finally {
+        if (isset($stmt)) {
+            $stmt->close();
         }
+        if (isset($conexion)) {
+            $conexion->close();
+        }
+    }
 }
 
     public function insertar($descripcion_material, $descripcion_servicio)

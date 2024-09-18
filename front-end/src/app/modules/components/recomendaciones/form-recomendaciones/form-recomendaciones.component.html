@@ -4,28 +4,46 @@
 <form [formGroup]="form" class="formmularioCont">
     <div class="formGroupCont">
         <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Materiales</mat-label>
-            <input matInput maxlength="60" placeholder="Materiales" formControlName="descripcion_material" />
-            @if (this.form.controls.descripcion_material.hasError('required')) {
-            <mat-error>Estado requerido</mat-error> 
-            }
-            @if (this.form.controls.descripcion_material.hasError('pattern')) {
-                <mat-error>Solo se permiten letras y espacios</mat-error> 
+            <mat-label>Material</mat-label>
+            <mat-select
+                formControlName="descripcion_material" (selectionChange)="getSelectedMaterial($event, form)">
+                @for (material of comboMaterial; track material) {
+                <mat-option [value]="material.descripcion_material">
+                    {{material.descripcion_material}}
+                </mat-option>
                 }
+            </mat-select>
+            @if (form.controls['descripcion_material'].hasError('required')) {
+            <mat-error>Seleccione un material</mat-error>
+            }
+
         </mat-form-field>
+          
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Servicios</mat-label>
-            <input matInput maxlength="60" placeholder="Servicios" formControlName="descripcion_servicio" />
-            @if (this.form.controls.descripcion_servicio.hasError('required')) {
-                <mat-error>Estado requerido</mat-error> 
+            <input (keyup)="getAllServices()" type="text" placeholder="Buscar servicio"
+            aria-label="servicios" matInput [formControl]="this.form.controls.descripcion_servicio"
+            [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            @for (option of filteredOptions | async; track option) {
+            <mat-option (onSelectionChange)="getSelectedService($event)"
+                [value]="option">{{option}}</mat-option>
+            }
+        </mat-autocomplete>  
+     
+        @if (this.form.controls.descripcion_servicio.hasError('required')) {
+                <mat-error>Servicio requerido</mat-error> 
                 }
                 @if (this.form.controls.descripcion_servicio.hasError('pattern')) {
                     <mat-error>Solo se permiten letras y espacios</mat-error> 
                     }
+                    @if (this.serviciosExistentesLong == 0) {
+                        <mat-hint>El servicio buscado no existe</mat-hint>
+                        }     
         </mat-form-field>
     </div>
 
     <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
 
-</form>
+</form>3

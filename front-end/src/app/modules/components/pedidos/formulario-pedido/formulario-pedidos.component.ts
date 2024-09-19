@@ -470,7 +470,7 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       "hora_entrega_estimada": this.form.controls.fecha_entrega_estimada.value ?? null,
       "direccion_entrega": this.form.controls.direccion_entrega.value ?? null,
       "tipo_entrega": this.form.controls.tipo_entrega.value ?? null,
-      "detallePedido": this.formItemList.getRawValue()
+      "detallePedido": JSON.stringify(this.formItemList.getRawValue().itemList)
     }
 
     console.log(pedido)

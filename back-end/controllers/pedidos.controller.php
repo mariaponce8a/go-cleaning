@@ -18,6 +18,74 @@ class Pedidos_controller
     }
 
 
+    public function insertarPedidoCompleto(
+        $fecha_pedido,
+        $fk_id_usuario,
+        $cantidad_articulos,
+        $fk_id_cliente,
+        $fk_id_descuentos,
+        $pedido_subtotal,
+        $estado_pago,
+        $valor_pago,
+        $fecha_recoleccion_estimada,
+        $hora_recoleccion_estimada,
+        $direccion_recoleccion,
+        $fecha_entrega_estimada,
+        $hora_entrega_estimada,
+        $direccion_entrega,
+        $tipo_entrega,
+        $total,
+        $detalle
+    ) {
+        error_log("--------------");
+        $model = new pedidos_model();
+        
+
+        if (
+            $fecha_pedido == null ||
+            $fk_id_usuario == null ||
+            $cantidad_articulos == null ||
+            $fk_id_cliente == null ||
+            $fk_id_descuentos == null ||
+            $pedido_subtotal == null ||
+            $estado_pago == null ||
+            $valor_pago == null ||
+            $fecha_entrega_estimada == null ||
+            $hora_entrega_estimada == null ||
+            $direccion_entrega == null ||
+            $tipo_entrega == null ||
+            $total == null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $model->registrarPedidoCompleto(
+            $fecha_pedido,
+            $fk_id_usuario,
+            $cantidad_articulos,
+            $fk_id_cliente,
+            $fk_id_descuentos,
+            $pedido_subtotal,
+            $estado_pago,
+            $valor_pago,
+            $fecha_recoleccion_estimada,
+            $hora_recoleccion_estimada,
+            $direccion_recoleccion,
+            $fecha_entrega_estimada,
+            $hora_entrega_estimada,
+            $direccion_entrega,
+            $tipo_entrega,
+            $total,
+            $detalle
+        );
+
+        error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el pedido"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
+        }
+    }
+
     public function insertPedidos(
         $fecha_pedido,
         $fk_id_usuario,

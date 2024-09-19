@@ -22,8 +22,8 @@
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Servicios</mat-label>
-            <input (keyup)="getAllServices()" type="text" placeholder="Buscar servicio"
-            aria-label="servicios" matInput [formControl]="this.form.controls.descripcion_servicio"
+            <input  type="text" placeholder="Buscar servicio"
+            aria-label="Servicios" matInput [formControl]="this.form.controls.descripcion_servicio"
             [matAutocomplete]="auto">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             @for (option of filteredOptions | async; track option) {
@@ -46,4 +46,4 @@
 
     <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
 
-</form>3
+</form>

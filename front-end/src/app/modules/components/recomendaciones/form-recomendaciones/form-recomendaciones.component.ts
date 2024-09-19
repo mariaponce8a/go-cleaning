@@ -132,17 +132,13 @@ export class FormRecomendacionesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value) => {
           this.comboServicios = value.data;
-          this.filteredOptions = this.form.controls.descripcion_servicio.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(value || '')),
-          )
         },
         error: () => {
           this.usermessage.getToastMessage('error', 'Error al cargar los servicios').fire()
         },
       });
   }
-  
+    
 
   getAllMaterials() { 
     this.requestservice
@@ -151,8 +147,12 @@ export class FormRecomendacionesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value) => { 
           this.comboMaterial = value.data;
-          console.log(this.comboMaterial); // Verifica que los datos se cargan
-
+          console.log(this.comboMaterial); 
+          this.comboDescripcionServicios = this.comboServicios.map(c => c.descripcion_servicio);
+          this.filteredOptions= this.form.controls.descripcion_servicio.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value || '')),
+          )
         },
         error: () => {
           this.usermessage.getToastMessage('error', 'Error al cargar los servicios').fire()
@@ -170,8 +170,7 @@ export class FormRecomendacionesComponent implements OnInit, OnDestroy {
     this.dialogRef.close('ok');
   }
 
-
-
+  
   actualizarRecomendacion(body: any) {
     console.log('Datos a enviar para editar:', body);
     this.requestservice.put(body, Constantes.apiUpdateRecomendaciones)

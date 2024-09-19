@@ -43,6 +43,68 @@ class pedidos_model
         }
     }
 
+    public function registrarPedidoCompleto(
+        $fecha_pedido,
+        $fk_id_usuario,
+        $cantidad_articulos,
+        $fk_id_cliente,
+        $fk_id_descuentos,
+        $pedido_subtotal,
+        $estado_pago,
+        $valor_pago,
+        $fecha_recoleccion_estimada,
+        $hora_recoleccion_estimada,
+        $direccion_recoleccion,
+        $fecha_entrega_estimada,
+        $hora_entrega_estimada,
+        $direccion_entrega,
+        $tipo_entrega,
+        $total,
+        $detalle
+    ) {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            $callProcedure = "CALL InsertarPedidoConDetalle(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conexion->prepare($callProcedure);
+            $stringDetalle =  json_encode($detalle);
+            $stmt->bind_param(
+                "siiiidsdsssssssds",
+                $fecha_pedido,
+                $fk_id_usuario,
+                $cantidad_articulos,
+                $fk_id_cliente,
+                $fk_id_descuentos,
+                $pedido_subtotal,
+                $estado_pago,
+                $valor_pago,
+                $fecha_recoleccion_estimada,
+                $hora_recoleccion_estimada,
+                $direccion_recoleccion,
+                $fecha_entrega_estimada,
+                $hora_entrega_estimada,
+                $direccion_entrega,
+                $tipo_entrega,
+                $total,
+                $detalle
+            );
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                error_log("?????????????????????RESULTADO INSERT DESDE MODEL PEDIDOS" . $resultado);
+                return true;
+            } else {
+                throw new Exception("Problemas al registrar el pedido");
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
 
     public function registrarPedido(
         $fecha_pedido,

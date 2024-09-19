@@ -56,13 +56,28 @@
           }}</mat-header-cell>
           <mat-cell *matCellDef="let element">
             <ng-container *ngIf="column.value === 'imagen'; else textCell">
-              <img
-                *ngIf="element.imagen"
-                [src]="element.imagen"
-                alt="Imagen del material"
-                style="max-width: 100px; max-height: 100px"
-              />
+              <div 
+                (mouseenter)="showZoomButton = true" 
+                (mouseleave)="showZoomButton = false" 
+                style="position: relative; display: inline-block;"
+              >
+                <img
+                  *ngIf="element.imagen"
+                  [src]="element.imagen"
+                  alt="Imagen del material"
+                  style="max-width: 100px; max-height: 100px"
+                />
+                <button 
+                  *ngIf="showZoomButton" 
+                  mat-icon-button 
+                  (click)="openImageDialog(element.imagen)" 
+                  style="position: absolute; top: 0; right: 0; background: rgba(255, 255, 255, 0.7);"
+                >
+                  <mat-icon>zoom_in</mat-icon>
+                </button>
+              </div>
             </ng-container>
+            
             <ng-template #textCell>
               {{ element[column.value] }}
             </ng-template>

@@ -13,7 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../../../desginModules/material.module';
 import { GlobalButtonsComponent } from '../global-buttons/global-buttons.component';
-
+import { ImageDialogComponent } from '../../../../modules/components/imagenes/image-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UserMessageService } from '../../services/user-message.service';
 
 @Component({
   selector: 'app-registros-paginados',
@@ -29,6 +31,9 @@ import { GlobalButtonsComponent } from '../global-buttons/global-buttons.compone
 })
 export class RegistrosPaginadosComponent implements OnInit {
   public dataSource: MatTableDataSource<any[]> = new MatTableDataSource();
+  public showZoomButton: boolean = false;
+
+  imageBase64: string | null = null;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   @Input() isLoadingTable!: boolean;
@@ -37,6 +42,10 @@ export class RegistrosPaginadosComponent implements OnInit {
   @Output() accionBotones: EventEmitter<IaccionBotones> = new EventEmitter();
   displayColumns: Array<string> = [];
 
+  constructor(
+    private usermessage: UserMessageService,
+    private dialog: MatDialog, 
+  ) { }
   // Nueva bandera para controlar la visibilidad del filtro
   public mostrarFiltro: boolean = false;
 
@@ -66,7 +75,12 @@ export class RegistrosPaginadosComponent implements OnInit {
       this.dataSource.data = this.valores;
     }
   }
-
+  openImageDialog(imageUrl: string): void {
+    this.dialog.open(ImageDialogComponent, {
+      data: { imageUrl, width: '80%', height: '80%' },
+      panelClass: 'custom-dialog-container'
+    });
+  }
   // Método para aplicar el filtro de búsqueda
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

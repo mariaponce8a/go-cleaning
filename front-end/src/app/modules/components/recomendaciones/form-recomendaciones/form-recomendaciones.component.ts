@@ -169,7 +169,6 @@ export class FormRecomendacionesComponent implements OnInit, OnDestroy {
   cerrarModalConInformacion() {
     this.dialogRef.close('ok');
   }
-
   
   actualizarRecomendacion(body: any) {
     console.log('Datos a enviar para editar:', body);

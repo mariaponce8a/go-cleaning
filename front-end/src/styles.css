@@ -227,3 +227,8 @@ body {
     background-color: var(--secondaryDark);
     transition: .3s;
 }
+.mat-dialog-content img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+  }

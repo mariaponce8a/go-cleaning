@@ -68,7 +68,7 @@
                         @if (fechaEntregaInvalida) {
                         <mat-error>La fecha de entrega debe ser mayor que la fecha de recolección.</mat-error>
                         }
-                        
+
                     </mat-form-field>
 
                     <mat-form-field class="w-25" appearance="outline">
@@ -102,32 +102,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="formGroupCont">
-
-                    <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Tipo de Pago</mat-label>
-                        <mat-select (selectionChange)="cambiarAdelantoPago($event)" formControlName="estado_pago">
-                            <mat-option value="P">Parcial</mat-option>
-                            <mat-option value="C">Completo</mat-option>
-                            <mat-option value="F">Al finalizar</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Adelanto de pago</mat-label>
-                        <input
-                            [readonly]="!this.form.controls.estado_pago.value || this.form.controls.estado_pago.value == 'C' || this.form.controls.estado_pago.value == 'F' "
-                            maxlength="10" matInput formControlName="valor_pago" />
-                    </mat-form-field>
-
-
-                    <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Total articulos</mat-label>
-                        <mat-icon matPrefix>shopping_basket</mat-icon>
-                        <input readonly="true" maxlength="4" matInput formControlName="cantidad_articulos"
-                            [value]="totalArticulos" />
-                    </mat-form-field>
-                </div>
+                <br>
 
                 <div class="formGroupCont">
                     <mat-form-field class="w-100" appearance="outline">
@@ -163,6 +138,40 @@
                         <mat-icon matPrefix>attach_money</mat-icon>
                         <input readonly="true" maxlength="10" matInput formControlName="total" />
                         <mat-hint>Total no incluye iva</mat-hint>
+                    </mat-form-field>
+                </div>
+                <br>
+                <div class="formGroupCont">
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Tipo de Pago</mat-label>
+                        <mat-select (selectionChange)="cambiarAdelantoPago($event)" formControlName="estado_pago">
+                            <mat-option value="P">Parcial</mat-option>
+                            <mat-option value="C">Completo</mat-option>
+                            <mat-option value="F">Al finalizar</mat-option>
+                        </mat-select>
+
+                        @if (this.form.controls.estado_pago.hasError('required')) {
+                        <mat-error>Debe seleccionar el estado del pago</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Adelanto de pago</mat-label>
+                        <input
+                            [readonly]="!this.form.controls.estado_pago.value || this.form.controls.estado_pago.value == 'C' || this.form.controls.estado_pago.value == 'F' "
+                            maxlength="10" matInput formControlName="valor_pago" />
+                        @if (this.form.controls.valor_pago.hasError('required')) {
+                        <mat-error>Debe seleccionar el estado del pago</mat-error>
+                        }
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Total articulos</mat-label>
+                        <mat-icon matPrefix>shopping_basket</mat-icon>
+                        <input readonly="true" maxlength="4" matInput formControlName="cantidad_articulos"
+                            [value]="totalArticulos" />
                     </mat-form-field>
                 </div>
                 }

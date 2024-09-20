@@ -39,7 +39,6 @@ class Pedidos_controller
     ) {
         error_log("--------------");
         $model = new pedidos_model();
-        
 
         if (
             $fecha_pedido == null ||
@@ -56,7 +55,7 @@ class Pedidos_controller
             $tipo_entrega == null ||
             $total == null
         ) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+            return json_encode(value: array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
         }
         $resultado = $model->registrarPedidoCompleto(
             $fecha_pedido,

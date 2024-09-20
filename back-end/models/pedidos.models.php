@@ -67,7 +67,6 @@ class pedidos_model
             $conexion = $con->Procedimiento_Conectar();
             $callProcedure = "CALL InsertarPedidoConDetalle(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conexion->prepare($callProcedure);
-            $stringDetalle =  json_encode($detalle);
             $stmt->bind_param(
                 "siiiidsdsssssssds",
                 $fecha_pedido,
@@ -88,12 +87,19 @@ class pedidos_model
                 $total,
                 $detalle
             );
+
+
             if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                error_log("?????????????????????RESULTADO INSERT DESDE MODEL PEDIDOS" . $resultado);
-                return true;
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+                error_log("----------------------RESPUESTA DEL PEDIDO------------" . $row['mensaje']);
+                if ($row['mensaje'] == 1) {
+                    return true;
+                } else {
+                    throw new Exception(false);
+                }
             } else {
-                throw new Exception("Problemas al registrar el pedido");
+                throw new Exception(false);
             }
         } catch (Exception $e) {
             error_log($e->getMessage());

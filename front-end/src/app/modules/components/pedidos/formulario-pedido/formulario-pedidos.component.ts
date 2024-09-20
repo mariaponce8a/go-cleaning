@@ -11,15 +11,14 @@ import { Constantes } from '../../../config/constantes';
 import { RequestService } from '../../../shared/services/request.service';
 import { FormGroup, FormArray, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { count, map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { HttpClient } from '@angular/common/http';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormClientesComponent } from '../../clientes/form-clientes/form-clientes.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelectChange } from '@angular/material/select';
-import { SelectionChange } from '@angular/cdk/collections';
 import { validarFechas } from '../../../shared/validators/custom-val';
 
 
@@ -33,6 +32,7 @@ import { validarFechas } from '../../../shared/validators/custom-val';
     GlobalButtonsComponent,
     ReactiveFormsModule,
     AsyncPipe,
+    DatePipe,
     FormsModule,
     FormClientesComponent
   ],
@@ -41,7 +41,7 @@ import { validarFechas } from '../../../shared/validators/custom-val';
 })
 export class FormularioPedidosComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
-  public propositoPagina: string = 'Formulario';
+  public propositoPagina: string = 'Formulario de pedido';
   public formInfo?: IaccionBotones;
 
   public comboUsuarios: IusuariosPlataforma[] = [];
@@ -74,7 +74,8 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     public localencript: LocalStorageEncryptationService,
     private requestServ: RequestService,
     private usermessage: UserMessageService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public datepipe: DatePipe
   ) {
     this.usuarioPlataforma = this.localencript.getLocalStorage(Constantes.usuarioKey);
     this.idUsuarioPlataforma = Number(this.localencript.getLocalStorage(Constantes.idusuarioKey));
@@ -91,8 +92,8 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     fk_id_descuentos: new FormControl(),
     pedido_subtotal: new FormControl(0),
     total: new FormControl(0),
-    estado_pago: new FormControl(),
-    valor_pago: new FormControl(0),
+    estado_pago: new FormControl('', [Validators.required]),
+    valor_pago: new FormControl(0, [Validators.required]),
     fecha_recoleccion_estimada: new FormControl(),
     hora_recoleccion_estimada: new FormControl(''),
     direccion_recoleccion: new FormControl(),
@@ -139,12 +140,13 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       value: 0
     }
     this.descuentoSeleccionado(fakeDiscount)
-    if (this.formInfo?.tipo == 'crear') {
-      this.form.controls.usuario.setValue(this.usuarioPlataforma);
-      this.form.controls.fk_id_usuario.setValue(this.idUsuarioPlataforma);
-    } else {
-      this.form.controls.usuario.enable();
-    }
+    // if (this.formInfo?.tipo == 'crear') {
+    this.form.controls.usuario.setValue(this.usuarioPlataforma);
+    this.form.controls.fk_id_usuario.setValue(this.idUsuarioPlataforma);
+    // } 
+    // else {
+    //   this.form.controls.usuario.enable();
+    // }
   }
 
   getUsuarios() {
@@ -438,18 +440,21 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       this.usermessage.getToastMessage('info', Constantes.formInvalidMessage).fire();
       this.form.markAllAsTouched();
+      this.formItemList.markAllAsTouched();
       return;
     }
 
     if (this.itemList.length == 0) {
       this.usermessage.getToastMessage('info', 'Debe agregar servicios al pedido').fire();
       this.form.markAllAsTouched();
+      this.formItemList.markAllAsTouched();
       return;
     }
 
     if (this.formItemList.invalid) {
       this.usermessage.getToastMessage('info', 'Servicios inválidos').fire();
       this.form.markAllAsTouched();
+      this.formItemList.markAllAsTouched();
       return;
     }
 
@@ -473,11 +478,26 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       "detallePedido": JSON.stringify(this.formItemList.getRawValue().itemList)
     }
 
+
+
     console.log(pedido)
 
     this.usermessage.questionMessage('¿Está seguro que desea guardar el pedido? Una vez aceptado no podrá modificarlo').then(r => {
       if (r.isConfirmed) {
-        //TODO : LOGICA DE INSERCION
+        this.requestServ.post(pedido, Constantes.apiInsertPedido).subscribe({
+          next: (value) => {
+            console.log(value);
+            if (value.respuesta == 1) {
+              this.usermessage.getToastMessage("success", 'Pedido ingresado con exito').fire();
+              this.router.navigateByUrl('/bds/pedidos');
+            } else {
+              this.usermessage.getToastMessage("error", 'Error al ingresar el pedido, revise los datos del formulario').fire();
+            }
+          },
+          error: (error) => {
+            this.usermessage.getToastMessage("error", 'Error al ingresar el pedido').fire();
+          }
+        })
 
       }
     })

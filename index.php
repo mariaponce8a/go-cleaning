@@ -796,25 +796,7 @@ Flight::route('POST /registrarPedidoCompleto', function () {
         $total = $data['total'] ?? null;
         $detalle = $data['detallePedido'] ?? null;
 
-        error_log("CUERPO DEL PEDIDOOOOOOO++++++++++++++++++++++++++".
-        $fecha_pedido.
-        "--".$fk_id_usuario.
-        "--".$cantidad_articulos.
-        "--".$fk_id_cliente.
-        "--".$fk_id_descuentos.
-        "--".$pedido_subtotal.
-        "--".$estado_pago.
-        "--".$valor_pago.
-        "--".$fecha_recoleccion_estimada.
-        "--".$hora_recoleccion_estimada.
-        "--".$direccion_recoleccion.
-        "--".$fecha_entrega_estimada.
-        "--".$hora_entrega_estimada.
-        "--".$direccion_entrega.
-        "--".$tipo_entrega.
-        "--".$total.
-        "--".$detalle
-    );
+    
         $respuesta = $controller->insertarPedidoCompleto(
             $fecha_pedido,
             $fk_id_usuario,

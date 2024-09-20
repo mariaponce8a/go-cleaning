@@ -29,18 +29,18 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
     {
       value: "fecha_pedido",
       viewValue: "Fecha pedido"
-    },
+    }, 
     {
       value: "usuario",
       viewValue: "Empleado"
     },
     {
       value: "cantidad_articulos",
-      viewValue: "Cantidad de artículos"
+      viewValue: "#Artículos"
     },
     {
       value: "identificacion_cliente",
-      viewValue: "ID: Cliente"
+      viewValue: "ID:Cliente"
     },
     {
       value: "nombre_cliente",
@@ -49,27 +49,11 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
     {
       value: "apellido_cliente",
       viewValue: "Apellido cliente"
-    },
-    {
-      value: "tipo_descuento_desc",
-      viewValue: "Descuento"
-    },
+    }, 
     {
       value: "pedido_subtotal",
       viewValue: "Sub total"
-    },
-    {
-      value: "valor_pago",
-      viewValue: "Total"
-    },
-    {
-      value: "estado_pago",
-      viewValue: "Pago"
-    },
-    {
-      value: "tipo_entrega",
-      viewValue: "Entrega"
-    }
+    } 
   ]
 
   valoresDeTabla: IpedidosJoin[] = [];

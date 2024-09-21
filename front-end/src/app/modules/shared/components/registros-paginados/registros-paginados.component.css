@@ -3,6 +3,12 @@
   font-weight: 700;
 }
 
+.pdf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(115, 201, 206);
+}
 .edit {
   display: flex;
   align-items: center;

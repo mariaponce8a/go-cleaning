@@ -291,4 +291,17 @@ class Pedidos_controller
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedido eliminado con éxito"));
         }
     }
+
+    public function getOrdenPedidos($id_pedido_cabecera)
+    {
+        error_log("--------------");
+        $pedidoModel = new pedidos_model();
+        $resultado = $pedidoModel->OrdenPedido($id_pedido_cabecera);
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        if ($resultado === false || empty($resultado)) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al cargar el pedido"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedido cargados con éxito", "data" => json_decode($resultado)));
+        }
+    }
 }

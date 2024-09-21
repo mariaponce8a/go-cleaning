@@ -822,8 +822,6 @@ Flight::route('POST /registrarPedidoCompleto', function () {
     }
 });
 
-
-
 Flight::route('PUT /actualizarPedido', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
@@ -938,5 +936,16 @@ Flight::route('PUT /editarItemPedido', function () {
     }
 });
 
+Flight::route('GET /ordenPedido/@id_pedido_cabecera', function ($id_pedido_cabecera) {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+
+        $respuesta = $controller->getOrdenPedidos($id_pedido_cabecera);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
 
 Flight::start();

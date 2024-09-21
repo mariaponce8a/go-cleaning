@@ -1,0 +1,99 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MaterialModule } from '../../../desginModules/material.module';
+import { ColoredBodyHeaderComponent } from '../../../shared/components/colored-body-header/colored-body-header.component';
+import { RegistrosPaginadosComponent } from '../../../shared/components/registros-paginados/registros-paginados.component';
+import { Subject, takeUntil } from 'rxjs';
+import { Constantes } from '../../../config/constantes';
+import { ITitulosTabla, IpedidosJoin } from '../../../shared/interface/datamodels.interface';
+import { RequestService } from '../../../shared/services/request.service';
+import { UserMessageService } from '../../../shared/services/user-message.service';
+import { Router } from '@angular/router';
+import { DataService } from '../../../shared/services/dataTransfer.service';
+
+@Component({
+  selector: 'app-tablas-home',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    RegistrosPaginadosComponent,
+    ColoredBodyHeaderComponent,
+  ],
+  templateUrl: './tablas-home.component.html',
+  styleUrl: './tablas-home.component.css'
+})
+export class TablasHomeComponent implements OnInit, OnDestroy {
+
+  titulosTabla: ITitulosTabla[] = [
+    {
+      value: "fecha_pedido",
+      viewValue: "Fecha pedido"
+    }, 
+    {
+      value: "usuario",
+      viewValue: "Empleado"
+    },
+    {
+      value: "cantidad_articulos",
+      viewValue: "#Artículos"
+    },
+    {
+      value: "identificacion_cliente",
+      viewValue: "ID:Cliente"
+    },
+    {
+      value: "nombre_cliente",
+      viewValue: "Nombre cliente"
+    },
+    {
+      value: "apellido_cliente",
+      viewValue: "Apellido cliente"
+    }, 
+     {
+       value: "descripcion_estado",
+       viewValue: "Estado"
+     }, 
+    {
+      value: "pedido_subtotal",
+      viewValue: "Sub total"
+    } 
+  ]
+
+  valoresDeTabla: IpedidosJoin[] = [];
+  destroy$ = new Subject<void>();
+  loadingTable: boolean = false;
+
+  constructor(
+    private requestService: RequestService,
+    private usermessage: UserMessageService,
+    private router: Router,
+    private datatransfer: DataService,
+  ) { }
+
+  ngOnInit(): void {
+    //this.getAllPedidos();
+  }
+
+  // getAllPedidos() {
+  //   this.loadingTable = true;
+  //   this.requestService.get(Constantes.apiGetAllPedidos)
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (value) => {
+  //         this.loadingTable = false;
+  //         this.valoresDeTabla = value.data;
+
+  //       },
+  //       error: () => {
+  //         this.loadingTable = false;
+  //       }
+  //     })
+  // }
+
+  
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+}

@@ -8,7 +8,8 @@ import { RequestService } from '../../../shared/services/request.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Constantes } from '../../../config/constantes';
 import { Router } from '@angular/router';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { FormAsignacionesComponent } from '../form-asignaciones/form-asignaciones.component';
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
@@ -168,6 +169,9 @@ export class ListadoAsignacionEmpleadoComponent  implements OnInit, OnDestroy {
     }
 
   }
+
+
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

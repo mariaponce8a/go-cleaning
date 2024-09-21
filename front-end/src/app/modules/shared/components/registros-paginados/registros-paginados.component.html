@@ -109,6 +109,17 @@
                 >restore_from_trash</mat-icon
               >
             </button>
+
+            <button
+              class="pdf"
+              type="button"
+              mat-icon-button
+              (click)="actionRow('PDF', element)"
+              *ngIf="shouldShowPdfButton()"
+            >
+              <mat-icon style="color: white; display: flex; align-items: center"
+              >description</mat-icon>
+    </button>
           </mat-cell>
         </ng-container>
 

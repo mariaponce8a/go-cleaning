@@ -15,6 +15,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {
+                path: 'bds',
+               canActivate: [AuthGuard], 
+                loadComponent: () => import('./modules/components/home/tablas-home/tablas-home.component').then(c => c.TablasHomeComponent),
+            },
+            {
                 path: 'pedidos',
                canActivate: [AuthGuard], 
                 loadComponent: () => import('./modules/components/pedidos/listar-pedidos/listar-pedidos.component').then(c => c.ListarPedidosComponent),

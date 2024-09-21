@@ -375,4 +375,73 @@ class pedidos_model
             }
         }
     }
+
+    public function OrdenPedido($id_pedido_cabecera) 
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            
+            $query = "
+                    SELECT 
+                    p.fecha_pedido,
+                    CONCAT(u.nombre, ' ', u.apellido) AS nombre_usuario_completo,
+                    c.identificacion_cliente,
+                    CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS nombre_cliente_completo,
+                    pd.descripcion_articulo, 
+                    pd.precio_servicio,
+                    pd.libras,
+                    d.tipo_descuento_desc,
+                    p.cantidad_articulos, 
+                    p.pedido_subtotal,
+                    p.estado_pago,
+                    p.valor_pago,
+                    p.fecha_recoleccion_estimada,
+                    p.hora_recoleccion_estimada,
+                    p.fecha_entrega_estimada,
+                    p.direccion_entrega,
+                    p.tipo_entrega,
+                    s.descripcion_servicio,
+                    s.costo_unitario,
+                    pd.id_pedido_detalle
+                FROM 
+                    tb_pedido p
+                LEFT JOIN 
+                    tb_pedido_detalle pd ON p.id_pedido_cabecera = pd.fk_id_pedido
+                LEFT JOIN 
+                    tb_usuarios_plataforma u ON p.fk_id_usuario = u.id_usuario
+                LEFT JOIN 
+                    tb_clientes_registrados c ON p.fk_id_cliente = c.id_cliente
+                LEFT JOIN 
+                    tb_tipo_descuentos d ON p.fk_id_descuentos = d.id_tipo_descuento
+                LEFT JOIN 
+                    tb_servicios s ON pd.fk_id_servicio = s.id_servicio
+                WHERE 
+                    p.id_pedido_cabecera = ?
+            ";
+    
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param("i", $id_pedido_cabecera);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+            }
+            
+            $result = $stmt->get_result();
+            $pedidos = array();
+            
+            while ($fila = $result->fetch_assoc()) {
+                $pedidos[] = $fila;
+            }
+            
+            return json_encode($pedidos);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
 }

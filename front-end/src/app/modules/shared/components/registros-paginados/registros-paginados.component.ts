@@ -16,6 +16,8 @@ import { GlobalButtonsComponent } from '../global-buttons/global-buttons.compone
 import { ImageDialogComponent } from '../../../../modules/components/imagenes/image-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../services/user-message.service';
+import { Router } from '@angular/router';
+import { RequestService } from '../../../shared/services/request.service';
 
 @Component({
   selector: 'app-registros-paginados',
@@ -45,6 +47,10 @@ export class RegistrosPaginadosComponent implements OnInit {
   constructor(
     private usermessage: UserMessageService,
     private dialog: MatDialog, 
+    private router: Router,
+    private requestService: RequestService,
+
+
   ) { }
   // Nueva bandera para controlar la visibilidad del filtro
   public mostrarFiltro: boolean = false;
@@ -86,7 +92,13 @@ export class RegistrosPaginadosComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();  // Aplica el filtro en minúsculas
   }
+  shouldShowPdfButton(): boolean {
+    const currentRoute = this.router.url;
+    return currentRoute === '/bds/pedidos';
+  }
 
+
+  
   // Método para alternar la visibilidad del filtro
   toggleFiltro() {
     this.mostrarFiltro = !this.mostrarFiltro; // Cambia el estado de la bandera

@@ -36,6 +36,13 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
   perfilPersona?: string | null;
   perfilPersonaDesc: string = ''
   menuItems: IMenu[] = [
+
+    {
+      descripcion: 'Home',
+      icon: 'home',
+      pagina: 'bds',
+      perfil: 'A, E'
+    },
     {
       descripcion: 'Pedidos',
       icon: 'shopping_cart',

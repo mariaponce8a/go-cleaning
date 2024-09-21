@@ -10,23 +10,23 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   `,
   styles: [`
     .image-dialog {
-      max-width: 95vw; /* increased max width */
-      max-height: 95vh; /* increased max height */
+      max-width: 95vw; 
+      max-height: 95vh; 
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .image-dialog img {
-      max-width: 100%; /* set max width to 100% of parent */
-      max-height: 100%; /* set max height to 100% of parent */
+      max-width: 100%; 
+      max-height: 100%; 
       object-fit: contain;
     }
   `]
 })
 export class ImageDialogComponent {
   imageUrl: string = '';
-  width: string = '100%'; /* set width to 100% of parent */
-  height: string = '100%'; /* set height to 100% of parent */
+  width: string = '100%'; 
+  height: string = '100%'; 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.imageUrl = data.imageUrl;

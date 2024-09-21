@@ -72,6 +72,9 @@ compareDates(fechaEntregaEstimada: string): boolean {
     
   }
 
+  isEstadosRoute(): boolean {
+    return this.router.url.includes('/bds/estados');
+  }
   actionRow(type: string, rowData: any) {
     let data: IaccionBotones = {
       tipo: type,

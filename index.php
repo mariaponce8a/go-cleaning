@@ -947,5 +947,15 @@ Flight::route('GET /ordenPedido/@id_pedido_cabecera', function ($id_pedido_cabec
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+Flight::route('GET /consultarPedidosNoFinalizados', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $respuesta = $controller->getPedidosNoFinalizados();
+        echo  $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
 
 Flight::start();

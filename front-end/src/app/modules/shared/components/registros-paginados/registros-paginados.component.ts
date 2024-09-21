@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { IaccionBotones, ITitulosTabla } from '../../interface/datamodels.interface';
+import { IaccionBotones, IestadosPlataforma, ITitulosTabla } from '../../interface/datamodels.interface';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../services/user-message.service';
 import { Router } from '@angular/router';
 import { RequestService } from '../../../shared/services/request.service';
+import { TablasHomeComponent } from '../../../../modules/components/home/tablas-home/tablas-home.component';
 
 @Component({
   selector: 'app-registros-paginados',
@@ -34,6 +35,14 @@ import { RequestService } from '../../../shared/services/request.service';
 export class RegistrosPaginadosComponent implements OnInit {
   public dataSource: MatTableDataSource<any[]> = new MatTableDataSource();
   public showZoomButton: boolean = false;
+  public rowClasses: { [key: number]: string } = {}; // Guardar las clases
+  // En el componente
+compareDates(fechaEntregaEstimada: string): boolean {
+  const fechaEntregaEstimadaDate = new Date(fechaEntregaEstimada);
+  const currentDate = new Date();
+  return fechaEntregaEstimadaDate < currentDate;
+}
+
 
   imageBase64: string | null = null;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -42,6 +51,7 @@ export class RegistrosPaginadosComponent implements OnInit {
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;
   @Output() accionBotones: EventEmitter<IaccionBotones> = new EventEmitter();
+   
   displayColumns: Array<string> = [];
 
   constructor(
@@ -52,11 +62,14 @@ export class RegistrosPaginadosComponent implements OnInit {
 
 
   ) { }
-  // Nueva bandera para controlar la visibilidad del filtro
   public mostrarFiltro: boolean = false;
 
   ngOnInit(): void {
+    this.showActions = this.router.url !== '/bds/home'; // Ocultar botones de acción en home
+    this.showCreateButton = this.router.url !== '/bds/home';
+    this.showPdfButtonNextToCreate = this.router.url == '/bds/clientes';
     this.onFillData();
+    
   }
 
   actionRow(type: string, rowData: any) {
@@ -77,10 +90,14 @@ export class RegistrosPaginadosComponent implements OnInit {
       for (let title of this.titulos) {
         this.displayColumns.push(title.value);
       }
-      this.displayColumns.push('accion');
+      // Solo agrega 'accion' si showActions es true
+      if (this.showActions) {
+        this.displayColumns.push('accion');
+      }
       this.dataSource.data = this.valores;
     }
   }
+  
   openImageDialog(imageUrl: string): void {
     this.dialog.open(ImageDialogComponent, {
       data: { imageUrl, width: '80%', height: '80%' },
@@ -97,8 +114,10 @@ export class RegistrosPaginadosComponent implements OnInit {
     return currentRoute === '/bds/pedidos';
   }
 
+  public showPdfButtonNextToCreate: boolean = false;
+  public showCreateButton: boolean = false;
+  public showActions: boolean = false;
 
-  
   // Método para alternar la visibilidad del filtro
   toggleFiltro() {
     this.mostrarFiltro = !this.mostrarFiltro; // Cambia el estado de la bandera

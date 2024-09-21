@@ -58,6 +58,7 @@ export class ListadoEstadosComponent implements OnInit, OnDestroy {
         },
       });
   }
+  
   manejarEventosBotones(evento: IaccionBotones) {
     console.log('Evento recibido:', evento); 
     let dialogRef;

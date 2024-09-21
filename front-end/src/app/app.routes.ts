@@ -15,7 +15,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {
-                path: 'bds',
+                path: 'home',
                canActivate: [AuthGuard], 
                 loadComponent: () => import('./modules/components/home/tablas-home/tablas-home.component').then(c => c.TablasHomeComponent),
             },

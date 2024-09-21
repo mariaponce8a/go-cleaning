@@ -16,9 +16,20 @@
         type="button"
         class="buttonBack mb-4"
         (click)="actionRow('crear', {})"
-      >
+        *ngIf="showCreateButton">
         Crear registro
       </button>
+
+      <app-global-buttons 
+      [showConfirm]="true"
+      [showCancel]="false"
+      [textBtn1]="'Imprimir Reporte'"
+      (click)="('PDF')"
+      *ngIf="showPdfButtonNextToCreate"
+      style="width: 20%;"
+      >
+    </app-global-buttons>
+
 
       <!-- Campo de búsqueda, visible solo si mostrarFiltro es true -->
       <div class="w-100 search-field-container d-flex flex-row g-2">
@@ -88,7 +99,8 @@
           <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef
             >Acción</mat-header-cell
           >
-          <mat-cell class="cellButtons" mat-cell *matCellDef="let element">
+          <mat-cell class="cellButtons" mat-cell *matCellDef="let element"
+          >
             <button
               class="edit"
               type="button"
@@ -120,12 +132,19 @@
               <mat-icon style="color: white; display: flex; align-items: center"
               >description</mat-icon>
     </button>
+    
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
-
+        <mat-row *matRowDef="let row; columns: displayColumns" 
+        [ngClass]="{
+            'yellow-row': row.descripcion_estado === 'Por recoger',
+            'red-row': compareDates(row.fecha_entrega_estimada)
+        }"
+        [matTooltip]="row.descripcion_estado === 'Por recoger' ? 'Pedido pendiente por recoger' : 
+                     (compareDates(row.fecha_entrega_estimada) ? 'Entrega con atraso' : '')">
+        </mat-row>
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell noDataItem" colspan="4">
             No se encontraron registros

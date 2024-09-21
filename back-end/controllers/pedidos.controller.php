@@ -304,4 +304,17 @@ class Pedidos_controller
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedido cargados con éxito", "data" => json_decode($resultado)));
         }
     }
+
+    public function getPedidosNoFinalizados()
+    {
+        error_log("--------------");
+        $model = new pedidos_model();
+        $resultado = $model->getPedidosNoFinalizados();
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para cargar los pedidos"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedidos no finalizados cargados con éxito", "data" => json_decode($resultado)));
+        }
+    }
 }

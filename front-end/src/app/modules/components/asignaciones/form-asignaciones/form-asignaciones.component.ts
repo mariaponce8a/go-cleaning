@@ -6,7 +6,7 @@ import { MaterialModule } from '../../../desginModules/material.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ModalHeaderComponent } from '../../../shared/components/modal-header/modal-header.component';
-import { IaccionBotones, IAsignacionEmpleadosPlataforma } from '../../../shared/interface/datamodels.interface';
+import { IaccionBotones, IAsignacionEmpleadosPlataforma, IestadosPlataforma } from '../../../shared/interface/datamodels.interface';
 import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
@@ -26,6 +26,8 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
 })
 export class FormAsignacionesComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
+  public comboEstados: IestadosPlataforma[] = [];
+
   constructor(
     private usermessage: UserMessageService,
     private requestservice: RequestService,
@@ -38,6 +40,7 @@ export class FormAsignacionesComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.getAllEstados();
     console.log(this.data);
     if (this.data.tipo == 'editar') {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
@@ -50,9 +53,7 @@ export class FormAsignacionesComponent implements OnInit, OnDestroy {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
       this.form.controls.usuario.enable();
       this.form.controls.fecha_fin.disable();
-      this.form.controls.descripcion_estado.setValue('Recibido');
       this.form.controls.fecha_fin.setValue(null);
-      this.form.controls.descripcion_estado.disable();
 
     }
   }
@@ -75,6 +76,29 @@ export class FormAsignacionesComponent implements OnInit, OnDestroy {
     ])
   })
   
+  
+  getAllEstados() {
+    this.requestservice
+      .get(Constantes.apiGetAllEstados)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (value) => { 
+          this.comboEstados = value.data;
+          console.log(this.comboEstados); 
+        },
+        error: () => {
+          this.usermessage.getToastMessage('error', 'Error al cargar los servicios').fire()
+        },
+      });
+  }
+
+  getSelectedEstado(event: any, items: FormGroup) {
+    console.log(event.value, items);
+    let itemEncontrado = this.comboEstados.find(s => s.descripcion_estado == event.value);
+    if (itemEncontrado) {
+      items.controls['descripcion_estado'].setValue(itemEncontrado.descripcion_estado);
+    }
+  }
 
   cerrarModalSinInformacion(cerrar: boolean) {
     if (cerrar) {

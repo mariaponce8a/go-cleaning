@@ -53,6 +53,8 @@ export class Constantes {
     this.env.host + this.env.name + '/registrarPedidoCompleto';
     public static apiOrdenPedido: string =
     this.env.host + this.env.name + '/ordenPedido';
+    public static apiGetPedidosNoFinalizados: string =
+    this.env.host + this.env.name + '/consultarPedidosNoFinalizados';
 
 
   //----------- APIS  SERVICIOS

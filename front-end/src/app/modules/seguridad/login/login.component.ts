@@ -70,7 +70,7 @@ export class LoginComponent implements OnDestroy {
             this.localencript.setLocalStorage(Constantes.perfilKey, value.data.perfil);
             this.localencript.setLocalStorage(Constantes.idusuarioKey, String(value.data.id_usuario));
             console.log(value.data.id_usuario)
-            this.router.navigateByUrl('/bds');
+            this.router.navigateByUrl('/bds/home');
 
           },
           error: (error) => {

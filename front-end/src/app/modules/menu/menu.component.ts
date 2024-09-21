@@ -40,7 +40,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       descripcion: 'Home',
       icon: 'home',
-      pagina: 'bds',
+      pagina: 'bds/home',
       perfil: 'A, E'
     },
     {

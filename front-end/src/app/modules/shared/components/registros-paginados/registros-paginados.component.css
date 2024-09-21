@@ -100,3 +100,10 @@ input[matInput] {
   height: 100%;
   object-fit: contain;
 }
+.yellow-row {
+  background-color: rgb(247, 244, 143) ; 
+}
+
+.red-row{
+  background-color: rgb(239, 18, 63);
+}

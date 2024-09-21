@@ -39,11 +39,17 @@
 
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Estado</mat-label>
-            <input matInput maxlength="60" placeholder="Estado del pedido" formControlName="descripcion_estado" />
-            @if (this.form.controls.descripcion_estado.hasError('required')) {
-                <mat-error>Estado requerido</mat-error> 
-
+            <mat-select
+            formControlName="descripcion_estado" (selectionChange)="getSelectedEstado($event, form)">
+            @for (estado of comboEstados; track estado) {
+            <mat-option [value]="estado.descripcion_estado">
+                {{estado.descripcion_estado}}
+            </mat-option>
             }
+        </mat-select>
+        @if (form.controls['descripcion_estado'].hasError('required')) {
+        <mat-error>Seleccione un estado</mat-error>
+        }
         </mat-form-field>
     </div>
 

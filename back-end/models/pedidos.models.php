@@ -444,4 +444,55 @@ class pedidos_model
             }
         }
     }
+
+    public function getPedidosNoFinalizados()
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+                        $query = "SELECT 
+                                    p.fecha_pedido,
+                                    CONCAT(u.nombre, ' ', u.apellido) AS nombre_usuario_completo,
+                                    c.identificacion_cliente,
+                                    CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS nombre_cliente_completo,
+                                    p.cantidad_articulos, 
+                                    p.estado_pago,
+                                    p.valor_pago,
+                                    p.fecha_recoleccion_estimada,
+                                    p.direccion_entrega,
+                                    p.tipo_entrega,
+                                    p.fecha_entrega_estimada,
+                                    e.descripcion_estado
+                                FROM 
+                                    tb_pedido p
+                                LEFT JOIN 
+                                    tb_usuarios_plataforma u ON p.fk_id_usuario = u.id_usuario
+                                LEFT JOIN 
+                                    tb_clientes_registrados c ON p.fk_id_cliente = c.id_cliente
+                                LEFT JOIN 
+                                    tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
+                                LEFT JOIN 
+                                    tb_estados e ON a.fk_id_estado = e.id_estado
+                                ";
+            $exeResult = mysqli_query($conexion, $query);
+
+            if ($exeResult == false) {
+                throw new Exception("Problemas al cargar el pedido");
+            } else {
+                $data = array();
+                while ($fila = mysqli_fetch_assoc($exeResult)) {
+                    $data[] = $fila;
+                }
+
+                return json_encode($data);
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
 }

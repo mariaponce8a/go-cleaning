@@ -133,6 +133,9 @@ export class Constantes {
   public static apiDeleteAsignaciones: string =
     this.env.host + this.env.name + '/eliminarAsignacion';
 
+  //----------- API MENSAJE
+  public static apiSendMessage: string =
+  this.env.host + this.env.name + '/enviarMensaje';
 
 
 

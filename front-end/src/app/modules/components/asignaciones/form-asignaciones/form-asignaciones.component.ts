@@ -117,12 +117,31 @@ export class FormAsignacionesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value) => {
           this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
+          if (body.descripcion_estado === 'Finalizado') {
+            console.log('Llamando a enviarMensajeWhatsApp con ID:', body.id_pedido_cabecera);
+            this.enviarMensajeWhatsApp(body.id_pedido_cabecera);
+          }
           this.cerrarModalConInformacion();
         },
         error: (error) => {
+          console.error('Error en la actualización o envío:', error);
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
-      })
+      });
+}
+
+
+  enviarMensajeWhatsApp(id_pedido_cabecera: number) {
+    this.requestservice.post({ "id_pedido_cabecera": id_pedido_cabecera }, Constantes.apiSendMessage)
+    
+      .subscribe({
+        next: (response) => {
+          this.usermessage.getToastMessage('success', 'Mensaje de WhatsApp enviado correctamente').fire();
+        },
+        error: (error) => {
+          this.usermessage.getToastMessage('error', 'Error al enviar el mensaje de WhatsApp').fire();
+        }
+      });
   }
 
   registrarAsignacion(body: any) {

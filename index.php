@@ -9,6 +9,7 @@ require_once('./back-end/controllers/material.controllers.php');
 require_once('./back-end/controllers/estados.controllers.php');
 require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
 require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
+require_once('./back-end/controllers/mensajes.controller.php');
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -1042,5 +1043,21 @@ Flight::route('GET /consultarPedidosNoFinalizados', function () {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
+//MEEEEEEEEENSAAAAAAJESSSSS
+
+Flight::route('POST /enviarMensaje', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new MensajesW_Controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+        $respuesta = $controller->enviarMensajePorPedido($data['id_pedido_cabecera']);
+        echo json_encode(array("respuesta" => $respuesta, "mensaje" => "Mensaje de WhatsApp enviado correctamente"));
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
 
 Flight::start();

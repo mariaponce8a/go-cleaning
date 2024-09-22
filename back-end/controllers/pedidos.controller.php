@@ -40,15 +40,14 @@ class Pedidos_controller
         error_log("--------------");
         $model = new pedidos_model();
 
+        error_log("----------DATOS DESDE CONTROLLER: "  .$detalle);
         if (
             $fecha_pedido == null ||
             $fk_id_usuario == null ||
             $cantidad_articulos == null ||
             $fk_id_cliente == null ||
-            $fk_id_descuentos == null ||
             $pedido_subtotal == null ||
-            $estado_pago == null ||
-            $valor_pago == null ||
+            $estado_pago == null || 
             $fecha_entrega_estimada == null ||
             $hora_entrega_estimada == null ||
             $direccion_entrega == null ||
@@ -77,11 +76,10 @@ class Pedidos_controller
             $detalle
         );
 
-        error_log("----------RESULTADO INSERT DESDE CONTROLLER: " . $resultado);
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el pedido"));
         } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
+            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['idPedido'] ,"mensaje" => "Pedido registrado con éxito"));
         }
     }
 

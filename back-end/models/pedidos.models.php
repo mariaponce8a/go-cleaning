@@ -63,6 +63,10 @@ class pedidos_model
         $detalle
     ) {
         try {
+
+            $detallestr = json_encode($detalle);
+            error_log($detalle);
+            error_log($detallestr);
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
             $callProcedure = "CALL InsertarPedidoConDetalle(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -94,7 +98,7 @@ class pedidos_model
                 $row = $result->fetch_assoc();
                 error_log("----------------------RESPUESTA DEL PEDIDO------------" . $row['mensaje']);
                 if ($row['mensaje'] == 1) {
-                    return true;
+                    return $row;
                 } else {
                     throw new Exception(false);
                 }

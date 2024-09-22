@@ -32,9 +32,11 @@ import { validarFechas } from '../../../shared/validators/custom-val';
     GlobalButtonsComponent,
     ReactiveFormsModule,
     AsyncPipe,
-    DatePipe,
     FormsModule,
     FormClientesComponent
+  ],
+  providers: [
+    DatePipe
   ],
   templateUrl: './formulario-pedidos.component.html',
   styleUrl: './formulario-pedidos.component.css'
@@ -434,6 +436,16 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     }
   }
 
+  tranformDate(date: any) {
+    if (date) {
+      let fechaFormateada = this.datepipe.transform(date, Constantes.formatoFecha);
+      return fechaFormateada;
+    } else {
+      return null;
+    }
+
+  }
+
 
   guardar() {
 
@@ -457,9 +469,9 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       this.formItemList.markAllAsTouched();
       return;
     }
-
+    let currentDate = new Date();
     let pedido = {
-      "fecha_pedido": new Date(),
+      "fecha_pedido": String(currentDate),
       "fk_id_usuario": this.form.controls.fk_id_usuario.value ?? null,
       "cantidad_articulos": this.form.controls.cantidad_articulos.value ?? null,
       "fk_id_cliente": this.form.controls.fk_id_cliente.value ?? null,
@@ -472,13 +484,14 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
       "hora_recoleccion_estimada": this.form.controls.hora_recoleccion_estimada.value ?? null,
       "direccion_recoleccion": this.form.controls.direccion_recoleccion.value ?? null,
       "fecha_entrega_estimada": this.form.controls.fecha_entrega_estimada.value ?? null,
-      "hora_entrega_estimada": this.form.controls.fecha_entrega_estimada.value ?? null,
+      "hora_entrega_estimada": this.form.controls.hora_entrega_estimada.value ?? null,
       "direccion_entrega": this.form.controls.direccion_entrega.value ?? null,
       "tipo_entrega": this.form.controls.tipo_entrega.value ?? null,
       "detallePedido": JSON.stringify(this.formItemList.getRawValue().itemList)
     }
-
-
+    pedido.fecha_pedido = this.tranformDate(pedido.fecha_pedido) ?? '';
+    pedido.fecha_entrega_estimada = this.tranformDate(pedido.fecha_entrega_estimada);
+    pedido.fecha_recoleccion_estimada = this.tranformDate(pedido.fecha_recoleccion_estimada);
 
     console.log(pedido)
 

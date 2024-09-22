@@ -46,7 +46,7 @@ compareDates(fechaEntregaEstimada: string): boolean {
 
   imageBase64: string | null = null;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-
+  @Input() showBotoncrear: boolean = true;
   @Input() isLoadingTable!: boolean;
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;

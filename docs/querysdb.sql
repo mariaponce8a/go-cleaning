@@ -74,7 +74,6 @@ VALUES
 
 
 // creacion de pedido sp 
-
 CREATE DEFINER=`usg8hrdab84mdg8a`@`%` PROCEDURE `InsertarPedidoConDetalle`(
     IN p_fecha_pedido DATETIME,
     IN p_fk_id_usuario INT,
@@ -96,58 +95,32 @@ CREATE DEFINER=`usg8hrdab84mdg8a`@`%` PROCEDURE `InsertarPedidoConDetalle`(
 )
 BEGIN
     DECLARE v_id_pedido INT;
-    DECLARE exit handler FOR SQLEXCEPTION
+    DECLARE respuestaPedido INT;  
+    DECLARE usurioMasLibre INT;
+    DECLARE estadoPorTipoEntrega INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        -- Si ocurre un error, se revierte la transacción
         ROLLBACK;
         SELECT 0 AS respuesta;
     END;
 
-    -- Iniciar transacción
     START TRANSACTION;
     
-    -- Insertar en tb_pedido
     INSERT INTO tb_pedido (
-        fecha_pedido,
-        fk_id_usuario,
-        cantidad_articulos,
-        fk_id_cliente,
-        fk_id_descuentos,
-        pedido_subtotal,
-        estado_pago,
-        valor_pago,
-        fecha_recoleccion_estimada,
-        hora_recoleccion_estimada,
-        direccion_recoleccion,
-        fecha_entrega_estimada,
-        hora_entrega_estimada,
-        direccion_entrega,
-        tipo_entrega,
-        total
-    )
-    VALUES (
-        p_fecha_pedido,
-        p_fk_id_usuario,
-        p_cantidad_articulos,
-        p_fk_id_cliente,
-        p_fk_id_descuentos,
-        p_pedido_subtotal,
-        p_estado_pago,
-        p_valor_pago,
-        p_fecha_recoleccion_estimada,
-        p_hora_recoleccion_estimada,
-        p_direccion_recoleccion,
-        p_fecha_entrega_estimada,
-        p_hora_entrega_estimada,
-        p_direccion_entrega,
-        p_tipo_entrega,
-        p_total
+        fecha_pedido, fk_id_usuario, cantidad_articulos, fk_id_cliente, fk_id_descuentos,
+        pedido_subtotal, estado_pago, valor_pago, fecha_recoleccion_estimada,
+        hora_recoleccion_estimada, direccion_recoleccion, fecha_entrega_estimada,
+        hora_entrega_estimada, direccion_entrega, tipo_entrega, total
+    ) VALUES (
+        p_fecha_pedido, p_fk_id_usuario, p_cantidad_articulos, p_fk_id_cliente, 
+        p_fk_id_descuentos, p_pedido_subtotal, p_estado_pago, p_valor_pago, 
+        p_fecha_recoleccion_estimada, p_hora_recoleccion_estimada, 
+        p_direccion_recoleccion, p_fecha_entrega_estimada, p_hora_entrega_estimada, 
+        p_direccion_entrega, p_tipo_entrega, p_total
     );
 
-    -- Obtener el ID del nuevo pedido
     SET v_id_pedido = LAST_INSERT_ID();
-    
-    -- Insertar en tb_pedido_detalle usando JSON
+
     INSERT INTO tb_pedido_detalle (fk_id_servicio, libras, precio_servicio, fk_id_pedido, descripcion_articulo, cantidad)
     SELECT
         JSON_UNQUOTE(JSON_EXTRACT(detail, '$.fk_id_servicio')),
@@ -156,18 +129,42 @@ BEGIN
         v_id_pedido,
         JSON_UNQUOTE(JSON_EXTRACT(detail, '$.descripcion_articulo')),
         JSON_UNQUOTE(JSON_EXTRACT(detail, '$.cantidad'))
-    FROM JSON_TABLE(
-        p_detalles,
-        '$[*]' COLUMNS (
-            detail JSON PATH '$'
-        )
-    ) AS t;
+    FROM JSON_TABLE(p_detalles, '$[*]' COLUMNS (detail JSON PATH '$')) AS t;
 
-    -- Confirmar la transacción si todo es exitoso
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SET respuestaPedido = 0;
+        SELECT respuestaPedido AS respuesta;
+    ELSE  
+        SET @usuarioID = (
+            SELECT us.id_usuario
+            FROM tb_usuarios_plataforma AS us  
+            LEFT JOIN tb_asignaciones_empleado AS asig ON asig.fk_id_usuario = us.id_usuario 
+            WHERE us.perfil = 'E'
+            GROUP BY us.id_usuario
+            ORDER BY COUNT(CASE WHEN asig.fk_id_estado = 3 THEN asig.id_asignaciones END) ASC
+            LIMIT 1
+        );
+
+        SET usurioMasLibre = @usuarioID;
+
+        IF usurioMasLibre IS NOT NULL THEN
+            IF p_tipo_entrega = 'L' THEN
+                SET estadoPorTipoEntrega = 1;
+            ELSE
+                SET estadoPorTipoEntrega = 2;
+            END IF;
+
+            INSERT INTO tb_asignaciones_empleado 
+                (fk_id_usuario, fecha_hora_inicio_asignacion, fecha_hora_fin_asignacion, fk_id_pedido, fk_id_estado)
+            VALUES (
+                usurioMasLibre, CURRENT_TIMESTAMP, NULL, v_id_pedido, estadoPorTipoEntrega
+            );
+
+            SET respuestaPedido = 1;
+            SELECT respuestaPedido AS respuesta, 'Pedido y asignación creados con éxito' AS mensaje, v_id_pedido AS pedido;
+        END IF;
+    END IF;
+
     COMMIT;
-    
-    -- Mensaje de éxito
-    SELECT 1 AS mensaje, v_id_pedido as idPedido;
-    
-    
 END

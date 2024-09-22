@@ -35,7 +35,7 @@ export class RegistrosPaginadosComponent implements OnInit {
 
   imageBase64: string | null = null;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-
+  @Input() showBotoncrear: boolean = true;
   @Input() isLoadingTable!: boolean;
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;
@@ -44,7 +44,7 @@ export class RegistrosPaginadosComponent implements OnInit {
 
   constructor(
     private usermessage: UserMessageService,
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
   ) { }
   // Nueva bandera para controlar la visibilidad del filtro
   public mostrarFiltro: boolean = false;

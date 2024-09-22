@@ -109,7 +109,9 @@ Flight::route('POST /registrarUsuario', function () {
         $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $clave);
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -131,7 +133,9 @@ Flight::route('PUT /actualizarUsuario', function () {
         $respuesta = $user_controller->updateUser($id_usuario, $nombre, $apellido, $perfil, $usuario, $clave);
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -147,7 +151,9 @@ Flight::route('PUT /eliminarUsuario', function () {
         $respuesta = $user_controller->deleteUsuario($id_usuario);
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -158,7 +164,9 @@ Flight::route('GET /consultarUsuarios', function () {
         $respuesta = $user_controller->getAllUsers();
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 // Ruta para consultar todos los servicios (GET)
@@ -169,7 +177,9 @@ Flight::route('GET /consultarServicios', function () {
         $respuesta = $servicios_controller->getAllServices();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -189,7 +199,9 @@ Flight::route('POST /registrarServicios', function () {
         $respuesta = $servicios_controller->insertService($descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -210,7 +222,9 @@ Flight::route('PUT /actualizarServicios', function () {
         $respuesta = $servicios_controller->updateService($id_servicio, $descripcion_servicio, $costo_unitario, $validar_pesaje, $maximo_articulos);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -227,7 +241,9 @@ Flight::route('PUT /eliminarServicio', function () {
         $respuesta = $servicios_controller->deleteService($id_servicio);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -239,7 +255,9 @@ Flight::route('GET /buscarServicioPorId/@id_servicio', function ($id_servicio) {
         $respuesta = $servicios_controller->findServiceById($id_servicio);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -252,7 +270,9 @@ Flight::route('GET /buscarServicioPorDescripcion', function () {
         $respuesta = $servicios_controller->findServiceByDescription($data->descripcion_servicio);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -273,7 +293,9 @@ Flight::route('POST /registrarCliente', function () {
         $respuesta = $cliente_controller->insertCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -295,7 +317,9 @@ Flight::route('PUT /actualizarCliente', function () {
         $respuesta = $cliente_controller->updateCliente($id_cliente, $identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -312,7 +336,9 @@ Flight::route('PUT /eliminarCliente', function () {
         $respuesta = $cliente_controller->deleteCliente($id_cliente);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -323,7 +349,9 @@ Flight::route('GET /consultarClientes', function () {
         $respuesta = $cliente_controller->getAllClientes();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -340,7 +368,9 @@ Flight::route('POST /registrarDescuentos', function () {
         $respuesta = $descuento_controller->insertDescuento($tipo_descuento_desc, $cantidad_descuento);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -359,7 +389,9 @@ Flight::route('PUT /actualizarDescuentos', function () {
         $respuesta = $descuento_controller->updateDescuento($id_tipo_descuento, $tipo_descuento_desc, $cantidad_descuento);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -376,7 +408,9 @@ Flight::route('PUT /eliminarDescuentos', function () {
         $respuesta = $descuento_controller->deleteDescuentos($id_tipo_descuento);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -388,7 +422,9 @@ Flight::route('GET /consultarDescuentos', function () {
         $respuesta = $descuento_controller->getAllDescuentos();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -397,7 +433,7 @@ Flight::route('POST /registrarMaterial', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $materiales_controller = new Materiales_controller();
-        
+
         // Decodificar el cuerpo de la solicitud
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
@@ -410,7 +446,7 @@ Flight::route('POST /registrarMaterial', function () {
             echo json_encode(array("respuesta" => "0", "mensaje" => "La descripción del material es requerida."));
             return;
         }
-        
+
         if (empty($imagen)) {
             echo json_encode(array("respuesta" => "0", "mensaje" => "La imagen es requerida."));
             return;
@@ -427,7 +463,7 @@ Flight::route('POST /registrarMaterial', function () {
             return;
         } elseif (strlen($imagen) > 1024 * 1024) {
             http_response_code(response_code: 413);
-            echo json_encode(array("estatus" => "0", "mensaje" => "La imagen es demasiado grande."));
+            echo json_encode(array("status" => "0", "mensaje" => "La imagen es demasiado grande."));
             return;
         }
 
@@ -435,7 +471,9 @@ Flight::route('POST /registrarMaterial', function () {
         $respuesta = $materiales_controller->insertMaterial($descripcion_material, $imagen);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -465,14 +503,16 @@ Flight::route('PUT /editarMaterial', function () {
             return;
         } elseif (strlen($imagen) > 1024 * 1024) {
             http_response_code(response_code: 413);
-            echo json_encode(array("estatus" => "0", "mensaje" => "La imagen es demasiado grande."));
+            echo json_encode(array("status" => "0", "mensaje" => "La imagen es demasiado grande."));
             return;
         }
 
         $respuesta = $materiales_controller->updateMaterial($id_material, $descripcion_material, $imagen);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -488,7 +528,9 @@ Flight::route('PUT /eliminarMaterial', function () {
         $respuesta = $materiales_controller->deleteMaterial($id_material);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -496,11 +538,13 @@ Flight::route('GET /consultarMateriales', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $materiales_controller = new Materiales_controller();
-        
+
         $respuesta = $materiales_controller->getAllMaterials();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -510,10 +554,12 @@ Flight::route('GET /consultarMaterial', function () {
         $materiales_controller = new Materiales_controller();
 
         $respuesta = $materiales_controller->getMaterialDetail();
-        
+
         echo json_encode($respuesta);
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -532,7 +578,7 @@ Flight::route('POST /registrarEstado', function () {
         echo $respuesta;
     } else {
         http_response_code(401);
-        echo json_encode(array("estatus" => "0", "mensaje" => "Petición no autorizada"));
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
         exit;
     }
 });
@@ -551,7 +597,9 @@ Flight::route('PUT /actualizarEstado', function () {
         $respuesta = $estado_controller->updateState($id_estado, $descripcion_estado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -568,7 +616,9 @@ Flight::route('PUT /eliminarEstado', function () {
         $respuesta = $estado_controller->deleteState($id_estado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -580,7 +630,9 @@ Flight::route('GET /consultarEstados', function () {
         $respuesta = $estado_controller->getAllStates();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -598,7 +650,9 @@ Flight::route('POST /registrarRecomendacion', function () {
         $respuesta = $recomendacion_controller->insertRecommendation($descripcion_material, $descripcion_servicio);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -616,7 +670,9 @@ Flight::route('PUT /actualizarRecomendacion', function () {
         $respuesta = $recomendacion_controller->updateRecommendation($id_recomendacion_lavado, $descripcion_material, $descripcion_servicio);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -632,7 +688,9 @@ Flight::route('PUT /eliminarRecomendacion', function () {
         $respuesta = $recomendacion_controller->deleteRecommendation($id_recomendacion_lavado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -643,7 +701,9 @@ Flight::route('GET /consultarRecomendaciones', function () {
         $respuesta = $recomendacion_controller->getAllRecommendations();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 // asignacionessssssssssssssssssssssssss
@@ -660,10 +720,12 @@ Flight::route('POST /registrarAsignacion', function () {
         $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
         $descripcion_estado = $data['descripcion_estado'] ?? null;
 
-        $respuesta = $asignaciones_controller->insertAssignment( $usuario,  $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
+        $respuesta = $asignaciones_controller->insertAssignment($usuario,  $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -684,7 +746,9 @@ Flight::route('PUT /actualizarAsignacion', function () {
         $respuesta = $asignaciones_controller->updateAssignment($id_asignaciones, $usuario, $fecha_inicio, $fecha_fin, $id_pedido_cabecera, $descripcion_estado);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 Flight::route('PUT /eliminarAsignacion', function () {
@@ -699,7 +763,9 @@ Flight::route('PUT /eliminarAsignacion', function () {
         $respuesta = $asignaciones_controller->deleteAssignment($id_asignaciones);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 Flight::route('GET /consultarAsignaciones', function () {
@@ -709,7 +775,9 @@ Flight::route('GET /consultarAsignaciones', function () {
         $respuesta = $asignaciones_controller->getAllAssignments();
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 Flight::route('GET /consultarPedidos', function () {
@@ -719,7 +787,9 @@ Flight::route('GET /consultarPedidos', function () {
         $respuesta = $controller->getAllPedidos();
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -767,7 +837,9 @@ Flight::route('POST /registrarPedido', function () {
         );
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -796,7 +868,10 @@ Flight::route('POST /registrarPedidoCompleto', function () {
         $total = $data['total'] ?? null;
         $detalle = $data['detallePedido'] ?? null;
 
-    
+        error_log("----------------------DATOS DEL PEDIDO------------" . $body);
+
+        error_log(message: "detalle desde el index   ".$detalle);
+
         $respuesta = $controller->insertarPedidoCompleto(
             $fecha_pedido,
             $fk_id_usuario,
@@ -818,7 +893,9 @@ Flight::route('POST /registrarPedidoCompleto', function () {
         );
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -836,9 +913,9 @@ Flight::route('PUT /actualizarPedido', function () {
         $cantidad_articulos = $data['cantidad_articulos'] ?? null;
         $fk_id_cliente = $data['fk_id_cliente'] ?? null;
         $fk_id_descuentos = $data['fk_id_descuentos'] ?? null;
-        $pedido_subtotal = $data['pedido_subtotal'] ?? null;
-        $estado_pago = $data['estado_pago'] ?? null;
-        $valor_pago = $data['valor_pago'] ?? null;
+        $pedido_subtotal = $data['pedido_subtotal'];
+        $estado_pago = $data['estado_pago'];
+        $valor_pago = $data['valor_pago'];
         $fecha_hora_recoleccion_estimada = $data['fecha_hora_recoleccion_estimada'] ?? null;
         $direccion_recoleccion = $data['direccion_recoleccion'] ?? null;
         $fecha_hora_entrega_estimada = $data['fecha_hora_entrega_estimada'] ?? null;
@@ -862,7 +939,9 @@ Flight::route('PUT /actualizarPedido', function () {
         );
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -878,7 +957,9 @@ Flight::route('PUT /eliminarPedido', function () {
         $respuesta = $controller->deletePedido($idPedidoCabecera);
         echo $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -905,7 +986,9 @@ Flight::route('POST /registrarItemPedido', function () {
         );
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 
@@ -934,7 +1017,9 @@ Flight::route('PUT /editarItemPedido', function () {
         );
         echo  $respuesta;
     } else {
-        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 

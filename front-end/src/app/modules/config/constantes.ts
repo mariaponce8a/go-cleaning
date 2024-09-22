@@ -5,6 +5,8 @@ export class Constantes {
   public static DEFAULT_TIMEOUT: number = 30000; //tiempo en milisegundos
   public static automaticLogOutKey: string = '&S3$L&O&3u^456T&'; //modals switcher key
 
+  public static formatoFecha: string = 'yyyy-MM-dd HH:mm:ss';
+
   // local storage keys
   public static tokenKey: string = 'auth';
   public static usuarioKey: string = 'usuarioValue';

@@ -71,3 +71,103 @@ VALUES
         'Calle Falsa 456', -- Dirección de entrega
         'D'         -- Tipo de entrega  D o L (DOMICILIO o LOCAL)
 );
+
+
+// creacion de pedido sp 
+
+CREATE DEFINER=`usg8hrdab84mdg8a`@`%` PROCEDURE `InsertarPedidoConDetalle`(
+    IN p_fecha_pedido DATETIME,
+    IN p_fk_id_usuario INT,
+    IN p_cantidad_articulos INT,
+    IN p_fk_id_cliente INT,
+    IN p_fk_id_descuentos INT,
+    IN p_pedido_subtotal DECIMAL(10, 2),
+    IN p_estado_pago VARCHAR(50),
+    IN p_valor_pago DECIMAL(10, 2),
+    IN p_fecha_recoleccion_estimada DATE,
+    IN p_hora_recoleccion_estimada TIME,
+    IN p_direccion_recoleccion VARCHAR(255),
+    IN p_fecha_entrega_estimada DATE,
+    IN p_hora_entrega_estimada TIME,
+    IN p_direccion_entrega VARCHAR(255),
+    IN p_tipo_entrega VARCHAR(50),
+    IN p_total DECIMAL(10, 2),
+    IN p_detalles JSON
+)
+BEGIN
+    DECLARE v_id_pedido INT;
+    DECLARE exit handler FOR SQLEXCEPTION
+    BEGIN
+        -- Si ocurre un error, se revierte la transacción
+        ROLLBACK;
+        SELECT 0 AS respuesta;
+    END;
+
+    -- Iniciar transacción
+    START TRANSACTION;
+    
+    -- Insertar en tb_pedido
+    INSERT INTO tb_pedido (
+        fecha_pedido,
+        fk_id_usuario,
+        cantidad_articulos,
+        fk_id_cliente,
+        fk_id_descuentos,
+        pedido_subtotal,
+        estado_pago,
+        valor_pago,
+        fecha_recoleccion_estimada,
+        hora_recoleccion_estimada,
+        direccion_recoleccion,
+        fecha_entrega_estimada,
+        hora_entrega_estimada,
+        direccion_entrega,
+        tipo_entrega,
+        total
+    )
+    VALUES (
+        p_fecha_pedido,
+        p_fk_id_usuario,
+        p_cantidad_articulos,
+        p_fk_id_cliente,
+        p_fk_id_descuentos,
+        p_pedido_subtotal,
+        p_estado_pago,
+        p_valor_pago,
+        p_fecha_recoleccion_estimada,
+        p_hora_recoleccion_estimada,
+        p_direccion_recoleccion,
+        p_fecha_entrega_estimada,
+        p_hora_entrega_estimada,
+        p_direccion_entrega,
+        p_tipo_entrega,
+        p_total
+    );
+
+    -- Obtener el ID del nuevo pedido
+    SET v_id_pedido = LAST_INSERT_ID();
+    
+    -- Insertar en tb_pedido_detalle usando JSON
+    INSERT INTO tb_pedido_detalle (fk_id_servicio, libras, precio_servicio, fk_id_pedido, descripcion_articulo, cantidad)
+    SELECT
+        JSON_UNQUOTE(JSON_EXTRACT(detail, '$.fk_id_servicio')),
+        JSON_UNQUOTE(JSON_EXTRACT(detail, '$.libras')),
+        JSON_UNQUOTE(JSON_EXTRACT(detail, '$.precio_servicio')),
+        v_id_pedido,
+        JSON_UNQUOTE(JSON_EXTRACT(detail, '$.descripcion_articulo')),
+        JSON_UNQUOTE(JSON_EXTRACT(detail, '$.cantidad'))
+    FROM JSON_TABLE(
+        p_detalles,
+        '$[*]' COLUMNS (
+            detail JSON PATH '$'
+        )
+    ) AS t;
+
+    -- Confirmar la transacción si todo es exitoso
+    COMMIT;
+    
+    -- Mensaje de éxito
+    SELECT 1 AS mensaje, v_id_pedido as idPedido;
+    
+    
+END

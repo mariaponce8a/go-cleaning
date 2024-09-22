@@ -105,6 +105,8 @@ export class ListadoAsignacionEmpleadoComponent  implements OnInit, OnDestroy {
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
+
+         
         },
         error: () => {
           this.loadingTable = false;

@@ -39,8 +39,7 @@ class Pedidos_controller
     ) {
         error_log("--------------");
         $model = new pedidos_model();
-
-        error_log("----------DATOS DESDE CONTROLLER: "  .$detalle);
+ 
         if (
             $fecha_pedido == null ||
             $fk_id_usuario == null ||
@@ -76,10 +75,12 @@ class Pedidos_controller
             $detalle
         );
 
+        error_log("RESPUESTA CONTROLLER PEDIDO --------------------".json_encode($resultado));
+
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el pedido"));
         } else {
-            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['idPedido'] ,"mensaje" => "Pedido registrado con éxito"));
+            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['pedido'] ,"mensaje" => "Pedido registrado con éxito"));
         }
     }
 

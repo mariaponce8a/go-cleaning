@@ -96,9 +96,9 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     total: new FormControl(0),
     estado_pago: new FormControl('', [Validators.required]),
     valor_pago: new FormControl(0, [Validators.required]),
-    fecha_recoleccion_estimada: new FormControl(),
-    hora_recoleccion_estimada: new FormControl(''),
-    direccion_recoleccion: new FormControl(),
+    fecha_recoleccion_estimada: new FormControl({ value: '', disabled: false }),
+    hora_recoleccion_estimada: new FormControl({ value: '', disabled: false }),
+    direccion_recoleccion: new FormControl({ value: '', disabled: false }),
     fecha_entrega_estimada: new FormControl('', [Validators.required]),
     hora_entrega_estimada: new FormControl('', [Validators.required]),
     direccion_entrega: new FormControl(),
@@ -145,6 +145,10 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
     // if (this.formInfo?.tipo == 'crear') {
     this.form.controls.usuario.setValue(this.usuarioPlataforma);
     this.form.controls.fk_id_usuario.setValue(this.idUsuarioPlataforma);
+    
+    this.form.controls.fecha_recoleccion_estimada.disable();
+    this.form.controls.hora_recoleccion_estimada.disable();
+    this.form.controls.direccion_recoleccion.disable()
     // } 
     // else {
     //   this.form.controls.usuario.enable();
@@ -218,11 +222,18 @@ export class FormularioPedidosComponent implements OnInit, OnDestroy {
 
   setearDireccionEntrega(event: MatSelectChange) {
     console.log(event);
-    if (event.value == 'L') {
+    if (event.value == 'L') {  //para local
       this.form.controls.direccion_entrega
         .setValue('(local) Leonardo Murialdo N57-199 yMiguel Valdiviezo-Kennedy Quito Pichincha Ecuador');
-    } else {
+      this.form.controls.fecha_recoleccion_estimada.disable();
+      this.form.controls.hora_recoleccion_estimada.disable();
+      this.form.controls.direccion_recoleccion.disable()
+
+    } else { // para domicilio
       this.form.controls.direccion_entrega.setValue('');
+      this.form.controls.fecha_recoleccion_estimada.enable();
+      this.form.controls.hora_recoleccion_estimada.enable();
+      this.form.controls.direccion_recoleccion.enable()
     }
   }
 

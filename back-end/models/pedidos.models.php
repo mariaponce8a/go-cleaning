@@ -98,8 +98,8 @@ class pedidos_model
             if ($stmt->execute()) {
                 $result = $stmt->get_result();
                 $row = $result->fetch_assoc();
-                error_log("----------------------RESPUESTA DEL PEDIDO------------" . $row['mensaje']);
-                if ($row['mensaje'] == 1) {
+                error_log("----------------------RESPUESTA DEL PEDIDO MODELO------------" . json_encode($row));
+                if ($row['respuesta'] == 1) {
                     return $row;
                 } else {
                     throw new Exception(false);

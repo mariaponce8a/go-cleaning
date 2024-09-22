@@ -45,7 +45,7 @@
                 @if (habilitarFormularioRestante) {
                 <div class="formGroupCont">
                     <mat-form-field class="w-50" appearance="outline">
-                        <mat-label>Tipo de entrega</mat-label>
+                        <mat-label>Tipo de entrega </mat-label>
                         <mat-select (selectionChange)="setearDireccionEntrega($event)" formControlName="tipo_entrega">
                             <mat-option value="D">Domicilio</mat-option>
                             <mat-option value="L">Local</mat-option>
@@ -79,26 +79,28 @@
 
                 <div class="formGroupCont">
                     <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Fecha recolección</mat-label>
+                        <mat-label>Fecha recolección <mat-icon matTooltip="Solo aplica para entregas a domicilio">info</mat-icon></mat-label>
                         <input matInput [matDatepicker]="picker2" formControlName="fecha_recoleccion_estimada">
                         <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
+                        
                         @if (fechaRecoleccionInvalida) {
                         <mat-error> La fecha de recolección no puede ser anterior a la fecha actual.</mat-error>
                         }
                     </mat-form-field>
 
                     <mat-form-field class="w-25" appearance="outline">
-                        <mat-label>Hora recolección</mat-label>
+                        <mat-label>Hora recolección  <mat-icon matTooltip="Solo aplica para entregas a domicilio">info</mat-icon></mat-label>
                         <input type="time" matInput formControlName="hora_recoleccion_estimada" />
+                      
                     </mat-form-field>
                 </div>
 
                 <div class="formGroupCont">
                     <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Dirección de recolección</mat-label>
+                        <mat-label>Dirección de recolección  <mat-icon matTooltip="Solo aplica para entregas a domicilio">info</mat-icon></mat-label>
                         <input maxlength="150" matInput formControlName="direccion_recoleccion" />
-                        <mat-hint>Max.150</mat-hint>
+                       
                     </mat-form-field>
                 </div>
 

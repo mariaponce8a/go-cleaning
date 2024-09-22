@@ -13,7 +13,6 @@
 "
     >
       <button
-      *ngIf="showBotoncrear"
         type="button"
         class="buttonBack mb-4"
         (click)="actionRow('crear', {})"
@@ -141,7 +140,8 @@
         <mat-row *matRowDef="let row; columns: displayColumns" 
         [ngClass]="{
             'yellow-row': !isEstadosRoute() && row.descripcion_estado === 'Por recoger',
-            'red-row': compareDates(row.fecha_entrega_estimada)
+            'red-row': row.descripcion_estado == 'Entregado con atraso' || compareDates(row.fecha_entrega_estimada)  && 
+            row.descripcion_estado !== 'Entregado'            
         }"
         [matTooltip]="!isEstadosRoute() && row.descripcion_estado === 'Por recoger' ? 'Pedido pendiente por recoger' : 
                      (compareDates(row.fecha_entrega_estimada) ? 'Entrega con atraso' : '')">

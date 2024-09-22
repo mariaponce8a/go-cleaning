@@ -99,8 +99,8 @@ export class TablasHomeComponent implements OnInit, OnDestroy {
          next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data.filter((pedido: IestadosPlataforma) => 
-            pedido.descripcion_estado !== 'entregado' && 
-            pedido.descripcion_estado !== 'entregado con atraso'
+            pedido.descripcion_estado !== 'Entregado' && 
+            pedido.descripcion_estado !== 'Entregado con atraso'
           );
         },
          error: () => {

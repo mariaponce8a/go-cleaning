@@ -46,7 +46,6 @@ compareDates(fechaEntregaEstimada: string): boolean {
 
   imageBase64: string | null = null;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @Input() showBotoncrear: boolean = true;
   @Input() isLoadingTable!: boolean;
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;
@@ -66,7 +65,7 @@ compareDates(fechaEntregaEstimada: string): boolean {
 
   ngOnInit(): void {
     this.showActions = this.router.url !== '/bds/home'; // Ocultar botones de acción en home
-    this.showCreateButton = this.router.url !== '/bds/home';
+    this.showCreateButton = this.router.url !== '/bds/home' && this.router.url !== '/bds/asignaciones';
     this.showPdfButtonNextToCreate = this.router.url == '/bds/clientes';
     this.onFillData();
     
@@ -75,6 +74,7 @@ compareDates(fechaEntregaEstimada: string): boolean {
   isEstadosRoute(): boolean {
     return this.router.url.includes('/bds/estados');
   }
+
   actionRow(type: string, rowData: any) {
     let data: IaccionBotones = {
       tipo: type,

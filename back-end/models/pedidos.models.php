@@ -16,10 +16,12 @@ class pedidos_model
             p.fk_id_cliente, c.identificacion_cliente, c.correo_cliente , c.nombre_cliente, c.apellido_cliente,
             p.fk_id_descuentos, d.tipo_descuento_desc , d.cantidad_descuento , p.pedido_subtotal, p.estado_pago, p.valor_pago,
             p.fecha_recoleccion_estimada, p.direccion_recoleccion, p.fecha_entrega_estimada,
-            p.direccion_entrega, p.tipo_entrega
+            p.direccion_entrega, p.tipo_entrega,  e.descripcion_estado
             from tb_pedido p
             inner join tb_usuarios_plataforma u on u.id_usuario = p.fk_id_usuario
             inner join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
+            inner join tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
+            inner join tb_estados e ON a.fk_id_estado = e.id_estado
             inner join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos";
             $exeResult = mysqli_query($conexion, $query);
 

@@ -794,6 +794,42 @@ Flight::route('GET /consultarPedidos', function () {
     }
 });
 
+Flight::route('GET /consultarPedidosnoCancelados', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+        $respuesta = $controller->getAllPedidosnoCancelados();
+        echo  $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+
+Flight::route('GET /consultarPedidosXid', function () {
+    $tokenDesdeCabecera = getValidToken();
+    
+    if ($tokenDesdeCabecera == true) {
+        // Obtener el parámetro de consulta 'id' desde la URL
+        $id = Flight::request()->query->__get('id');
+        
+        if ($id) {
+            $controller = new Pedidos_controller();
+            $respuesta = $controller->getPedidosXId($id);
+            echo $respuesta;
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(array("status" => "0", "mensaje" => "Parámetro 'id' faltante"));
+        }
+    } else {
+        http_response_code(401); // Unauthorized
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+
 Flight::route('POST /registrarPedido', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
@@ -900,7 +936,9 @@ Flight::route('POST /registrarPedidoCompleto', function () {
     }
 });
 
-Flight::route('PUT /actualizarPedido', function () {
+
+
+Flight::route('PUT /ejecutar-facturacion', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
         $controller = new Pedidos_controller();
@@ -908,33 +946,12 @@ Flight::route('PUT /actualizarPedido', function () {
         $data = json_decode($body, true);
 
         $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
-        $fk_id_usuario = $data['fk_id_usuario'] ?? null;
-        $cantidad_articulos = $data['cantidad_articulos'] ?? null;
-        $fk_id_cliente = $data['fk_id_cliente'] ?? null;
-        $fk_id_descuentos = $data['fk_id_descuentos'] ?? null;
-        $pedido_subtotal = $data['pedido_subtotal'];
-        $estado_pago = $data['estado_pago'];
-        $valor_pago = $data['valor_pago'];
-        $fecha_hora_recoleccion_estimada = $data['fecha_hora_recoleccion_estimada'] ?? null;
-        $direccion_recoleccion = $data['direccion_recoleccion'] ?? null;
-        $fecha_hora_entrega_estimada = $data['fecha_hora_entrega_estimada'] ?? null;
-        $direccion_entrega = $data['direccion_entrega'] ?? null;
-        $tipo_entrega = $data['tipo_entrega'] ?? null;
+        $estado_facturacion = $data['estado_facturacion'] ?? null;
+        
 
-        $respuesta = $controller->updatePedidos(
+        $respuesta = $controller->ejecutarFacturacion(
             $id_pedido_cabecera,
-            $fk_id_usuario,
-            $cantidad_articulos,
-            $fk_id_cliente,
-            $fk_id_descuentos,
-            $pedido_subtotal,
-            $estado_pago,
-            $valor_pago,
-            $fecha_hora_recoleccion_estimada,
-            $direccion_recoleccion,
-            $fecha_hora_entrega_estimada,
-            $direccion_entrega,
-            $tipo_entrega
+            $estado_facturacion 
         );
         echo  $respuesta;
     } else {

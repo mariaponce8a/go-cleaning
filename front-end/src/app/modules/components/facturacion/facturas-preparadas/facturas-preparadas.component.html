@@ -1,0 +1,117 @@
+@if (!generalLoading) {
+<div
+    style="background-color: rgba(0, 0, 0, 0.586); position: absolute; z-index: 9999; margin: auto; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+    <mat-spinner [mode]="'indeterminate'"></mat-spinner>
+</div>
+}
+
+<app-colored-body-header (returnPage)="goBack($event)" [icon]="'keyboard_backspace'"
+    [nombrePagina]="'Facturas preparadas'"
+    [subtitulo]="'Realice sus pedidos rápida y facilmente'"></app-colored-body-header>
+<div class="conttoatl">
+    <div class="contFormpedidos">
+        <app-modal-header [tituloHeader]="'Formulario de pedido'" [mostrarBtnCerrar]="false"></app-modal-header>
+        <div class="formmularioCont">
+            <form [formGroup]="form">
+                <div class="formGroupCont">
+                    <mat-form-field class="w-25" appearance="outline">
+                        <mat-label>Pedido asociado</mat-label>
+                        <mat-icon style="color: #00000061;" matPrefix>#
+                        </mat-icon>
+                        <input readonly="true" matInput formControlName="id_pedido_cabecera" />
+                    </mat-form-field>
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Cliente</mat-label>
+                        <mat-icon style="color: #00000061;" matPrefix>person</mat-icon>
+                        <input placeholder="Cargando cliente..." readonly="true" matInput
+                            formControlName="infoClienteCompleto" />
+                    </mat-form-field>
+                </div>
+                <div class="formGroupCont">
+                    <mat-form-field class="w-50" appearance="outline">
+                        <mat-label>Tipo de entrega</mat-label>
+                        <input readonly="true"  matInput formControlName="descEntrega" />
+                    </mat-form-field>
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Dirección de entrega</mat-label>
+                        <input readonly="true" maxlength="150" matInput formControlName="direccion_entrega" />
+                    </mat-form-field>
+                </div>
+                <div class="formGroupCont">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Adelanto de pago</mat-label>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input
+                            [readonly]="!this.form.controls.estado_pago.value || this.form.controls.estado_pago.value == 'C' || this.form.controls.estado_pago.value == 'F' "
+                            maxlength="10" matInput formControlName="valor_pago" />
+                    </mat-form-field>
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Total</mat-label>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input readonly="true" maxlength="10" matInput formControlName="total" />
+                        <mat-hint>Total incluye iva</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Diferencia por pagar</mat-label>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input readonly="true" maxlength="10" matInput formControlName="diferenciaPagar" />
+                    </mat-form-field>
+                </div>
+                <div class="serviciosAgg">
+                    @if (itemList.length == 0) {
+                    <div class="sinPedidos">Cargando los pedidos asociados...</div>
+                    }
+                    @else {
+
+                    <button (click)="facturar()" [disabled]="this.form.controls.estado_facturacion.value == 1" mat-stroked-button
+                        style="padding: 5px 0;">
+                        <mat-icon matPrefix>check</mat-icon>
+                        {{this.form.controls.estado_facturacion.value == 0 ? 'Generar facturas': 'Factura ya generada'}}
+                    </button>
+
+                    @for (items of itemList.controls; track $index) {
+                    <div [formGroup]="items" class="itemPedido">
+                        <div class="w-100 d-flex justify-content-between">
+                            <label class="numerofactura"> <mat-icon
+                                    style="color: rgba(84, 134, 120, 0.513);">receipt</mat-icon>Factura
+                                #000{{items.controls['id_pedido_detalle'].value}} </label>
+                        </div>
+                        <div class="formGroupCont">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Descripción</mat-label>
+                                <input readonly="true" matInput formControlName="descripcion_articulo" />
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Servicios</mat-label>
+                                <input readonly="true" matInput formControlName="descServicio" />
+                            </mat-form-field>
+                        </div>
+                        <div class="formGroupCont">
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Cantidad</mat-label>
+                                <input readonly="true" matInput formControlName="cantidad" />
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Libras</mat-label>
+                                <input readonly="true" matInput formControlName="libras" />
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Totalizado</mat-label>
+                                <mat-icon matPrefix>attach_money</mat-icon>
+                                <input readonly="true" formControlName="precio_servicio" matInput />
+                                <mat-hint>Totalizado incluye iva x servicio</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    }
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

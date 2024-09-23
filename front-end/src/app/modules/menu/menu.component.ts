@@ -50,6 +50,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       perfil: 'A, E'
     },
     {
+      descripcion: 'Facturas',
+      icon: 'receipt',
+      pagina: 'bds/facturas',
+      perfil: 'A, E'
+    },
+    {
       descripcion: 'Clientes',
       icon: 'account_circle',
       pagina: 'bds/clientes',
@@ -87,7 +93,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       perfil: 'A'
     },
     {
-      descripcion: 'Recomendación Lavado',
+      descripcion: 'Recomendaciónes',
       icon: 'dry_cleaning',
       pagina: 'bds/recomendaciones',
       perfil: 'A'

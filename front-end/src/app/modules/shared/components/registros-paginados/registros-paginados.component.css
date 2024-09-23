@@ -3,6 +3,11 @@
   font-weight: 700;
 }
 
+.mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell {
+  background: inherit;
+  justify-content: center!important;
+}
+
 table.rowAlternate mat-row:nth-child(odd) {
   background-color: #8181811e;
 }
@@ -40,7 +45,7 @@ mat-row, mat-footer-row {
 
 .mdc-data-table__cell , .mdc-data-table__header-cell {
   padding: 0 0px 0 12px !important;
-  min-width: 120px;
+  /* min-width: 120px; */
   text-align: center;
 }
 
@@ -48,7 +53,7 @@ mat-row, mat-footer-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(115, 201, 206);
+  background-color: rgb(222 142 0);
 }
 
 .edit {
@@ -68,6 +73,11 @@ mat-row, mat-footer-row {
 
 .edit:hover {
   background-color: var(--secondaryDark);
+  transition: 0.3s;
+}
+
+.pdf:hover {
+  background-color: rgb(196, 124, 0);
   transition: 0.3s;
 }
 
@@ -93,7 +103,7 @@ mat-row, mat-footer-row {
 
 .cellButtons {
   display: flex !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   gap: 10px !important;
 }
 

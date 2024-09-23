@@ -10,7 +10,7 @@
     gap: 17px;
     justify-content: flex-start;
 ">
-      <button type="button" class="buttonBack mb-4" (click)="actionRow('crear', {})" *ngIf="showCreateButton">
+      <button type="button" class="buttonBack mb-4" (click)="actionRow('crear', {})" *ngIf="verBtnCrear">
         Crear registro
       </button>
 
@@ -61,20 +61,33 @@
         </ng-container>
         }
         <ng-container matColumnDef="accion" [stickyEnd]="true">
-          <mat-header-cell  class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
-          <mat-cell  style="background-color: rgb(255, 255, 255); padding: 0 10px;" class="cellButtons" mat-cell *matCellDef="let element">
-            <button class="edit" type="button" mat-icon-button (click)="actionRow('editar', element)">
+          <mat-header-cell class="tableCont" mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+          <mat-cell style="background-color: rgb(255, 255, 255); padding: 0 10px;" class="cellButtons" mat-cell
+            *matCellDef="let element">
+            @if (verEditar) {
+            <button matTooltip="Editar" matTooltipPosition="above" class="edit" type="button" mat-icon-button
+              (click)="actionRow('editar', element)">
               <mat-icon style="color: white; display: flex; align-items: center">edit</mat-icon>
             </button>
-            <button class="delete" type="button" mat-icon-button (click)="actionRow('eliminar', element)">
+            }
+            @if (verFacturas) {
+            <button matTooltip="Facturas del pedido" matTooltipPosition="above" class="edit" type="button"
+              mat-icon-button (click)="actionRow('recibos', element)">
+              <mat-icon style="color: white; display: flex; align-items: center">receipt</mat-icon>
+            </button>
+            }
+            @if (verEliminar) {
+            <button matTooltip="Eliminar" matTooltipPosition="above" class="delete" type="button" mat-icon-button
+              (click)="actionRow('eliminar', element)">
               <mat-icon style="color: white; display: flex; align-items: center">restore_from_trash</mat-icon>
             </button>
-
-            <button class="pdf" type="button" mat-icon-button (click)="actionRow('PDF', element)"
-              *ngIf="shouldShowPdfButton()">
+            }
+            @if (verPdf) {
+            <button matTooltip="Imprimir PDF" matTooltipPosition="above" class="pdf" type="button" mat-icon-button
+              (click)="actionRow('PDF', element)" >
               <mat-icon style="color: white; display: flex; align-items: center">description</mat-icon>
             </button>
-
+          }
           </mat-cell>
         </ng-container>
 

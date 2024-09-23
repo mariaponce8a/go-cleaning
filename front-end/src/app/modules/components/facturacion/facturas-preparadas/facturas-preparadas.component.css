@@ -1,0 +1,64 @@
+.contFormpedidos {
+    width: 100%;
+    max-width: 850px;
+
+}
+
+.formmularioCont {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 1px solid #e1e1e1;
+    border-radius: 0 0 10px 10px;
+    background-color: white;
+}
+
+.numerofactura {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-direction: row;
+    gap: 5px;
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.conttoatl {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    position: relative;
+    top: -76px;
+    display: flex;
+    justify-content: center;
+}
+
+.serviciosAgg {
+    border-radius: 8px;
+    border: 1px solid #cecece;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.sinPedidos {
+    padding: 10px;
+    background-color: #e1e1e1;
+    color: rgb(40, 40, 40);
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+}
+
+.itemPedido {
+    border-radius: 8px;
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    gap: 10px;
+}

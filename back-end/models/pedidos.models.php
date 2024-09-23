@@ -11,7 +11,7 @@ class pedidos_model
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
             $query = "select
-            p.id_pedido_cabecera, p.fecha_pedido, p.fk_id_usuario,
+            p.id_pedido_cabecera, p.fecha_pedido, p.fk_id_usuario, p.estado_facturacion, p.total , p.estado_pedido ,
             u.usuario , p.cantidad_articulos,
             p.fk_id_cliente, c.identificacion_cliente, c.correo_cliente , c.nombre_cliente, c.apellido_cliente,
             p.fk_id_descuentos, d.tipo_descuento_desc , d.cantidad_descuento , p.pedido_subtotal, p.estado_pago, p.valor_pago,
@@ -45,6 +45,99 @@ class pedidos_model
         }
     }
 
+
+
+    public function getAllPedidosNoCancelados()
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            $query = "select p.id_pedido_cabecera, p.fecha_pedido, p.fk_id_usuario, p.estado_facturacion, 
+            p.total, p.estado_pedido, p.cantidad_articulos, p.fk_id_cliente, c.identificacion_cliente, 
+            c.correo_cliente, c.nombre_cliente, c.apellido_cliente, p.fk_id_descuentos, 
+            p.pedido_subtotal, p.estado_pago, p.valor_pago,p.fecha_recoleccion_estimada, 
+            p.direccion_recoleccion, p.fecha_entrega_estimada, p.direccion_entrega, 
+            p.tipo_entrega FROM tb_pedido p 
+            INNER JOIN tb_clientes_registrados c ON c.id_cliente = p.fk_id_cliente 
+            WHERE p.estado_pedido = 1";
+            $exeResult = mysqli_query($conexion, $query);
+
+            if ($exeResult == false) {
+                throw new Exception("Problemas al cargar el pedido");
+            } else {
+                $data = array();
+                while ($fila = mysqli_fetch_assoc($exeResult)) {
+                    $data[] = $fila;
+                }
+
+                return json_encode($data);
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+    public function getPedidoXId($idpedido)
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+
+            // Consultar la cabecera del pedido
+            $query = "
+           select
+            p.id_pedido_cabecera, p.fecha_pedido, p.fk_id_usuario, p.estado_facturacion , p.cantidad_articulos,
+            p.fk_id_cliente, c.identificacion_cliente, c.correo_cliente , c.nombre_cliente, c.apellido_cliente,
+            p.fk_id_descuentos, p.pedido_subtotal, p.estado_pago, p.valor_pago,  p.total , p.estado_pedido ,
+            p.fecha_recoleccion_estimada, p.direccion_recoleccion, p.fecha_entrega_estimada,
+            p.direccion_entrega, p.tipo_entrega
+            from tb_pedido p inner join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
+            where p.id_pedido_cabecera = ?
+            ";
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param('i', $idpedido);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Problemas al cargar los datos de la cabecera del pedido");
+            }
+
+            $cabecera = array();
+            $resultado = $stmt->get_result();
+            while ($fila = $resultado->fetch_assoc()) {
+                $cabecera[] = $fila;
+            }
+
+            // Consultar el detalle del pedido
+            $query2 = "SELECT * FROM tb_pedido_detalle WHERE fk_id_pedido = ?";
+            $stmt2 = $conexion->prepare($query2);
+            $stmt2->bind_param('i', $idpedido);
+
+            if (!$stmt2->execute()) {
+                throw new Exception("Problemas al cargar los datos del detalle del pedido");
+            }
+
+            $detalle = array();
+            $resultado2 = $stmt2->get_result();
+            while ($filad = $resultado2->fetch_assoc()) {
+                $detalle[] = $filad;
+            }
+
+            // Retornar el resultado en formato JSON
+            return json_encode(array("pedido" => $cabecera[0], "detalle" => $detalle));
+        } catch (Exception $e) {
+            error_log($e->getMessage() . "----DESDE EL MODELO");
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
     public function registrarPedidoCompleto(
         $fecha_pedido,
         $fk_id_usuario,
@@ -179,6 +272,39 @@ class pedidos_model
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+
+    public function ejecutarFacturacion(
+        $id_pedido_cabecera,
+        $estado_facturacion
+    ) {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar(); 
+            $query = "update  tb_pedido  SET  estado_facturacion  = ? WHERE  id_pedido_cabecera = ? ";
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param(
+                "ii",
+                $estado_facturacion,
+                $id_pedido_cabecera
+            );
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                 
+                error_log("???resultado de facturacion". $resultado);
+                return true;
+            } else {
+                throw new Exception("Problemas al ejecutar la facturación");
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage()); 
             return false;
         } finally {
             if (isset($conexion)) {
@@ -382,12 +508,12 @@ class pedidos_model
         }
     }
 
-    public function OrdenPedido($id_pedido_cabecera) 
+    public function OrdenPedido($id_pedido_cabecera)
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            
+
             $query = "
                     SELECT 
                     p.fecha_pedido,
@@ -425,21 +551,21 @@ class pedidos_model
                 WHERE 
                     p.id_pedido_cabecera = ?
             ";
-    
+
             $stmt = $conexion->prepare($query);
             $stmt->bind_param("i", $id_pedido_cabecera);
-            
+
             if (!$stmt->execute()) {
                 throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
             }
-            
+
             $result = $stmt->get_result();
             $pedidos = array();
-            
+
             while ($fila = $result->fetch_assoc()) {
                 $pedidos[] = $fila;
             }
-            
+
             return json_encode($pedidos);
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -456,7 +582,7 @@ class pedidos_model
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-                        $query = "SELECT 
+            $query = "SELECT 
                                     p.fecha_pedido,
                                     CONCAT(u.nombre, ' ', u.apellido) AS nombre_usuario_completo,
                                     c.identificacion_cliente,

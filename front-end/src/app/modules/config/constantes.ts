@@ -51,12 +51,18 @@ export class Constantes {
   //----------- APIS PEDIDOS
   public static apiGetAllPedidos: string =
     this.env.host + this.env.name + '/consultarPedidos';
+  public static apiGetPedidosXId: string =
+    this.env.host + this.env.name + '/consultarPedidosXid';
+  public static apiPedidosNoCancelados =
+    this.env.host + this.env.name + '/consultarPedidosnoCancelados';
   public static apiInsertPedido: string =
     this.env.host + this.env.name + '/registrarPedidoCompleto';
-    public static apiOrdenPedido: string =
+  public static apiOrdenPedido: string =
     this.env.host + this.env.name + '/ordenPedido';
-    public static apiGetPedidosNoFinalizados: string =
+  public static apiGetPedidosNoFinalizados: string =
     this.env.host + this.env.name + '/consultarPedidosNoFinalizados';
+  public static ejecutarFacturacion: string =
+    this.env.host + this.env.name + '/ejecutarfacturacion'
 
 
   //----------- APIS  SERVICIOS
@@ -135,7 +141,7 @@ export class Constantes {
 
   //----------- API MENSAJE
   public static apiSendMessage: string =
-  this.env.host + this.env.name + '/enviarMensaje';
+    this.env.host + this.env.name + '/enviarMensaje';
 
 
 

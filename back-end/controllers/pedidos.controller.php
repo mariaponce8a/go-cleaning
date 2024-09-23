@@ -17,6 +17,33 @@ class Pedidos_controller
         }
     }
 
+    public function getAllPedidosnoCancelados()
+    {
+        error_log("--------------");
+        $model = new pedidos_model();
+        $resultado = $model->getAllPedidosNoCancelados();
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para cargar los pedidos"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedidos cargados con éxito", "data" => json_decode($resultado)));
+        }
+    }
+
+    public function getPedidosXId($id)
+    {
+        error_log("-------------- $id");
+        $model = new pedidos_model();
+        $resultado = $model->getPedidoXId($id);
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . json_encode($resultado));
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para cargar"));
+        } else {
+            return json_encode(array("respuesta" => "1", "data" => json_decode($resultado)));
+        }
+    }
+
+
 
     public function insertarPedidoCompleto(
         $fecha_pedido,
@@ -39,14 +66,14 @@ class Pedidos_controller
     ) {
         error_log("--------------");
         $model = new pedidos_model();
- 
+
         if (
             $fecha_pedido == null ||
             $fk_id_usuario == null ||
             $cantidad_articulos == null ||
             $fk_id_cliente == null ||
             $pedido_subtotal == null ||
-            $estado_pago == null || 
+            $estado_pago == null ||
             $fecha_entrega_estimada == null ||
             $hora_entrega_estimada == null ||
             $direccion_entrega == null ||
@@ -75,12 +102,12 @@ class Pedidos_controller
             $detalle
         );
 
-        error_log("RESPUESTA CONTROLLER PEDIDO --------------------".json_encode($resultado));
+        error_log("RESPUESTA CONTROLLER PEDIDO --------------------" . json_encode($resultado));
 
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el pedido"));
         } else {
-            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['pedido'] ,"mensaje" => "Pedido registrado con éxito"));
+            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['pedido'], "mensaje" => "Pedido registrado con éxito"));
         }
     }
 
@@ -177,6 +204,34 @@ class Pedidos_controller
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
         }
     }
+
+
+    public function ejecutarFacturacion(
+        $id_pedido_cabecera,
+        $estado_facturacion
+    ) {
+        error_log("-------------- BODY DE PEDIDOS DETALLE: " . $id_pedido_cabecera . " - " . $estado_facturacion);
+        $model = new pedidos_model();
+        if (
+            $id_pedido_cabecera == null ||
+            $estado_facturacion == null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+        $resultado = $model->ejecutarFacturacion(
+            $id_pedido_cabecera,
+            $estado_facturacion
+        );
+
+        error_log("----------RESULTADO INSERT items DESDE CONTROLLER: " . $resultado);
+        if ($resultado == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para ejecutar la facturación"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Pedido registrado con éxito"));
+        }
+    }
+
+
 
 
     public function actualizarItemsPedidos(

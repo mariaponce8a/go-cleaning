@@ -37,11 +37,11 @@ export class RegistrosPaginadosComponent implements OnInit {
   public showZoomButton: boolean = false;
   public rowClasses: { [key: number]: string } = {}; // Guardar las clases
   // En el componente
-compareDates(fechaEntregaEstimada: string): boolean {
-  const fechaEntregaEstimadaDate = new Date(fechaEntregaEstimada);
-  const currentDate = new Date();
-  return fechaEntregaEstimadaDate < currentDate;
-}
+  compareDates(fechaEntregaEstimada: string): boolean {
+    const fechaEntregaEstimadaDate = new Date(fechaEntregaEstimada);
+    const currentDate = new Date();
+    return fechaEntregaEstimadaDate < currentDate;
+  }
 
 
   imageBase64: string | null = null;
@@ -50,12 +50,16 @@ compareDates(fechaEntregaEstimada: string): boolean {
   @Input() titulos!: ITitulosTabla[];
   @Input() valores: any;
   @Output() accionBotones: EventEmitter<IaccionBotones> = new EventEmitter();
-   
+  @Input() verFacturas: boolean = false;
+  @Input() verEliminar: boolean = true;
+  @Input() verEditar: boolean = true;
+  @Input() verBtnCrear: boolean = true;
+  @Input() verPdf: boolean = false;
   displayColumns: Array<string> = [];
 
   constructor(
     private usermessage: UserMessageService,
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private router: Router,
     private requestService: RequestService,
 
@@ -65,10 +69,9 @@ compareDates(fechaEntregaEstimada: string): boolean {
 
   ngOnInit(): void {
     this.showActions = this.router.url !== '/bds/home'; // Ocultar botones de acción en home
-    this.showCreateButton = this.router.url !== '/bds/home' && this.router.url !== '/bds/asignaciones';
     this.showPdfButtonNextToCreate = this.router.url == '/bds/clientes';
     this.onFillData();
-    
+
   }
 
   isEstadosRoute(): boolean {
@@ -100,7 +103,7 @@ compareDates(fechaEntregaEstimada: string): boolean {
       this.dataSource.data = this.valores;
     }
   }
-  
+
   openImageDialog(imageUrl: string): void {
     this.dialog.open(ImageDialogComponent, {
       data: { imageUrl, width: '80%', height: '80%' },
@@ -111,10 +114,6 @@ compareDates(fechaEntregaEstimada: string): boolean {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();  // Aplica el filtro en minúsculas
-  }
-  shouldShowPdfButton(): boolean {
-    const currentRoute = this.router.url;
-    return currentRoute === '/bds/pedidos';
   }
 
   public showPdfButtonNextToCreate: boolean = false;

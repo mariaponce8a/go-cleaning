@@ -1,0 +1,7 @@
+<app-colored-body-header [icon]="'receipt'" [nombrePagina]="'Facturas'"
+    [subtitulo]="'Genere facturas de los pedidos ingresados'"></app-colored-body-header>
+
+<app-registros-paginados (accionBotones)="manejarEventosBotones($event)" [isLoadingTable]="loadingTable"
+    [titulos]="titulosTabla" [verPdf]="true"  [verPdf]="true" [valores]="valoresDeTabla"  [verEditar]="false" [verFacturas]="true" [verEliminar]="false"
+    [verBtnCrear]="false">
+</app-registros-paginados>

@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router'; 
-import { MenuComponent } from './modules/menu/menu.component'; 
-import { AuthGuard } from './guards/auth.guard';  
+import { Routes } from '@angular/router';
+import { MenuComponent } from './modules/menu/menu.component';
+import { AuthGuard } from './guards/auth.guard';
 export const routes: Routes = [
     {
         path: '', redirectTo: 'login', pathMatch: 'full'
@@ -16,12 +16,22 @@ export const routes: Routes = [
         children: [
             {
                 path: 'home',
-               canActivate: [AuthGuard], 
+                canActivate: [AuthGuard],
                 loadComponent: () => import('./modules/components/home/tablas-home/tablas-home.component').then(c => c.TablasHomeComponent),
             },
             {
+                path: 'facturas-del-servicio',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('./modules/components/facturacion/facturas-preparadas/facturas-preparadas.component').then(c => c.FacturasPreparadasComponent)
+            },
+            {
+                path: 'facturas',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('./modules/components/facturacion/listado-pedidos-facturar/listado-pedidos-facturar.component').then(c => c.ListadoPedidosFacturarComponent),
+            },
+            {
                 path: 'pedidos',
-               canActivate: [AuthGuard], 
+                canActivate: [AuthGuard],
                 loadComponent: () => import('./modules/components/pedidos/listar-pedidos/listar-pedidos.component').then(c => c.ListarPedidosComponent),
             },
             {

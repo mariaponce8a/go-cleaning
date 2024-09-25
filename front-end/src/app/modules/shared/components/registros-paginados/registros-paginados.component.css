@@ -44,7 +44,7 @@ mat-row, mat-footer-row {
 }
 
 .mdc-data-table__cell , .mdc-data-table__header-cell {
-  padding: 0 0px 0 12px !important;
+  padding: 0 24px 0 24px !important;
   /* min-width: 120px; */
   text-align: center;
 }

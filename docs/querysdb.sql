@@ -73,7 +73,7 @@ VALUES
 );
 
 
-// creacion de pedido sp 
+// creacion de pedido sp y asignacion
 CREATE DEFINER=`usg8hrdab84mdg8a`@`%` PROCEDURE `InsertarPedidoConDetalle`(
     IN p_fecha_pedido DATETIME,
     IN p_fk_id_usuario INT,
@@ -110,13 +110,15 @@ BEGIN
         fecha_pedido, fk_id_usuario, cantidad_articulos, fk_id_cliente, fk_id_descuentos,
         pedido_subtotal, estado_pago, valor_pago, fecha_recoleccion_estimada,
         hora_recoleccion_estimada, direccion_recoleccion, fecha_entrega_estimada,
-        hora_entrega_estimada, direccion_entrega, tipo_entrega, total
+        hora_entrega_estimada, direccion_entrega, tipo_entrega, total, 
+        estado_facturacion,estado_pedido
     ) VALUES (
         p_fecha_pedido, p_fk_id_usuario, p_cantidad_articulos, p_fk_id_cliente, 
         p_fk_id_descuentos, p_pedido_subtotal, p_estado_pago, p_valor_pago, 
         p_fecha_recoleccion_estimada, p_hora_recoleccion_estimada, 
         p_direccion_recoleccion, p_fecha_entrega_estimada, p_hora_entrega_estimada, 
-        p_direccion_entrega, p_tipo_entrega, p_total
+        p_direccion_entrega, p_tipo_entrega, p_total,
+        0,1
     );
 
     SET v_id_pedido = LAST_INSERT_ID();

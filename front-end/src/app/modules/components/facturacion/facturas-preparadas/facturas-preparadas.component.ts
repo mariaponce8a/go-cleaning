@@ -217,7 +217,7 @@ export class FacturasPreparadasComponent implements OnInit, OnDestroy {
     }
   }
 
-  facturar() {
+  facturar(accion?: string) {
 
     if (this.form.controls.estado_facturacion.value == 1) {
       this.usermessage.getToastMessage('info', 'El pedido ya se encuentra facturado').fire();
@@ -225,14 +225,14 @@ export class FacturasPreparadasComponent implements OnInit, OnDestroy {
     }
 
     let body = {
-      "id_pedido_cabecera": this.form.controls.id_pedido_cabecera,
+      "id_pedido_cabecera": this.form.controls.id_pedido_cabecera.value,
       "estado_facturacion": 1
     }
 
     let numerosFacturas: any[] = this.dataDelPedidoDetalle.map((p: any) =>
       p.id_pedido_detalle
     )
-    console.log(numerosFacturas)
+    console.log(body)
 
     let facturasAejecutar: any[] = []; //= listadoFacturas.join(" - ");
 
@@ -241,25 +241,24 @@ export class FacturasPreparadasComponent implements OnInit, OnDestroy {
       facturasAejecutar.push(element);
     });
 
-
     let stringFacturas = facturasAejecutar.join(" - ");
 
     this.usermessage.questionMessage(stringFacturas, '¿Está seguro de generar las siguientes facturas?').then((r) => {
       if (r.isConfirmed) {
         console.log('confirmado')
         this.requestserv.put(body, Constantes.ejecutarFacturacion)
-        .subscribe({
-          next: (value) => {
-            console.log(value);
-            this.usermessage.getToastMessage('success', 'Factura generada con éxito, se ha enviado al correo del cliente').fire();
-            this.router.navigateByUrl('bds/facturas');
-          },
-          error: (error) => {
-            console.log(error)
-            this.usermessage.getToastMessage('error', 'Error al generar la facturación').fire();
+          .subscribe({
+            next: (value) => {
+              console.log(value);
+              this.usermessage.getToastMessage('success', 'Factura generada con éxito, se ha enviado al correo del cliente').fire();
+              this.router.navigateByUrl('bds/facturas');
+            },
+            error: (error) => {
+              console.log(error)
+              this.usermessage.getToastMessage('error', 'Error al generar la facturación').fire();
 
-          }
-        })
+            }
+          })
       }
     })
 

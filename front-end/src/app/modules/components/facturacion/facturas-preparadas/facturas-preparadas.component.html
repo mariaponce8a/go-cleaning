@@ -63,7 +63,7 @@
                     }
                     @else {
 
-                    <button (click)="facturar()" [disabled]="this.form.controls.estado_facturacion.value == 1" mat-stroked-button
+                    <button (click)="facturar()" mat-stroked-button
                         style="padding: 5px 0;">
                         <mat-icon matPrefix>check</mat-icon>
                         {{this.form.controls.estado_facturacion.value == 0 ? 'Generar facturas': 'Factura ya generada'}}

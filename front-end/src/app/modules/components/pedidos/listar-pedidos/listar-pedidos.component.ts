@@ -59,8 +59,8 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
       viewValue: "Estado"
     },
     {
-      value: "pedido_subtotal",
-      viewValue: "Sub total"
+      value: "total",
+      viewValue: "Total"
     } 
   ]
 

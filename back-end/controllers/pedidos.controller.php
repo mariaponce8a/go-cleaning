@@ -107,7 +107,7 @@ class Pedidos_controller
         if ($resultado == false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para registrar el pedido"));
         } else {
-            return json_encode(array("respuesta" => $resultado['mensaje'], "pedido" => $resultado['pedido'], "mensaje" => "Pedido registrado con éxito"));
+            return json_encode(array("respuesta" => $resultado['respuesta'], "pedido" => $resultado['pedido'], "mensaje" =>  $resultado['mensaje']));
         }
     }
 

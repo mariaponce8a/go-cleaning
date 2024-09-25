@@ -356,6 +356,19 @@ Flight::route('GET /consultarClientes', function () {
     }
 });
 
+Flight::route('GET /reporteClientes', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $cliente_controller = new Clientes_controller();
+        $respuesta = $cliente_controller->clientsReport();
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
 // Ruta para registrar un nuevo descuento
 Flight::route('POST /registrarDescuentos', function () {
     $tokenDesdeCabecera = getValidToken();

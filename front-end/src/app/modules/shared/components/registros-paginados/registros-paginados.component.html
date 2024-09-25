@@ -14,7 +14,7 @@
         Crear registro
       </button>
 
-      <app-global-buttons [showConfirm]="true" [showCancel]="false" [textBtn1]="'Imprimir Reporte'" (click)="('PDF')"
+      <app-global-buttons [showConfirm]="true" [showCancel]="false" [textBtn1]="'Imprimir Reporte'" (click)="actionRow('PDF', {})"
         *ngIf="showPdfButtonNextToCreate" style="width: 20%;">
       </app-global-buttons>
 
@@ -84,7 +84,8 @@
             }
             @if (verPdf) {
             <button matTooltip="Imprimir PDF" matTooltipPosition="above" class="pdf" type="button" mat-icon-button
-              (click)="actionRow('PDF', element)" >
+              (click)="actionRow('PDF', element)"
+              (click)="actionRow('Factura', element)" >
               <mat-icon style="color: white; display: flex; align-items: center">description</mat-icon>
             </button>
           }

@@ -51,6 +51,7 @@ export class FormClientesComponent implements OnInit, OnDestroy {
       this.form.controls.identificacion_cliente.valueChanges.subscribe(value => {
             this.validarIdentificacion();
           });
+          this.form.controls.telefono_cliente.setValue("+593")
     }
   }
   
@@ -88,7 +89,7 @@ export class FormClientesComponent implements OnInit, OnDestroy {
     tipo_identificacion_cliente: new FormControl('', [Validators.required]),
     nombre_cliente: new FormControl('', [Validators.required]),
     apellido_cliente: new FormControl('', [Validators.required]),
-    telefono_cliente: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    telefono_cliente: new FormControl('', [Validators.required, Validators.pattern(/^\+\d{1,12}$/)]),
     correo_cliente: new FormControl('', [Validators.required, Validators.email]),
     });
 

@@ -47,12 +47,12 @@
     <div class="formGroupCont">
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>Teléfono</mat-label>
-            <input matInput maxlength="10" placeholder="Teléfono" formControlName="telefono_cliente" />
+            <input matInput maxlength="13" placeholder="Teléfono" formControlName="telefono_cliente" />
             @if (this.form.controls.telefono_cliente.hasError('required')) {
                 <mat-error>Teléfono requerido</mat-error>
                 }
             @if (this.form.controls.telefono_cliente.hasError('pattern')) {
-                <mat-error>El teléfono debe contener 10 dígitos</mat-error>
+                <mat-error>El teléfono debe contener máximo 13 dígitos</mat-error>
                 }
         </mat-form-field>
 

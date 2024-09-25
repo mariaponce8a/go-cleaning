@@ -82,9 +82,10 @@ export class Constantes {
     this.env.host + this.env.name + '/actualizarCliente';
   public static apiCreateCliente: string =
     this.env.host + this.env.name + '/registrarCliente';
-
   public static apiDeleteCliente: string =
     this.env.host + this.env.name + '/eliminarCliente';
+    public static apiClientsReport: string =
+    this.env.host + this.env.name + '/reporteClientes';
 
   //----------- APIS  Descuentos
   public static apiGetAllDescuentos: string =

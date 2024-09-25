@@ -10,6 +10,8 @@ import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { FormClientesComponent } from '../form-clientes/form-clientes.component'; 
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 @Component({
@@ -136,10 +138,79 @@ export class ListadoClientesComponent implements OnInit, OnDestroy {
           }
         })
         break;
-
-    }
+        case 'PDF':
+          try {
+            this.generateReport();
+            console.log('PDF generado exitosamente.');
+          } catch (error) {
+            console.error('Error al generar el PDF:', error);
+            alert('No se pudo generar el PDF. Por favor, intenta nuevamente.');
+          }
+          break;
+        }
 
   }
+  
+  generateReport() {
+    this.requestService.get(Constantes.apiClientsReport).subscribe(data => {
+        const doc = new jsPDF();
+
+        doc.setFont('Helvetica');
+        doc.setFontSize(16);
+
+        // Encabezado de la lavandería
+        doc.text('Lavandería Burbuja de Seda', 105, 10, { align: 'center' });
+        doc.setFontSize(12);
+        doc.text('Dirección Matriz: Leonardo Murialdo N57-199 y Miguel Valdiviezo', 105, 18, { align: 'center' });
+        doc.text('Kennedy, Quito - Pichincha, Ecuador', 105, 26, { align: 'center' });
+        doc.text('Teléfono: 0985369007', 105, 34, { align: 'center' });
+
+        // Título del reporte
+        doc.setFontSize(14);
+        doc.text('Reporte de Clientes', 105, 50, { align: 'center' });
+        doc.setFontSize(12);
+
+        let y = 65; // Posición inicial para el contenido
+
+        if (data && data.respuesta === "1" && data.data.length > 0) {
+
+            const filas = data.data.map((detalle: { identificacion_cliente: string, nombre_completo: string, total_pedidos: number }) => [
+                detalle.identificacion_cliente,
+                detalle.nombre_completo,
+                detalle.total_pedidos,  // Formato de dos decimales para los totales
+            ]);
+
+            // Generar la tabla con autoTable
+            autoTable(doc, {
+                head: [['Identificación', 'Cliente', 'Total de pedidos']],
+                body: filas,
+                startY: y,
+                theme: 'striped',  // Tema elegante para la tabla
+                styles: { font: 'Helvetica', fontSize: 10 },
+                headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255] }, // Azul para el encabezado
+                alternateRowStyles: { fillColor: [245, 245, 245] },  // Alterna el color de las filas
+                columnStyles: {
+                    0: { halign: 'left' },    // Alineación izquierda para Identificación
+                    1: { halign: 'center' },  // Alineación centrada para Cliente
+                    2: { halign: 'right' }    // Alineación derecha para Total de pedidos
+                },
+            });
+
+            // Posicionar el cursor después de la tabla
+            y = (doc as any).lastAutoTable.finalY + 10;
+        } else {
+            // Mostrar un mensaje en caso de que no haya datos
+            doc.text('No se encontraron clientes con estado de facturación 1.', 105, y, { align: 'center' });
+        }
+
+        // Crear y abrir el PDF
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url);
+    });
+}
+
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -121,5 +121,18 @@ class Clientes_controller
             return json_encode(array("respuesta" => "1", "mensaje" => "Clientes encontrados con éxito", "data" => json_decode($resultado)));
         }
     }
+
+    public function clientsReport()
+    {
+        error_log("--------------");
+        $clienteModel = new Clase_Clientes();
+        $resultado = $clienteModel->reporteClientes();
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        if ($resultado === false || empty($resultado)) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al cargar los clientes"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Clientes cargados con éxito", "data" => json_decode($resultado)));
+        }
+    }
 }
 

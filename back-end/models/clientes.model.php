@@ -153,4 +153,44 @@ class Clase_Clientes
         }
     }
 
+    public function reporteClientes ()
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            $query = "SELECT 
+                            c.identificacion_cliente,
+                            CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS nombre_completo,
+                            SUM(p.total) AS total_pedidos
+                        FROM 
+                            tb_pedido p
+                        JOIN 
+                            tb_clientes_registrados c ON p.fk_id_cliente = c.id_cliente
+                        WHERE 
+                            p.estado_facturacion = 1
+                        GROUP BY 
+                            c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.identificacion_cliente;
+                        ";
+            $exeResult = mysqli_query($conexion, $query);
+
+            if ($exeResult == false) {
+                throw new Exception("Problemas al cargar los clientes");
+            } else {
+                $clientes = array();
+                while ($fila = mysqli_fetch_assoc($exeResult)) {
+                    $clientes[] = $fila;
+                }   
+
+                return json_encode($clientes);
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    
+    }
 }

@@ -627,4 +627,68 @@ class pedidos_model
             }
         }
     }
+
+    public function GenerarFactura($id_pedido_cabecera)
+{
+    try {
+        $con = new Clase_Conectar();
+        $conexion = $con->Procedimiento_Conectar();
+
+        $query = "
+            		SELECT 
+                    p.fecha_pedido,
+                    CONCAT(u.nombre, ' ', u.apellido) AS nombre_usuario_completo,
+                    c.identificacion_cliente,
+                    CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS nombre_cliente_completo,
+                    pd.precio_servicio,
+                    d.tipo_descuento_desc,
+                    pd.cantidad, 
+                    p.pedido_subtotal,
+                    s.descripcion_servicio,
+                    s.costo_unitario,
+                    pd.id_pedido_detalle,
+                    pd.libras
+                FROM 
+                    tb_pedido p
+                LEFT JOIN 
+                    tb_pedido_detalle pd ON p.id_pedido_cabecera = pd.fk_id_pedido
+                LEFT JOIN 
+                    tb_usuarios_plataforma u ON p.fk_id_usuario = u.id_usuario
+                LEFT JOIN 
+                    tb_clientes_registrados c ON p.fk_id_cliente = c.id_cliente
+                LEFT JOIN 
+                    tb_tipo_descuentos d ON p.fk_id_descuentos = d.id_tipo_descuento
+                LEFT JOIN 
+                    tb_servicios s ON pd.fk_id_servicio = s.id_servicio
+                WHERE 
+                    p.id_pedido_cabecera = ? and
+                    p.estado_facturacion= 1 
+            
+        ";
+
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param("i", $id_pedido_cabecera);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        $factura = array();
+
+        while ($fila = $result->fetch_assoc()) {
+            $factura[] = $fila;
+        }
+
+        return json_encode($factura);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return false;
+    } finally {
+        if (isset($conexion)) {
+            $conexion->close();
+        }
+    }
+}
+
 }

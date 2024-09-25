@@ -62,7 +62,7 @@ export class Constantes {
   public static apiGetPedidosNoFinalizados: string =
     this.env.host + this.env.name + '/consultarPedidosNoFinalizados';
   public static ejecutarFacturacion: string =
-    this.env.host + this.env.name + '/ejecutarfacturacion'
+    this.env.host + this.env.name + '/ejecutar-facturacion'
 
 
   //----------- APIS  SERVICIOS

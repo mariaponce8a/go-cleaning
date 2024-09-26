@@ -3,7 +3,7 @@ require_once('./back-end/config/conexion.php');
 
 class MensajesW
 {
-    private $whatsappToken = 'EAB4qTXjtSjMBO8oNOu2Q3EOlMCdCLFVr17PcmNAUlZAp3vWXF0p05ZBmgIxh099Ye4E5agDe0ZBKykxnbiYJ6pZCdHZB0ZAG5Qqb9W59RBNszrknzLXZCwLjPMVG0khzZBdz1v9wZBR4VEKWlMWyo0l0YpmqUW8mIZBSHjiDcIpE835ZCLhdisH80YdPz2FLbjq0yLtnTF6tnhD0AJ15ioyUNOrjyA58GMrfeMutmsZD';
+    private $whatsappToken = 'EAB4qTXjtSjMBOxon1XvVAJUoqdk6cdpCqZC28Rz6jz6ASff2QET72h1geCM1AZBBN85CINgYXXjuIB8MkhcUqY55dZB25a8DzNjzwhS5pOZCz2euxI6dFX6LMbw3OpO3Re3QxwRyYapZCCz780mZCH4arWPQPJiy3zaYQvogc2sMxwlGom7GrnBWlMSBCnOXwOKg327661UaOj4wWMZApD9S6PVZAvJyyrXubDgZD';
     private $whatsappApiUrl = 'https://graph.facebook.com/v20.0/430795600120167/messages';
 
     private function enviarMensajeWhatsAppAPI($telefono) {

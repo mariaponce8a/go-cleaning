@@ -949,8 +949,6 @@ Flight::route('POST /registrarPedidoCompleto', function () {
     }
 });
 
-
-
 Flight::route('PUT /ejecutar-facturacion', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
@@ -1063,6 +1061,7 @@ Flight::route('GET /ordenPedido/@id_pedido_cabecera', function ($id_pedido_cabec
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });
+
 Flight::route('GET /consultarPedidosNoFinalizados', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
@@ -1071,6 +1070,31 @@ Flight::route('GET /consultarPedidosNoFinalizados', function () {
         echo  $respuesta;
     } else {
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('GET /generarFactura/@id_pedido_cabecera', function ($id_pedido_cabecera) {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $controller = new Pedidos_controller();
+
+        $respuesta = $controller->getFactura($id_pedido_cabecera);
+        echo $respuesta;
+    } else {
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+    }
+});
+
+Flight::route('GET /consultarIva', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $iva_controller = new Iva_controller();
+        $respuesta = $iva_controller->getAllIvas();
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 

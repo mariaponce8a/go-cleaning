@@ -371,4 +371,17 @@ class Pedidos_controller
             return json_encode(array("respuesta" => "1", "mensaje" => "Pedidos no finalizados cargados con éxito", "data" => json_decode($resultado)));
         }
     }
+
+    public function getFactura($id_pedido_cabecera)
+    {
+        error_log("--------------");
+        $pedidoModel = new pedidos_model();
+        $resultado = $pedidoModel->GenerarFactura($id_pedido_cabecera);
+        error_log("----------RESULTADO SELECT DESDE CONTROLLER: " . $resultado);
+        if ($resultado === false || empty($resultado)) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas al cargar la factura"));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Factura cargada con éxito", "data" => json_decode($resultado)));
+        }
+    }
 }

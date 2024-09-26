@@ -60,7 +60,7 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
     },
     {
       value: "total",
-      viewValue: "Total"
+      viewValue: "Subtotal"
     } 
   ]
 

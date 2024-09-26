@@ -18,11 +18,11 @@ class pedidos_model
             p.fecha_recoleccion_estimada, p.direccion_recoleccion, p.fecha_entrega_estimada,
             p.direccion_entrega, p.tipo_entrega,  e.descripcion_estado
             from tb_pedido p
-            inner join tb_usuarios_plataforma u on u.id_usuario = p.fk_id_usuario
-            inner join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
-            inner join tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
-            inner join tb_estados e ON a.fk_id_estado = e.id_estado
-            inner join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos";
+            left join tb_usuarios_plataforma u on u.id_usuario = p.fk_id_usuario
+            left join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
+            left join tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
+            left join tb_estados e ON a.fk_id_estado = e.id_estado
+            left join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {
@@ -640,6 +640,8 @@ class pedidos_model
                     CONCAT(u.nombre, ' ', u.apellido) AS nombre_usuario_completo,
                     c.identificacion_cliente,
                     CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS nombre_cliente_completo,
+                    c.telefono_cliente,
+                    c.correo_cliente,
                     pd.precio_servicio,
                     d.tipo_descuento_desc,
                     pd.cantidad, 
@@ -647,7 +649,8 @@ class pedidos_model
                     s.descripcion_servicio,
                     s.costo_unitario,
                     pd.id_pedido_detalle,
-                    pd.libras
+                    pd.libras,
+                    pd.id_pedido_detalle
                 FROM 
                     tb_pedido p
                 LEFT JOIN 

@@ -11,6 +11,7 @@ import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
+import { Interface } from 'readline';
 
 @Component({
   selector: 'app-form-asignaciones',
@@ -83,7 +84,10 @@ export class FormAsignacionesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (value) => { 
-          this.comboEstados = value.data;
+          this.comboEstados = value.data.filter((estado: any) => 
+            estado.descripcion_estado !== 'Recibido' && 
+            estado.descripcion_estado !== 'Por recoger'
+          );
           console.log(this.comboEstados); 
         },
         error: () => {

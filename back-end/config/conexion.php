@@ -6,10 +6,10 @@ class Clase_Conectar
     // Propiedades para la conexión
     public $conexion;
     protected $db;
-    private $server = "byhvchma1fkwfhn1iyj7-mysql.services.clever-cloud.com";
+    private $server = "bjslw73deakzvv08ljwn-mysql.services.clever-cloud.com";
     private $usu = "usg8hrdab84mdg8a";
     private $clave = "TsH93lXSfg47hGGNNbfA";  
-    private $base = "byhvchma1fkwfhn1iyj7";
+    private $base = "bjslw73deakzvv08ljwn";
 
     // Método para establecer la conexión
     public function Procedimiento_Conectar()

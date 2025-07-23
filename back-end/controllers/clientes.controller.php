@@ -14,7 +14,7 @@ class Clientes_controller
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Clientes cargados con éxito", "data" => json_decode($resultado)));
         }
-    }  
+    }
 
     public function insertCliente($identificacion_cliente, $tipo_identificacion_cliente, $nombre_cliente, $apellido_cliente, $telefono_cliente, $correo_cliente)
     {

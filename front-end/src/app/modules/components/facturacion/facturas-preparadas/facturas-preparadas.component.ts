@@ -250,7 +250,7 @@ export class FacturasPreparadasComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (value) => {
               console.log(value);
-              this.usermessage.getToastMessage('success', 'Factura generada con éxito, se ha enviado al correo del cliente').fire();
+              this.usermessage.getToastMessage('success', 'Factura generada con éxito').fire();
               this.router.navigateByUrl('bds/facturas');
             },
             error: (error) => {

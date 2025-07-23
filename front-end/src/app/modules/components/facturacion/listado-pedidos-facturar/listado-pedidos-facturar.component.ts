@@ -30,6 +30,8 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
   styleUrl: './listado-pedidos-facturar.component.css'
 })
 export class ListadoPedidosFacturarComponent implements OnInit, OnDestroy {
+  dataDelPedidoDetalle: any;
+
 
   titulosTabla: ITitulosTabla[] = [
     {
@@ -74,6 +76,7 @@ export class ListadoPedidosFacturarComponent implements OnInit, OnDestroy {
         next: (value) => {
           this.loadingTable = false;
           this.valoresDeTabla = value.data;
+          this.dataDelPedidoDetalle = value.data.detalle;
 
         },
         error: () => {
@@ -91,7 +94,7 @@ export class ListadoPedidosFacturarComponent implements OnInit, OnDestroy {
         break;
       case 'PDF':
         if (evento.fila && evento.fila.id_pedido_cabecera) {
-          this.generatePDF(evento.fila.id_pedido_cabecera);
+          this.generarFactura(evento.fila.id_pedido_cabecera);
         } else {
           console.error('El evento no tiene la estructura esperada', evento);
         }
@@ -100,144 +103,160 @@ export class ListadoPedidosFacturarComponent implements OnInit, OnDestroy {
 
   }
 
-  generatePDF(id_pedido_cabecera: number) {
+  generarFactura(id_pedido_cabecera: number) {
     if (!id_pedido_cabecera) {
       console.error('ID de pedido no proporcionado');
       return;
     }
-
-    this.requestService.get(`${Constantes.apiOrdenPedido}/${id_pedido_cabecera}`).subscribe(data => {
+  
+    this.requestService.get(`${Constantes.apiFactura}/${id_pedido_cabecera}`).subscribe(data => {
       const doc = new jsPDF();
-      doc.setFont('Courier');
+      doc.setFont('Helvetica');
       doc.setFontSize(16);
-
+  
       // Encabezado de la lavandería
       doc.text('Lavandería Burbuja de Seda', 105, 10, { align: 'center' });
       doc.setFontSize(12);
       doc.text('Dirección Matriz: Leonardo Murialdo N57-199 y Miguel Valdiviezo', 105, 20, { align: 'center' });
       doc.text('Kennedy, Quito - Pichincha, Ecuador', 105, 30, { align: 'center' });
       doc.text('Teléfono: 0985369007', 105, 40, { align: 'center' });
-
-      // Texto "Orden de Pedido"
-      doc.setFontSize(14);
-      doc.text('Orden de Pedido', 10, 55);
-      doc.setFontSize(12);
-
-      const margin = 10;
+      doc.text('RUC: 1721240610001', 105, 50, { align: 'center' });
+  
+      const margin = 10; // Margen
       const contentWidth = 190; // Ancho máximo del contenido
+      const boxWidth = (doc.internal.pageSize.width - 3 * margin) / 2; // Ancho de los cuadros (ajustar a la mitad)
       let y = 70; // Posición inicial del contenido
-
+  
       if (data && data.respuesta === "1" && data.data.length > 0) {
         const pedido = data.data[0];
-
+  
+        doc.setFontSize(14);
+        doc.text('Factura #000' + pedido.id_pedido_detalle, 10, 55);
+        doc.setFontSize(12);
+  
+        // Desglose del IVA
+        const precioServicio = Number(pedido.precio_servicio) || 0;
+        const iva = Number((precioServicio * 0.15).toFixed(2)); // Calcular el IVA y formatear a dos decimales
+        const totalConIVA = Number((precioServicio + iva).toFixed(2)); // Calcular el total y formatear
+  
+        // Formatear los valores numéricos
+        const formatter = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' });
+  
+        // Información del pedido
         const fields = [
-          `Fecha de Pedido: ${pedido.fecha_pedido || 'N/A'}`,
-          `Usuario: ${pedido.nombre_usuario_completo || 'N/A'}`,
-          `Cliente: ${pedido.nombre_cliente_completo || 'N/A'} (${pedido.identificacion_cliente || 'N/A'})`,
-          `Estado de Pago: ${pedido.estado_pago || 'N/A'}`,
-          `Tipo de Entrega: ${pedido.tipo_entrega || 'N/A'}`,
-          `Fecha Recolección Estimada: ${pedido.fecha_recoleccion_estimada || 'N/A'}`,
-          `Hora Recolección Estimada: ${pedido.hora_recoleccion_estimada || 'N/A'}`,
-          `Fecha Entrega Estimada: ${pedido.fecha_entrega_estimada || 'N/A'}`,
-          `Dirección de Recolección: ${pedido.direccion_recoleccion || 'N/A'}`,
-          `Dirección de Entrega: ${pedido.direccion_entrega || 'N/A'}`
+          `Fecha de Emisión: ${pedido.fecha_pedido}`,
+          `Usuario: ${pedido.nombre_usuario_completo}`,
+          `Identificación: ${pedido.identificacion_cliente}`,
+          `Cliente: ${pedido.nombre_cliente_completo}`,
+          `Teléfono: ${pedido.telefono_cliente}`,
+          `Correo: ${pedido.correo_cliente}`,
         ];
+  
+        // Crear cuadro para Fecha de Emisión y Usuario
+        const userBoxX = margin; // Posición X para el cuadro del usuario
+        const userBoxY = y; // Posición Y inicial
+  
+        // Dibuja el cuadro del usuario
+        doc.setDrawColor(169, 169, 169); // Color gris para las líneas
+        doc.rect(userBoxX, userBoxY, boxWidth, 50); // Cuadro del usuario
+  
+        // Añadir títulos y valores en el cuadro del usuario
+        doc.text('Fecha de Emisión:', userBoxX + 5, userBoxY + 10);
+        doc.text(` ${pedido.fecha_pedido}`, userBoxX + 5, userBoxY + 20);
+        doc.text('Usuario:', userBoxX + 5, userBoxY + 30);
+        doc.text(` ${pedido.nombre_usuario_completo}`, userBoxX + 5, userBoxY + 40);
+  
+        // Crear cuadro para Identificación y Cliente
+        const clientBoxX = userBoxX + boxWidth + margin; // Posición X para el cuadro del cliente
+        const clientBoxY = userBoxY; // Posición Y igual a la del cuadro del usuario
+  
+        // Dibuja el cuadro del cliente
+        doc.rect(clientBoxX, clientBoxY, boxWidth, 50); // Cuadro del cliente
+  
+        // Añadir títulos y valores en el cuadro del cliente
+        doc.text(`Identificación: ${pedido.identificacion_cliente}`, clientBoxX + 5, clientBoxY + 10);
+        doc.text(`Cliente: ${pedido.nombre_cliente_completo}`, clientBoxX + 5, clientBoxY + 20);
+        doc.text(`Teléfono: ${pedido.telefono_cliente}`, clientBoxX + 5, clientBoxY + 30);
+        doc.text(`Correo: ${pedido.correo_cliente}`, clientBoxX + 5, clientBoxY + 40);
 
-        for (const field of fields) {
-          const splitText = doc.splitTextToSize(field, contentWidth);
-          for (const line of splitText) {
-            doc.text(line, margin, y);
-            y += 5;
-            if (y > 270) {
-              doc.addPage();
-              y = 10;
-            }
-          }
-        }
-
-        y += 5; // Espacio antes de la tabla
-
+        y += 60; // Espacio después de los cuadros
+  
         // Crear la tabla de detalles
-        const filas = data.data.map((detalle: { descripcion_servicio: string, descripcion_articulo: string, cantidad: number, libras: number, precio_servicio: number }) => ([
-          detalle.descripcion_servicio || 'N/A',
-          detalle.descripcion_articulo || 'N/A',
-          detalle.cantidad ? detalle.cantidad : 'N/A',
-          detalle.libras ? detalle.libras : 'N/A',
-          detalle.precio_servicio ? `$${detalle.precio_servicio}` : 'N/A'
-        ]));
-
+        const filas = data.data.map((detalle: { descripcion_servicio: string, cantidad: number, libras: number, precio_servicio: number, requierePesaje: boolean }) => {
+          // Determina el valor a mostrar basado en si requiere pesaje
+          const cantidad = detalle.requierePesaje ? detalle.libras : detalle.cantidad;
+  
+          return [
+            detalle.descripcion_servicio || 'N/A',
+            cantidad || 'N/A',
+            detalle.libras || 'N/A',
+            formatter.format(detalle.precio_servicio)  // Formatear el precio
+          ];
+        });
+  
+        // Generación de la tabla
         autoTable(doc, {
-          head: [['Servicio', 'Descripción', '#Artículos', 'Libras', 'Precio']],
+          head: [['Servicio', 'Artículos', 'Libras', 'Precio']],
           body: filas,
           startY: y,
           theme: 'grid',
-          styles: { font: 'Courier', fontSize: 12 },
-          headStyles: { fillColor: [200, 200, 200] },
+          styles: { font: 'Helvetica', fontSize: 12 },
+          headStyles: { fillColor: [41, 128, 185], lineColor: [169, 169, 169], textColor: [255, 255, 255] }, // Azul para el encabezado
           columnStyles: { 0: { halign: 'left' }, 1: { halign: 'center' }, 2: { halign: 'right' } },
+          margin: { left: margin, right: margin },
         });
-
-        // Ajustar `y` después de la tabla
+  
         y = (doc as any).lastAutoTable.finalY + 10;
+  
+        // Calcular subtotal, IVA y total
+        const subtotal = pedido.precio_servicio || 0;
+  
+        const totalsBoxY = y; // Ajustar para que el cuadro comience justo después de la tabla
+        const totalsBoxX = doc.internal.pageSize.width - boxWidth - margin; // Ubicación X en la parte derecha
+        const totalsBoxWidth = boxWidth; // Ancho del cuadro
+        const totalsBoxHeight = 60; // Altura del cuadro (ajustar para que quede más corto si es necesario)
 
-        doc.text(`Subtotal: $${pedido.pedido_subtotal ? pedido.pedido_subtotal : 'N/A'}`, margin, y);
-        doc.text(`Tipo de Descuento: ${pedido.tipo_descuento_desc || 'N/A'}`, margin, y += 5);
-        doc.text(`Valor Pagado: $${pedido.valor_pago ? pedido.valor_pago : 'N/A'}`, margin, y += 5);
+        // Dibuja el cuadro de totales
+        doc.setDrawColor(169, 169, 169); // Color gris para las líneas
+        doc.rect(totalsBoxX, totalsBoxY, totalsBoxWidth, totalsBoxHeight); // Cuadro de totales
 
-        // Agregar detalles del pedido en páginas adicionales
-        for (const detalle of data.data) {
-          doc.addPage();
-          doc.text('Lavandería Burbuja de Seda', 105, 10, { align: 'center' });
-          doc.setFontSize(12);
-          doc.text('Dirección Matriz: Leonardo Murialdo N57-199 y Miguel Valdiviezo', 105, 20, { align: 'center' });
-          doc.text('Kennedy, Quito - Pichincha, Ecuador', 105, 30, { align: 'center' });
-          doc.text('Teléfono: 0985369007', 105, 40, { align: 'center' });
+        // Mostrar subtotal, IVA y total dentro del cuadro
+        let totalY = totalsBoxY + 10; // Espacio inicial dentro del cuadro
+        const titleX = totalsBoxX + 5; // Posición X para los títulos
+        const valueX = totalsBoxX + totalsBoxWidth - 40; // Posición X para los valores
 
-          doc.setFontSize(14);
-          doc.text('Detalle de Servicio', 10, 55);
-          doc.setFontSize(12);
+        // Añadir títulos y valores, alineando a la derecha
+        doc.text('Subtotal:', titleX, totalY);
+        doc.text(formatter.format(subtotal), valueX, totalY, { align: 'right' });
+        totalY += 10;
 
-          let detalleY = 70; // Inicializar una nueva posición para los detalles
+        doc.text('Descuento:', titleX, totalY);
+        doc.text(pedido.tipo_descuento_desc || 'S/D', valueX, totalY, { align: 'right' });
+        totalY += 10;
 
-          doc.text(`#Detalle de pedido: ${detalle.id_pedido_detalle || 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Fecha de Pedido: ${detalle.fecha_pedido || 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Usuario: ${detalle.nombre_usuario_completo || 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Cliente: ${detalle.nombre_cliente_completo || 'N/A'} (${pedido.identificacion_cliente || 'N/A'})`, margin, detalleY);
-          detalleY += 10;
+        doc.text('IVA (15%):', titleX, totalY);
+        doc.text(formatter.format(iva), valueX, totalY, { align: 'right' });
+        totalY += 10;
 
-          // Manejar la descripción del artículo para ajustar el texto largo
-          const descripcionArticulo = `Descripción: ${detalle.descripcion_articulo || 'N/A'}`;
-          const splitText = doc.splitTextToSize(descripcionArticulo, contentWidth);
-          for (const line of splitText) {
-            doc.text(line, margin, detalleY);
-            detalleY += 10; // Incrementar la posición para la siguiente línea
-          }
-
-          doc.text(`Número de Artículos: ${detalle.cantidad ? detalle.cantidad : 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Libras: ${detalle.libras ? detalle.libras : 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Precio: $${detalle.precio_servicio ? detalle.precio_servicio : 'N/A'}`, margin, detalleY);
-          detalleY += 10;
-          doc.text(`Fecha Entrega Estimada: ${detalle.fecha_entrega_estimada || 'N/A'}`, margin, detalleY);
-        }
+        doc.text('Total:', titleX, totalY);
+        doc.text(formatter.format(totalConIVA), valueX, totalY, { align: 'right' });
       } else {
         doc.text('No se encontraron detalles para este pedido.', margin, y += 10);
       }
-
+  
       // Crear y abrir el PDF
       const pdfBlob = doc.output('blob');
       const url = URL.createObjectURL(pdfBlob);
       window.open(url);
     });
   }
-
-
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
 }
+
+
+//1721240610001

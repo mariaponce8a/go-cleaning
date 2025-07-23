@@ -57,7 +57,7 @@ export const routes: Routes = [
             {
                 path: 'servicios',
                 canActivate: [AuthGuard],
-                loadComponent: () => import('./modules/components/servicios/listado-servicios/servicios.component').then(c => c.ListadoServiciosComponent)
+                loadComponent: () => import('./modules/components/servicios/listado-servicios/servicios.component').then(c => c.ListadoServiciosCompo)
             },
             {
                 path: 'materiales',

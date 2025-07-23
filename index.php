@@ -94,27 +94,27 @@ Flight::route('POST /login', function () {
     }
 });
 
-Flight::route('POST /registrarUsuario', function () {
-    $tokenDesdeCabecera = getValidToken();
-    if ($tokenDesdeCabecera !== false) {
-        $user_controller = new Usuarios_controller();
-        $body = Flight::request()->getBody();
-        $data = json_decode($body, true);
+    Flight::route('POST /registrarUsuario', function () {
+        $tokenDesdeCabecera = getValidToken();
+        if ($tokenDesdeCabecera !== false) {
+            $user_controller = new Usuarios_controller();
+            $body = Flight::request()->getBody();
+            $data = json_decode($body, true);
 
-        $usuario = $data['usuario'] ?? null;
-        $clave = $data['clave'] ?? null;
-        $nombre = $data['nombre'] ?? null;
-        $apellido = $data['apellido'] ?? null;
-        $perfil = $data['perfil'] ?? null;
+            $usuario = $data['usuario'] ?? null;
+            $clave = $data['clave'] ?? null;
+            $nombre = $data['nombre'] ?? null;
+            $apellido = $data['apellido'] ?? null;
+            $perfil = $data['perfil'] ?? null;
 
-        $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $clave);
-        echo  $respuesta;
-    } else {
-        http_response_code(401);
-        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
-        exit;
-    }
-});
+            $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $clave);
+            echo  $respuesta;
+        } else {
+            http_response_code(401);
+            echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+            exit;
+        }
+    });
 
 
 Flight::route('PUT /actualizarUsuario', function () {

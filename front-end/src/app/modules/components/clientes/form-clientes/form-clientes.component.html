@@ -1,0 +1,78 @@
+<app-modal-header [tituloHeader]="tituloPorAccion"
+    (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+    <!-- Campo de búsqueda -->
+<div class="search-container mb-4 d-flex justify-content-center">
+    <mat-form-field class="w-100" appearance="outline" style="max-width: 500px;">
+        <mat-label>Buscar Cliente</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar cliente">
+    </mat-form-field>
+</div>
+
+<form [formGroup]="form" class="formmularioCont">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Identificación</mat-label>
+            <input matInput maxlength="13" placeholder="Identificación" formControlName="identificacion_cliente" />
+            @if (this.form.controls.identificacion_cliente.hasError('required')) {
+                <mat-error>Debe ingresar la identificación</mat-error>
+                }
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Tipo de Identificación</mat-label>
+            <mat-select formControlName="tipo_identificacion_cliente">
+                <mat-option value="CI">CI</mat-option>
+                <mat-option value="RUC">RUC</mat-option>
+                <mat-option value="Pasaporte">Pasaporte</mat-option>
+            </mat-select>           
+            @if (this.form.controls.tipo_identificacion_cliente.hasError('required')) {
+                <mat-error>Debe seleccionar un tipo de identificación</mat-error>
+                }
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput maxlength="100" placeholder="Nombre" formControlName="nombre_cliente" />
+            @if (this.form.controls.nombre_cliente.hasError('required')) {
+                <mat-error>Nombre requerido</mat-error>
+                }
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput maxlength="45" placeholder="Apellido" formControlName="apellido_cliente" />
+            @if (this.form.controls.apellido_cliente.hasError('required')) {
+                <mat-error>Apellido requerido</mat-error>
+                }
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput maxlength="10" placeholder="Teléfono" formControlName="telefono_cliente" />
+            @if (this.form.controls.telefono_cliente.hasError('required')) {
+                <mat-error>Teléfono requerido</mat-error>
+                }
+            @if (this.form.controls.telefono_cliente.hasError('pattern')) {
+                <mat-error>El teléfono debe contener 10 dígitos</mat-error>
+                }
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Correo</mat-label>
+            <input matInput maxlength="100" placeholder="Correo" formControlName="correo_cliente" />
+            @if (this.form.controls.correo_cliente.hasError('required')) {
+                <mat-error>Correo requerido</mat-error>
+                }
+            @if (this.form.controls.correo_cliente.hasError('email')) {
+                <mat-error>Correo inválido</mat-error>
+                }
+        </mat-form-field>
+    </div>
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+</form>

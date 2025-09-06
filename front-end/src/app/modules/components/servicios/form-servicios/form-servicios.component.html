@@ -1,0 +1,56 @@
+<app-modal-header [tituloHeader]="tituloPorAccion"
+    (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+<form [formGroup]="form" class="formmularioCont">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Descripción del Servicio</mat-label>
+            <input matInput maxlength="100" placeholder="Descripción" formControlName="descripcion_servicio" />
+            <mat-error *ngIf="form.controls.descripcion_servicio.hasError('required')">
+                Servicio requerido
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Costo Unitario</mat-label>
+            <input matInput type="number" step="0.01" placeholder="Costo Unitario" formControlName="costo_unitario" />
+            <mat-error *ngIf="form.controls.costo_unitario.hasError('required')">
+                Valor requerido
+            </mat-error>
+            <mat-error *ngIf="form.controls.costo_unitario.hasError('pattern')">
+                Formato incorrecto
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">    
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Validar Pesaje</mat-label>
+            <mat-select formControlName="validar_pesaje">
+                <mat-option value="Si">Si</mat-option>
+                <mat-option value="No">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls.validar_pesaje.hasError('required')">
+                Debe seleccionar una opción
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Máximo de Artículos</mat-label>
+            <input matInput type="number" placeholder="Máximo de Artículos" formControlName="maximo_articulos" min="1" max="150" />
+            <mat-error *ngIf="form.controls.maximo_articulos.hasError('pattern')">
+                Debe ser un número válido
+            </mat-error>
+            <mat-error *ngIf="form.controls.maximo_articulos.hasError('min')">
+                El valor debe ser al menos 1
+            </mat-error>
+            <mat-error *ngIf="form.controls.maximo_articulos.hasError('max')">
+                El valor no puede ser mayor de 150
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+</form>

@@ -1,0 +1,109 @@
+.buttonBack {
+  max-width: 150px;
+  font-weight: 700;
+}
+
+.pdf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(115, 201, 206);
+}
+.edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondaryLigth);
+}
+
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(172, 15, 54);
+}
+
+
+.edit:hover {
+  background-color: var(--secondaryDark);
+  transition: 0.3s;
+}
+
+.delete:hover {
+  background-color: rgb(126, 10, 39);
+  transition: 0.3s;
+}
+
+.mat-mdc-icon-button {
+  color: var(--mdc-icon-button-icon-color);
+  height: 30px !important;
+  width: 30px !important;
+  display: flex;
+}
+
+.mat-icon {
+  overflow: inherit !important;
+}
+
+.material-icons {
+  font-size: 20px !important;
+}
+
+.cellButtons {
+  display: flex !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+}
+
+.noDataItem {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 60px 0;
+}
+
+.search-field {
+  width: 100%;
+  /* max-width: 700px; */
+}
+
+.mat-form-field {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.mat-form-field.mat-focused {
+  background-color: #ffffff;
+  border-color: #6200ea; /* Color cuando está enfocado */
+}
+
+.mat-icon {
+  color: #888888;
+}
+
+input[matInput] { 
+  font-size: 16px;
+}
+
+.buttonConfirm, .buttonBack, .buttonDisabled {
+ 
+  margin: inherit!important; 
+}
+
+.mat-dialog-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.yellow-row {
+  background-color: rgb(247, 244, 143) ; 
+}
+
+.red-row{
+  background-color: rgb(188, 107, 107);
+}

@@ -1,0 +1,147 @@
+button {
+    background-color: transparent;
+    border: none;
+    color: #f3f3f3;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 18px;
+    display: flex;
+}
+
+.tituloApp {
+    color: #fff;
+    font-size: var(--lsize);
+    font-family: var(--regularFont);
+}
+
+.toolbar {
+    position: fixed;
+    min-width: 100%;
+    background-color: var(--secondary);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.menuItemCont {
+    border-radius: 50px;
+    background-color: white;
+    transition: .3s;
+    height: 35px;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    color: var(--secondary);
+}
+
+.labelIconCont {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--secondary);
+}
+
+.contUserPerf {
+    padding: 0 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.user {
+    border-radius: 50px;
+    background-color: var(--secondaryDark);
+    padding: 0 15px;
+    color: white;
+    font-size: var(--msize);
+    font-family: var(--regularFonts);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuItemCont:hover {
+    background-color: var(--secondary);
+    transition: .3s;
+
+    .icon {
+        color: white !important;
+        transition: .3s;
+    }
+
+    .labelIconCont {
+        color: white !important;
+        transition: .3s;
+    }
+}
+
+.Btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition-duration: .3s;
+    padding: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: var(--secondaryDark);
+}
+
+/* plus sign */
+.sign {
+    width: 100%;
+    transition-duration: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign svg {
+    width: 17px;
+}
+
+.sign svg path {
+    fill: white;
+}
+
+.text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: var(--size);
+    transition-duration: .3s;
+}
+
+.Btn:hover {
+    width: 125px;
+    border-radius: 40px;
+    transition-duration: .3s;
+}
+
+.Btn:hover .sign {
+    width: 30%;
+    transition-duration: .3s;
+    padding-left: 10px;
+}
+
+.Btn:hover .text {
+    opacity: 1;
+    width: 70%;
+    transition-duration: .3s;
+    padding-right: 10px;
+}
+
+.Btn:active {
+    transform: translate(2px, 2px);
+}

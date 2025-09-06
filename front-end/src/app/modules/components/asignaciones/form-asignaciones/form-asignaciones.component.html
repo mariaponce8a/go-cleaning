@@ -1,0 +1,58 @@
+<app-modal-header [tituloHeader]="tituloPorAccion"
+    (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+<form [formGroup]="form" class="formmularioCont">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Empleado</mat-label>
+            <input matInput maxlength="60" placeholder="Empleado" formControlName="usuario" />
+            @if (this.form.controls.usuario.hasError('required')) {
+            <mat-error>Empleado requerido</mat-error> 
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Fecha de Inicio</mat-label>
+            <input matInput type= "datetime-local" maxlength="60" placeholder="Fecha de inicio" formControlName="fecha_inicio" />
+            @if (this.form.controls.fecha_inicio.hasError('required')) {
+                <mat-error>Fecha requerido</mat-error> 
+                }
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Fecha de Finalización</mat-label>
+            <input matInput type= "datetime-local" maxlength="60" placeholder="Fecha de fin" formControlName="fecha_fin" />
+            @if (this.form.controls.fecha_fin.hasError('')) {
+            }
+        </mat-form-field>
+    </div>
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>ID pedido</mat-label>
+            <input matInput maxlength="60" placeholder="Pedido" formControlName="id_pedido_cabecera" />
+            @if (this.form.controls.id_pedido_cabecera.hasError('required')) {
+                <mat-error>ID pedido requerido</mat-error> 
+                }
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select
+            formControlName="descripcion_estado" (selectionChange)="getSelectedEstado($event, form)">
+            @for (estado of comboEstados; track estado) {
+            <mat-option [value]="estado.descripcion_estado">
+                {{estado.descripcion_estado}}
+            </mat-option>
+            }
+        </mat-select>
+        @if (form.controls['descripcion_estado'].hasError('required')) {
+        <mat-error>Seleccione un estado</mat-error>
+        }
+        </mat-form-field>
+    </div>
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+
+</form>

@@ -1,0 +1,9 @@
+<app-colored-body-header
+  [nombrePagina]="'Descuentos'"
+  [subtitulo]="'Tipos de decuentos'"
+  [icon]="'attach_money'"
+></app-colored-body-header>
+<app-registros-paginados (accionBotones)="manejarEventosBotones($event)" [isLoadingTable]="loadingTable"
+  [titulos]="titulosTabla"
+  [valores]="valoresDeTabla"
+></app-registros-paginados>

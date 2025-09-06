@@ -1,0 +1,8 @@
+<div class="buttonCont">
+    @if (showConfirm) {
+    <button type="button" (click)="sendAction('confirm')" class="buttonConfirm">{{textBtn1}}</button>
+    }
+    @if (showCancel) {
+    <button type="button" (click)="sendAction('cancel')" class="buttonBack">{{textBtn2}}</button>
+    }
+</div>

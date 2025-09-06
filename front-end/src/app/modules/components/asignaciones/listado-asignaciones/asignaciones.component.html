@@ -1,0 +1,12 @@
+<app-colored-body-header
+  [nombrePagina]="'Asignaciones Empleados'"
+  [subtitulo]="'Asiganacion le carga laboral'"
+  [icon]="' '"
+></app-colored-body-header>
+
+<app-registros-paginados (accionBotones)="manejarEventosBotones($event)" 
+  [isLoadingTable]="loadingTable"
+  [titulos]="titulosTabla"
+  [valores]="valoresDeTabla"
+></app-registros-paginados>
+

@@ -1,0 +1,833 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+
+    --color-primary: #9a75b9;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #907da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #573a6e;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #333e88;
+    --color-dark-variant: #677483;
+    --color-background: #f2ebf5;
+
+    --card-boarder-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 0.2rem;
+
+    --card_padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box_shadow: 0 2rem 3rem var(--color-light)
+}
+
+/*DARK 867194*/
+body.dark-theme-variables {
+    --color-primary: #7d6c88; /* un morado oscuro */
+    --color-danger: #d9534f; /* rojo oscuro */
+    --color-success: #34c759; /* verde profundo */
+    --color-warning: #ffc107; /* un naranja vibrante */
+    --color-white: #dcd3e0; /* tablas, secciones un blanco oscuro */
+    --color-info-dark: #8d779f; /* iconos letra */
+    --color-info-light: #d0ccd7; /* un morado gris medio letra sidebar*/ 
+    --color-dark: #2b2230; /* un gris muy oscuro con tono morado */
+    --color-light: rgba(211, 203, 226, 0.1); /* un blanco oscuro sutil */
+    --color-primary-variant: #71507a; /* un morado más vibrante */
+    --color-dark-variant: #3a2b40; /* sidebarun gris oscuro con tono morado */
+    --color-background: #eae9ed; /* un morado oscuro */
+}
+
+
+/* a dark gray background color */
+
+body.dark-theme-variables .sidebar,
+body.dark-theme-variables .top {
+    background-color: var(--color-dark);
+    /* Fondo oscuro para sidebar y top */
+    color: var(--color-white);
+    /* Texto blanco para sidebar y top */
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style-type: none;
+    box-sizing: border-box;
+
+}
+
+html {
+    font-size: 15px;
+}
+
+body {
+    width: 100vw;
+    height: 100vw;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-background);
+    user-select: none;
+    overflow: hidden;
+    color: var(--color-dark);
+}
+
+.container {
+    display: grid;
+    width: 96%;
+    height: 100%;
+    margin: 0;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 23rem;
+}
+
+a {
+    color: var(--color-dark);
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 0.87rem;
+}
+
+h4 {
+    font-size: 0.8rem;
+}
+
+h5 {
+    font-size: 0.77rem;
+}
+
+small {
+    font-size: 0.75rem;
+}
+
+.profile-photo {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.text-muted {
+    color: var(--color-info-dark);
+}
+
+p {
+    color: var(--color-dark-variant);
+}
+
+b {
+    color: var(--color-dark);
+}
+
+.primary {
+    color: var(--color-primary);
+}
+
+.danger {
+    color: var(--color-danger);
+}
+
+.success {
+    color: var(--color-success);
+}
+
+.warning {
+    color: var(--color-warning);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+  }
+  
+  
+  
+  .hidden-form {
+    display: none;
+  }
+  
+  .editar-btn,
+  .eliminar-btn {
+      padding: 6px 12px; /* Padding interior */
+      margin-right: 5px; /* Margen derecho entre botones */
+      cursor: pointer; /* Cursor de tipo puntero al pasar el mouse */
+      border: none; /* Sin borde */
+      border-radius: 3px; /* Bordes redondeados */
+      font-size: 10px; /* Tamaño de fuente */
+      display: inline-block; /* Mostrar en línea para que estén en la misma línea */
+      width: 40px; /* Ancho fijo para ambos botones */
+      align-items: center;
+  }
+  
+  /* Estilo de fondo y texto para el botón Editar */
+  .editar-btn {
+      background-color: #94cdf4; /* Color de fondo azul */
+      color: #fff; /* Color de texto blanco */
+  }
+  
+  /* Estilo de fondo y texto para el botón Eliminar */
+  .eliminar-btn {
+      background-color: var(--color-danger); /* Color de fondo rojo */
+      color: #fff; /* Color de texto blanco */
+  }
+
+  /* Estilo para el modal */
+.modal {
+    display: none; /* Por defecto oculto */
+    position: fixed; /* Posición fija para que se mantenga en pantalla */
+    z-index: 1000; /* Z-index alto para estar por encima del contenido */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    overflow: auto; /* Permitir desplazamiento si el contenido es demasiado grande */
+}
+
+.modal-content {
+    position: absolute; /* Agrega esto */
+    top: 50%; /* Coloca el contenido del modal en el centro vertical */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra el modal correctamente */
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Ancho del modal */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);   
+    width: calc(40% - 15px);
+
+}
+
+.modal-content h2 {
+    margin-top: 0; /* Eliminar margen superior del título */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+  main button {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; 
+    gap: 6px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+  /* Estilos para formularios */
+/* Estilos para formularios */
+/* Estilos para formularios */
+form {
+    margin-bottom: 1rem; /* Margen inferior para separación entre formularios */
+}
+
+form label {
+    font-weight: 600; /* Peso de la fuente para etiquetas de formulario */
+    margin-bottom: 0.5rem; /* Margen inferior para etiquetas */
+    display: block; /* Mostrar etiquetas en bloque */
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form input[type="number"],
+form input[type="password"] {
+    width: calc(100% - 20px); /* Ancho ajustado para inputs */
+    padding: 0.3rem; /* Relleno interior más compacto */
+    margin-bottom: 0.5rem; /* Margen inferior reducido */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="date"]:focus,
+form input[type="number"]:focus,
+form input[type="password"]:focus {
+    outline: none; /* Sin contorno al enfocar */
+    border-color: var(--color-primary); /* Cambiar color del borde al enfocar */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra al enfocar */
+}
+
+form button[type="submit"] {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+form button[type="submit"]:hover {
+    background-color: var(--color-info-dark); /* Color de fondo más oscuro al pasar el mouse */
+}
+
+/* Estilos para filtros de búsqueda */
+.filters {
+    margin-bottom: 1rem; 
+    display: flex; /* Mostrar elementos en línea */
+    align-items: center; /* Alinear verticalmente al centro */
+    gap: 1rem; /*/* Margen inferior para separación */
+}
+
+.filters label {
+    font-weight: 600; /* Peso de la fuente para etiquetas */
+    margin-right: 0.5rem; /* Margen derecho entre etiqueta y elemento de formulario */
+}
+
+.filters input[type="date"],
+.filters input[type="text"] {
+    width: calc(100% - 12px); /* Ancho ajustado para inputs */
+    padding: 0.4rem; /* Relleno interior más compacto */
+    margin-right: 0.5rem; /* Margen derecho entre elementos */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+.filters button {
+    background-color: var(--color-primary); /* Color de fondo primario */
+    color: #fff; /* Color de texto blanco */
+    padding: 0.3rem 0.8rem; /* Relleno interior más pequeño */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de tipo puntero */
+    font-size: 0.85rem; /* Tamaño de fuente ligeramente más pequeño */
+}
+
+.filters button:hover {
+    background-color: var(--color-info-dark); /* Color de fondo más oscuro al pasar el mouse */
+}
+
+
+
+  
+
+aside {
+    height: 100vh;
+
+}
+
+
+aside.hidden {
+    width: 60px;
+}
+
+aside .top {
+    background: white;
+    display: flex;
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
+    padding: 0 1rem;
+}
+
+
+aside .logo img {
+    width: 10rem;
+    height: 10rem;
+}
+
+aside .close img {
+    display: none;
+}
+
+
+
+/* Sidebar */
+aside .sidebar {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh;
+    padding-top: 20px;
+    box-shadow: 0 8px 20px 0 rgb(0 0 0 / 15%);
+
+}
+
+aside .sidebar button{
+    background: white;
+}
+
+aside .sidebar.collapsed {
+    width: 60px;
+}
+
+aside h3 {
+    font-weight: 500;
+}
+
+aside .sidebar.collapsed a h3 {
+    display: none;
+    /* Ocultar el texto en el sidebar colapsado */
+}
+
+aside .sidebar a {
+    display: flex;
+    color: var(--color-info-dark);
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    transition: all 300ms ease;
+}
+
+aside .sidebar.collapsed a {
+    justify-content: center;
+    margin-left: 0;
+}
+
+aside .sidebar a span {
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+}
+
+
+aside .sidebar a.active {
+    background: var(--color-light);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active::before {
+    content: "";
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .logo h2 {
+    display: inline;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a.active span {
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover {
+    color: var(--color-primary);
+}
+
+aside .sidebar a:hover span {
+    margin-left: 1rem;
+}
+
+aside .sidebar .message-count {
+    background: var(--color-danger);
+    color: var(--color-white);
+    padding: 2px 10px;
+    font-size: 11px;
+    border-radius: var(--border-radius-1);
+}
+
+.sidebar a h3 {
+    margin-left: 10px;
+    white-space: nowrap;
+    display: block;
+}
+
+aside.hidden .sidebar a h3 {
+    display: none;
+}
+
+aside .sidebar.collapsed .logo h2 {
+    display: none;
+    /* Ocultar el texto del logo en el sidebar colapsado */
+}
+
+aside .top {
+    transition: all 300ms ease;
+}
+
+aside .sidebar.collapsed~.top {
+    display: none;
+    /* Ocultar la clase .top */
+}
+
+aside .top {
+    transition: all 300ms ease;
+}
+
+aside .top.hidden {
+    display: none;
+    /* Ocultar la clase .top */
+}
+
+/* =======MAIN======*/
+
+main {
+    margin-top: 1.4rem;
+}
+
+main .date {
+    display: inline-block;
+    background-color: var(--color-light);
+    border-radius: var(--border-radius-1);
+    margin-top: 1rem;
+    margin-bottom: 1rem; /* Ajusta el margen inferior según sea necesario */
+    padding: 0.5rem 1.6rem;
+}
+
+main .date input {
+    background: transparent;
+    color: var(--color-dark);
+}
+
+main .insights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+main .insights>div {
+    background: var(--color-white);
+    padding: var(--card_padding);
+    border-radius: var(--card-border-radius--);
+    margin-top: 1rem;
+    box-shadow: var(--box_shadow);
+    transition: all 300ms-ease;
+}
+
+main .insights>div :hover {
+    box-shadow: none;
+}
+
+main.insights>div span {
+    background: coral;
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: r2em;
+}
+
+main .insights>div.expenses span {
+    background: var(--color-danger);
+}
+
+main .insights>div.income span {
+    background: var(--color-success);
+}
+
+main .insights>div.middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main .insights h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+
+main .insights .progress {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+}
+
+main .insights svg {
+    width: 7rem;
+    height: 7rem;
+}
+
+main .insights svg circle {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transform: translate(5px, 5px);
+    stroke-dasharray: 110;
+    stroke-dashoffset: 92;
+}
+
+main .insights .sales svg circle {
+    stroke-dasharray: 200;
+    stroke-dashoffset: -30;
+}
+
+main .insights .expenses svg circle {
+    stroke-dasharray: 80;
+    stroke-dashoffset: 20;
+}
+
+main .insights .income svg circle {
+    stroke-dasharray: 110;
+    stroke-dashoffset: 35;
+}
+
+main .insights .progress .number {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .insights small {
+    margin-top: 1.6rem;
+
+}
+
+/*====Pedidos Recientes====*/
+
+main .recent-order {
+    margin-top: 2rem;
+}
+
+main .recent-order table {
+    background: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-boarder-radius);
+    padding: center;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main .recent-order table:hover {
+    box-shadow: none;
+}
+
+main .recent-order h2{
+    margin-bottom: 5px;
+}
+
+main table tbody td {
+    height: 2.8rem;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark-variant);
+}
+
+main table tbody tr:last-child {
+    border: none;
+}
+
+main .recent-order a {
+    text-align: center;
+    display: block;
+    margin: 1rem auto;
+    color: var(--color-primary);
+}
+
+/* ====right*/
+
+.right {
+    margin-left: 1.4rem;
+}
+
+.right .top {
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+}
+
+.right .top button {
+    display: none;
+}
+
+.right .theme-toggler {
+    background: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4.2rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+.right .theme-toggler span {
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right .theme-toggler span.active {
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+.right .top .profile {
+    display: flex;
+    gap: 2rem;
+}
+
+
+/* ====actualizaciones*/
+.right .recent-updates {
+    margin-top: 1rem;
+}
+
+.right .recent-updates h2 {
+    margin-bottom: 0.8rem;
+}
+
+.right .recent-updates .update {
+    background: var(--color-white);
+    padding: var(--card_padding);
+    border-radius: var(--card-border-radius--);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+.right .recent-updates .updates:hover {
+    box-shadow: none;
+}
+
+.right .recent-updates .updates .update {
+    display: grid;
+    grid-template-columns: 2.6rem auto;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ====entregas realizadas*/
+
+.right .sales-analytics {
+    margin-top: 2rem;
+}
+
+.right .sales-analytics h2 {
+    margin-top: 0.8rem;
+}
+
+.right .sales-analytics .item {
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+    padding: 1.4rem var(--card_padding);
+    border-radius: var(--border-radius-3);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+.right .sales-analytics .item:hover {
+    box-shadow: none;
+}
+
+.right .sales-analytics .item .right {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin: 0;
+    width: 100%;
+}
+
+.right .sales-analytics .item .icon {
+    padding: 0.6rem;
+    color: var(--color-white);
+    border-radius: 50%;
+    background-color: red;
+    display: flex;
+}
+
+/* Media queries para dispositivos pequeños (ej. teléfonos) */
+@media only screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        height: 100%;
+        /* Cambia a una sola columna */
+    }
+
+    aside {
+        height: 100%;
+        background: rgb(0 0 0 / 35%);
+        position: absolute;
+        width: 100%;
+    }
+
+    aside.hidden {
+        width: 0;
+        /* Oculta completamente el aside cuando está en modo oculto */
+    }
+
+    aside .sidebar {
+        top: 0;
+        /* Ajusta la posición del sidebar en la parte superior */
+        margin-top: 0;
+        /* Elimina el margen superior negativo */
+    }
+
+    main .insights {
+        grid-template-columns: 1fr;
+        /* Cambia a una sola columna en los insights */
+    }
+}
+
+/* Media queries para iPads y otros dispositivos medianos */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        grid-template-columns: 12rem 1fr 20rem;
+        height: 100%;
+        /* Ajusta columnas según el espacio disponible */
+    }
+}
+
+/* Media queries para dispositivos grandes (ej. navegadores de escritorio) */
+@media only screen and (min-width: 1025px) {
+    .container {
+        grid-template-columns: 14rem 1fr 23rem;
+        height: 100%;
+        /* Restaura el diseño original para pantallas grandes */
+    }
+}

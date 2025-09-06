@@ -1,0 +1,234 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+    --primary: #191723;
+    --primaryLigth: #252135;
+    --primaryDark: #000000;
+
+    --secondary: #2d584d;
+    --secondaryLigth: #44796b;
+    --secondaryDark: #203d36;
+
+    --xxxxlsize: max(25px, min(70px, 5vw));
+    --xxxlsize: max(29px, min(35px, 3vw));
+    --xxlsize: max(25px, min(29px, 3vw));
+    --xlsize: max(20px, min(25px, 3vw));
+    --lsize: max(18px, min(20px, 3vw));
+    --msize: max(14px, min(16px, 3vw));
+    --ssize: max(10px, min(14px, 3vw));
+    --xssize: max(9px, min(12px, 3vw));
+
+    --blackFont: "R-black", "Lucida Sans", sans-serif;
+    --regularFont: "R-regular", "Lucida Sans", sans-serif;
+    --semiBoldFont: "R-sBold", "Lucida Sans", sans-serif;
+    --thinFont: "R-Thin", "Lucida Sans", sans-serif;
+
+}
+
+@font-face {
+    font-family: R-black;
+    src: url(/assets/fonts/Raleway-Black.ttf);
+}
+
+@font-face {
+    font-family: R-regular;
+    src: url(/assets/fonts/Raleway-Regular.ttf);
+}
+
+@font-face {
+    font-family: R-sBold;
+    src: url(/assets/fonts/Raleway-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: R-Thin;
+    src: url(/assets/fonts/Raleway-Thin.ttf);
+}
+
+html,
+body {
+    height: 100%;
+
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(214, 214, 214) rgb(214, 214, 214);
+}
+
+/**************GLOBAL STYLES*****************/
+.tableItemsHeader {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 10px 10px 0 0;
+}
+
+.listadoNameStyle {
+    color: var(--secondaryDark);
+    font-family: var(--semiBoldFont);
+    font-size: var(--size);
+}
+
+.contenedorTabla {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -72px;
+}
+
+.listadoContStyle {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 0 0 10px 10px ;
+}
+
+/*********MATERIAL DESIGN OVERWRITE STYLES**********/
+
+/*Para tamaño del input de formulario*/
+.mat-mdc-form-field-flex {
+    height: 40px !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline {
+    height: 40px !important;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+    position: relative;
+    top: 20px;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
+    position: relative;
+    top: -5px;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+    position: relative;
+    top: 25px;
+}
+
+.mat-drawer-content {
+    background-color: #f4f4f4 !important;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    height: 100%;
+    max-height: 350px;
+}
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ebebeb #ffffff;
+    scrollbar-arrow-color: white;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #d8d8d8;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #d8d8d8;
+    border-radius: 30px;
+    border: 4px solid #eeeeee;
+}
+
+/*FORMULARIOO*/
+
+.formmularioCont {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.formGroupCont {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+@media screen and (max-width: 700px) {
+
+    .formGroupCont {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+    }
+
+}
+
+.buttonCont {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.buttonConfirm,
+.buttonBack,
+.buttonDisabled {
+    height: 40px;
+    width: 100%;
+    color: white;
+    font-family: var(--semiBoldFont);
+    font-size: var(--xssize);
+    border-radius: 50px;
+    margin: auto;
+    padding: 5px 10px;
+    border: 2px solid white;
+    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.171);
+}
+
+.buttonConfirm {
+    background-color: var(--primary);
+    transition: .3s;
+}
+
+.buttonBack {
+    background-color: var(--secondary);
+    transition: .3s;
+}
+
+
+.buttonConfirm:hover {
+    background-color: var(--primaryDark);
+    transition: .3s;
+}
+
+.buttonBack:hover {
+    background-color: var(--secondaryDark);
+    transition: .3s;
+}
+.mat-dialog-content img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+  }

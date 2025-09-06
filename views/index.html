@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Lavandería</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f2ebf5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .login-container {
+            display: flex;
+            width: 90%;
+            max-width: 900px;
+            height: 70%;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex-direction: column; 
+        }
+        @media (min-width: 768px) {
+            .login-container {
+                flex-direction: row; 
+            }
+        }
+        .login-form {
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-form h1 {
+            margin-bottom: 20px;
+            color: #141115; 
+        }
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        .login-form .form-control {
+            border-radius: 25px;
+        }
+        .login-form .show-password {
+            display: flex;
+            align-items: center;
+        }
+        .login-form .show-password input {
+            margin-right: 10px;
+        }
+        .login-form .forgot-password {
+            display: block;
+            margin-top: 10px;
+            text-align: right;
+            color: #141115; 
+        }
+        .login-form .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .login-image {
+            display: none; 
+            width: 100%;
+            background: url('./public/img/login.jpg') no-repeat center center;
+            background-size: cover;
+            background-position: center center; 
+            background-repeat: no-repeat; 
+            height: 100%;
+        }
+        @media (min-width: 768px) {
+            .login-image {
+                display: block; 
+            }
+        }
+        .btn-primary {
+            background-color: #9f82b7; 
+            border-color: #9f82b7;
+            border-radius: 25px;
+        }
+        .btn-primary:hover {
+            background-color: #7b5a96; 
+            border-color: #7b5a96;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h1 class="text-center">Burbuja de Seda</h1>
+            <form action="./views/dashboard/dashboard.php" method="POST">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="form-group show-password">
+                    <input type="checkbox" id="showPassword">
+                    <label for="showPassword">Mostrar contraseña</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                <a href="#" class="forgot-password">Olvidé mi contraseña</a>
+            </form>
+        </div>
+        <div class="login-image"></div>
+    </div>
+
+    <script>
+        document.getElementById('showPassword').addEventListener('change', function() {
+            var passwordField = document.getElementById('password');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+    </script>
+</body>
+</html>

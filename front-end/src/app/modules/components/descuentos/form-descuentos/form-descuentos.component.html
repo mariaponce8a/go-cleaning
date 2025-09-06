@@ -1,0 +1,27 @@
+<app-modal-header [tituloHeader]="tituloPorAccion" 
+(accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+<form [formGroup]="form" class="formularioCont">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Descripción del Descuento</mat-label>
+            <input matInput maxlength="20" placeholder="Descripción del Descuento" formControlName="tipo_descuento_desc" />
+            <mat-error *ngIf="form.controls.tipo_descuento_desc.hasError('required')">
+                Descripción requerida
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Cantidad de Descuento (%)</mat-label>
+            <input matInput type="number" maxlength="5" placeholder="0.00" formControlName="cantidad_descuento" />
+            <mat-error *ngIf="form.controls.cantidad_descuento.hasError('required')">
+                Cantidad requerida
+            </mat-error>
+            <mat-error *ngIf="form.controls.cantidad_descuento.hasError('min') || form.controls.cantidad_descuento.hasError('max')">
+                La cantidad debe estar entre 0 y 99.99
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+</form>

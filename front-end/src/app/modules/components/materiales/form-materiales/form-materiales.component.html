@@ -1,0 +1,29 @@
+<app-modal-header [tituloHeader]="tituloPorAccion"
+    (accionCerrar)="cerrarModalSinInformacion($event)"></app-modal-header>
+
+<form [formGroup]="form" class="formmularioCont" enctype="multipart/form-data">
+    <div class="formGroupCont">
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Material</mat-label>
+            <input matInput maxlength="60" placeholder="Descripción del material" formControlName="descripcion_material" />
+            @if (this.form.controls.descripcion_material.hasError('required')) {
+            <mat-error>Material requerido</mat-error> 
+            }
+            @if (this.form.controls.descripcion_material.hasError('pattern')) {
+                <mat-error>Solo se permiten letras y espacios</mat-error> 
+                }
+        </mat-form-field>
+    </div>
+
+    <div class="formGroupCont">
+            <mat-label>Imagen</mat-label>
+            <input type="file" (change)="onFileSelected($event)" accept=".jpeg, .jpg, .png" />
+            @if (this.form.controls.imagen.errors?.['invalidFileType']){
+                <mat-error>Formato de imagen no permitido. Solo se aceptan JPEG y PNG.</mat-error> 
+            }
+              </div>
+            
+
+    <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
+
+</form>

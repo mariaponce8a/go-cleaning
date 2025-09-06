@@ -12,6 +12,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 import { Interface } from 'readline';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-asignaciones',
@@ -20,7 +22,8 @@ import { Interface } from 'readline';
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
-    GlobalButtonsComponent
+    GlobalButtonsComponent, CommonModule,
+        IonicModule
   ],
   templateUrl: './form-asignaciones.component.html',
   styleUrl: './form-asignaciones.component.css'

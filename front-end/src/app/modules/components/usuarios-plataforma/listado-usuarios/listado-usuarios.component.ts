@@ -11,6 +11,8 @@ import { FormUsuariosComponent } from '../form-usuarios/form-usuarios.component'
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-listado-usuarios',
@@ -18,7 +20,9 @@ import { UserMessageService } from '../../../shared/services/user-message.servic
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
-    ColoredBodyHeaderComponent 
+    ColoredBodyHeaderComponent,
+     CommonModule,
+        IonicModule 
   ],
   templateUrl: './listado-usuarios.component.html',
   styleUrl: './listado-usuarios.component.css'

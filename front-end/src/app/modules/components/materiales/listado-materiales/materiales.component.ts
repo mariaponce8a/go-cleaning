@@ -11,6 +11,8 @@ import { FormMaterialesComponent } from '../form-materiales/form-materiales.comp
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-listado-materiales',
@@ -18,7 +20,8 @@ import { UserMessageService } from '../../../shared/services/user-message.servic
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
-    ColoredBodyHeaderComponent],
+    ColoredBodyHeaderComponent, CommonModule,
+        IonicModule],
   templateUrl: './materiales.component.html',
   styleUrls: ['./materiales.component.css'],
 })

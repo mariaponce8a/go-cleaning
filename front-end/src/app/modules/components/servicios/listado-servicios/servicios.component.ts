@@ -15,11 +15,14 @@ import { FormServiciosComponent } from '../form-servicios/form-servicios.compone
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';   
 import { UserMessageService } from '../../../shared/services/user-message.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-listado-servicios',
   standalone: true,
-  imports: [ MaterialModule, RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [ MaterialModule, RegistrosPaginadosComponent, ColoredBodyHeaderComponent,  CommonModule,
+      IonicModule],
   templateUrl: './servicios.component.html',
   styleUrl: './servicios.component.css',
 })

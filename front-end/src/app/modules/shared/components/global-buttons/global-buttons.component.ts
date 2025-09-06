@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-global-buttons',
   standalone: true,
-  imports: [],
+  imports: [ CommonModule,
+      IonicModule],
   templateUrl: './global-buttons.component.html',
   styleUrl: './global-buttons.component.css'
 })

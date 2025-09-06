@@ -11,6 +11,8 @@ import { Constantes } from '../../../config/constantes';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-clientes',
@@ -19,7 +21,8 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
-    GlobalButtonsComponent
+    GlobalButtonsComponent, CommonModule,
+        IonicModule
   ],
   templateUrl: './form-clientes.component.html',
   styleUrl: './form-clientes.component.css'

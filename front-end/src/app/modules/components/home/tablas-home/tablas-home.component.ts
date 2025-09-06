@@ -9,6 +9,8 @@ import { RequestService } from '../../../shared/services/request.service';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { Router } from '@angular/router';
 import { DataService } from '../../../shared/services/dataTransfer.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-tablas-home',
@@ -17,6 +19,8 @@ import { DataService } from '../../../shared/services/dataTransfer.service';
     MaterialModule,
     RegistrosPaginadosComponent,
     ColoredBodyHeaderComponent,
+    CommonModule,
+    IonicModule
   ],
   templateUrl: './tablas-home.component.html',
   styleUrl: './tablas-home.component.css'

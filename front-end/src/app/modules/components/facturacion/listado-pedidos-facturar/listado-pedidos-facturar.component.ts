@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { FacturasPreparadasComponent } from '../facturas-preparadas/facturas-preparadas.component';
 import { ModalHeaderComponent } from '../../../shared/components/modal-header/modal-header.component';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-listado-pedidos-facturar',
@@ -24,7 +26,9 @@ import { GlobalButtonsComponent } from '../../../shared/components/global-button
     FacturasPreparadasComponent,
     ColoredBodyHeaderComponent,
     ModalHeaderComponent,
-    GlobalButtonsComponent
+    GlobalButtonsComponent,
+     CommonModule,
+        IonicModule
   ],
   templateUrl: './listado-pedidos-facturar.component.html',
   styleUrl: './listado-pedidos-facturar.component.css'

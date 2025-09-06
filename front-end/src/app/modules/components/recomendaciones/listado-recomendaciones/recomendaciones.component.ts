@@ -11,11 +11,14 @@ import { FormRecomendacionesComponent } from '../form-recomendaciones/form-recom
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-listado-recomendaciones',
   standalone: true,
-  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent, CommonModule,
+      IonicModule],
   templateUrl: './recomendaciones.component.html',
   styleUrls: ['./recomendaciones.component.css'],
 })

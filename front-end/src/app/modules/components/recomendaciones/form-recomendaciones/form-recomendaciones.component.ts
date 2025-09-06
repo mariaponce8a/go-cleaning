@@ -9,7 +9,7 @@ import { IaccionBotones, IrecomendacionesPlataforma, ImaterialesPlataforma, Iser
 import { Constantes } from '../../../config/constantes';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormGroup, FormArray, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -18,6 +18,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { count, map, startWith, takeUntil } from 'rxjs/operators';
+import { IonicModule } from '@ionic/angular';
 
 
 @Component({
@@ -35,6 +36,8 @@ import { count, map, startWith, takeUntil } from 'rxjs/operators';
     MatInputModule,
     FormsModule,
     MatAutocompleteModule,
+     CommonModule,
+        IonicModule
   ],
   
   templateUrl: './form-recomendaciones.component.html',

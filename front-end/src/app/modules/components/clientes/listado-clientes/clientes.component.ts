@@ -12,12 +12,15 @@ import { UserMessageService } from '../../../shared/services/user-message.servic
 import { FormClientesComponent } from '../form-clientes/form-clientes.component'; 
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 
 @Component({
   selector: 'app-listado-clientes',
   standalone: true,
-  imports: [ MaterialModule,RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [ MaterialModule,RegistrosPaginadosComponent, ColoredBodyHeaderComponent, CommonModule,
+      IonicModule],
   templateUrl: './clientes.component.html',
   styleUrl: './clientes.component.css',
 })

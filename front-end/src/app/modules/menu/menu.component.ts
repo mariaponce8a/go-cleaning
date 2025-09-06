@@ -16,6 +16,7 @@ import {
 import { LocalStorageEncryptationService } from '../shared/services/local-storage-encryptation.service';
 import { Constantes } from '../config/constantes';
 import { HttpClient } from '@angular/common/http';
+import { IonicModule } from '@ionic/angular';
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -25,7 +26,8 @@ import { HttpClient } from '@angular/common/http';
     MatListModule,
     CommonModule,
     MatSidenavModule,
-    RouterModule,
+    RouterModule, 
+        IonicModule
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'

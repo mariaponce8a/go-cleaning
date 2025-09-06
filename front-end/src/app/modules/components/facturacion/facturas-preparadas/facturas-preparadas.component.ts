@@ -11,6 +11,8 @@ import { map, startWith, Subject, takeUntil } from 'rxjs';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { DataService } from '../../../shared/services/dataTransfer.service';
 import { IusuariosPlataforma, IclientesPlataforma, IdescuentosPlataforma, IserviciosPlataforma } from '../../../shared/interface/datamodels.interface';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-facturas-preparadas',
@@ -19,7 +21,8 @@ import { IusuariosPlataforma, IclientesPlataforma, IdescuentosPlataforma, Iservi
     ColoredBodyHeaderComponent,
     ModalHeaderComponent,
     GlobalButtonsComponent,
-    MaterialModule
+    MaterialModule, CommonModule,
+        IonicModule
   ],
   templateUrl: './facturas-preparadas.component.html',
   styleUrl: './facturas-preparadas.component.css'

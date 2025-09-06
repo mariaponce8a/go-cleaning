@@ -15,6 +15,8 @@ import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { FormDescuentosComponent } from '../form-descuentos/form-descuentos.component';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 
 @Component({
@@ -23,7 +25,8 @@ import { FormDescuentosComponent } from '../form-descuentos/form-descuentos.comp
   imports: [
     MaterialModule,
     RegistrosPaginadosComponent,
-    ColoredBodyHeaderComponent 
+    ColoredBodyHeaderComponent , CommonModule,
+        IonicModule
   ],
   templateUrl: './descuentos.component.html',
   styleUrl: './descuentos.component.css',

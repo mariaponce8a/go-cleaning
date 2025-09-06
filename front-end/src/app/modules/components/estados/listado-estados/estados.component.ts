@@ -11,18 +11,21 @@ import { FormEstadosComponent } from '../form-estados/form-estados.component';
 import { MaterialModule } from '../../../desginModules/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMessageService } from '../../../shared/services/user-message.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 
 @Component({
   selector: 'app-listado-estados',
   standalone: true,
-  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent],
+  imports: [RegistrosPaginadosComponent, ColoredBodyHeaderComponent, CommonModule,
+    IonicModule],
   templateUrl: './estados.component.html',
   styleUrl: './estados.component.css',
 })
 export class ListadoEstadosComponent implements OnInit, OnDestroy {
   titulosTabla: ITitulosTabla[] = [
-    
+
     {
       value: 'descripcion_estado',
       viewValue: 'Estado',
@@ -58,9 +61,9 @@ export class ListadoEstadosComponent implements OnInit, OnDestroy {
         },
       });
   }
-  
+
   manejarEventosBotones(evento: IaccionBotones) {
-    console.log('Evento recibido:', evento); 
+    console.log('Evento recibido:', evento);
     let dialogRef;
     switch (evento.tipo) {
       case 'editar':

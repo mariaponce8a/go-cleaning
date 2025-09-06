@@ -19,6 +19,7 @@ import { UserMessageService } from '../../services/user-message.service';
 import { Router } from '@angular/router';
 import { RequestService } from '../../../shared/services/request.service';
 import { TablasHomeComponent } from '../../../../modules/components/home/tablas-home/tablas-home.component';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-registros-paginados',
@@ -29,7 +30,8 @@ import { TablasHomeComponent } from '../../../../modules/components/home/tablas-
     MaterialModule,
     GlobalButtonsComponent,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    IonicModule
   ]
 })
 export class RegistrosPaginadosComponent implements OnInit {

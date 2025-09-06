@@ -12,6 +12,8 @@ import { Constantes } from '../../config/constantes';
 import { Subject, takeUntil } from 'rxjs';
 import { LocalStorageEncryptationService } from '../../shared/services/local-storage-encryptation.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,9 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatCheckboxModule,
     GlobalButtonsComponent,
-    HttpClientModule
+    HttpClientModule,
+     CommonModule,
+        IonicModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

@@ -14,7 +14,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { HttpClient } from '@angular/common/http';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { FormClientesComponent } from '../../clientes/form-clientes/form-clientes.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -22,6 +22,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { validarFechas } from '../../../shared/validators/custom-val';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-formulario-pedidos',
@@ -34,7 +35,8 @@ import autoTable from 'jspdf-autotable';
     ReactiveFormsModule,
     AsyncPipe,
     FormsModule,
-    FormClientesComponent
+    FormClientesComponent, CommonModule,
+        IonicModule
   ],
   providers: [
     DatePipe

@@ -12,6 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-servicios',
@@ -21,7 +22,8 @@ import { CommonModule } from '@angular/common';
     ModalHeaderComponent,
     MaterialModule,
     ColoredBodyHeaderComponent,
-    GlobalButtonsComponent  
+    GlobalButtonsComponent , 
+        IonicModule 
   ],
   templateUrl: './form-servicios.component.html',
   styleUrls: ['./form-servicios.component.css']

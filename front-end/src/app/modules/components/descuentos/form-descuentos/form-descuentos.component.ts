@@ -12,6 +12,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UserMessageService } from '../../../shared/services/user-message.service';
 import { GlobalButtonsComponent } from '../../../shared/components/global-buttons/global-buttons.component';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-descuentos',
@@ -21,7 +22,8 @@ import { CommonModule } from '@angular/common';
     MaterialModule,
     ColoredBodyHeaderComponent,
     GlobalButtonsComponent,
-    CommonModule
+    CommonModule,
+        IonicModule
   ],
   templateUrl: './form-descuentos.component.html',
   styleUrl: './form-descuentos.component.css'   // Cambiado a `styleUrls`

@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,11 +7,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './modules/shared/interceptors/auth.interceptor';
 import { authorizacionInterceptor } from './modules/shared/interceptors/authorizacion.interceptor';
+import { IonicModule } from '@ionic/angular';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
   provideClientHydration(),
   provideAnimationsAsync(),
   provideAnimationsAsync(),
+  importProvidersFrom(IonicModule.forRoot()),
   provideHttpClient(withInterceptors([authorizacionInterceptor]))]
 };

@@ -12,6 +12,8 @@ import { FormularioPedidosComponent } from '../formulario-pedido/formulario-pedi
 import { DataService } from '../../../shared/services/dataTransfer.service';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 
 
@@ -22,7 +24,8 @@ import autoTable from 'jspdf-autotable';
     MaterialModule,
     RegistrosPaginadosComponent,
     ColoredBodyHeaderComponent,
-    FormularioPedidosComponent
+    FormularioPedidosComponent, CommonModule,
+        IonicModule
   ],
   templateUrl: './listar-pedidos.component.html',
   styleUrl: './listar-pedidos.component.css'

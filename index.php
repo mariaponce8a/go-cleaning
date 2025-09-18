@@ -10,63 +10,94 @@ require_once('./back-end/controllers/estados.controllers.php');
 require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
 require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
 require_once('./back-end/controllers/mensajes.controller.php');
-//prueba
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
+// function getValidToken()
+// {
+//     $respuesta_token = false;
+//     $os = PHP_OS_FAMILY;
+
+//     if ($os === 'Windows') {
+//         $key = $_SERVER['TOKEN_KEY'];
+//         $headers = apache_request_headers();
+//         error_log("------------------------ENCABEZADOS " . implode(",", $headers));
+//         $authorization = $headers["Authorization"];
+//         $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
+//         if ($decodedToken) {
+//             error_log(json_encode($decodedToken));
+//             $respuesta_token = $decodedToken;
+//         } else {
+//             $respuesta_token = false;
+//         }
+//     } else {
+
+//         $key = $_SERVER['TOKEN_KEY'];
+//         $authorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+//         error_log("AUTORIZACIOOOOOOOOOONNNNN " . $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+//         if ($authorization) {
+//             error_log(json_encode($authorization));
+//             $respuesta_token =  $authorization;
+//         } else {
+//             $respuesta_token = false;
+//         }
+//     }
+//     return $respuesta_token;
+// }
+
 function getValidToken()
 {
     $respuesta_token = false;
-    $os = PHP_OS_FAMILY;
+    $key = $_SERVER['TOKEN_KEY'] ?? 'default_key';
+    $authorization = null;
 
-    if ($os === 'Windows') {
-        $key = $_SERVER['TOKEN_KEY'];
-        $headers = apache_request_headers();
-        error_log("------------------------ENCABEZADOS " . implode(",", $headers));
-        $authorization = $headers["Authorization"];
-        $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
-        if ($decodedToken) {
-            error_log(json_encode($decodedToken));
-            $respuesta_token = $decodedToken;
-        } else {
-            $respuesta_token = false;
-        }
-    } else {
-
-        $key = $_SERVER['TOKEN_KEY'];
+    // Buscar el header en diferentes lugares (depende de Apache/Nginx/ngrok)
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
         $authorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
-        error_log("AUTORIZACIOOOOOOOOOONNNNN " . $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
-        if ($authorization) {
-            error_log(json_encode($authorization));
-            $respuesta_token =  $authorization;
-        } else {
+    } elseif (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            $authorization = $headers['Authorization'];
+        }
+    }
+
+    if ($authorization) {
+        // Si viene con "Bearer " lo limpiamos
+        $authorization = str_replace('Bearer ', '', $authorization);
+        try {
+            $decodedToken = JWT::decode($authorization, new Key($key, 'HS256'));
+            $respuesta_token = $decodedToken;
+        } catch (Exception $e) {
+            error_log("Error decodificando token: " . $e->getMessage());
             $respuesta_token = false;
         }
     }
+
     return $respuesta_token;
 }
 Flight::before('start', function () {
-    // Solo si no es preflight
-    if ($_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
-        Flight::response()->header('Access-Control-Allow-Origin', '*');
-        Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
-        Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-        Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    }
+    error_log("Settings default headers");
+
+    Flight::response()->header('Access-Control-Allow-Origin', '*');
+    Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
+    Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers,Authorization, x-Requested-With');
 });
 
-// Responder preflight OPTIONS
 Flight::route('OPTIONS /*', function () {
     Flight::response()->header('Access-Control-Allow-Origin', '*');
+    Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
     Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    Flight::response()->status(200);   
-    Flight::stop();                   // Termina la ejecución para OPTIONS
-});
+    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers,Authorization, x-Requested-With');
 
+    echo json_encode(array("status" => "ok"));
+});
 
 Flight::route('POST /login', function () {
     $user_controller = new Usuarios_controller();
@@ -1064,12 +1095,13 @@ Flight::route('GET /ordenPedido/@id_pedido_cabecera', function ($id_pedido_cabec
 });
 
 Flight::route('GET /consultarPedidosNoFinalizados', function () {
-    $tokenDesdeCabecera = getValidToken();
+    $tokenDesdeCabecera = getValidToken(); 
     if ($tokenDesdeCabecera == true) {
         $controller = new Pedidos_controller();
         $respuesta = $controller->getPedidosNoFinalizados();
+        
         echo  $respuesta;
-    } else {
+    } else { 
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });

@@ -154,7 +154,7 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
         doc.setFontSize(16);
 
         // Encabezado de la lavandería
-        doc.text('Lavandería Burbuja de Seda', 105, 10, { align: 'center' });
+        doc.text('Lavandería GO CLEANING', 105, 10, { align: 'center' });
         doc.setFontSize(12);
         doc.text('Dirección Matriz: Leonardo Murialdo N57-199 y Miguel Valdiviezo', 105, 20, { align: 'center' });
         doc.text('Kennedy, Quito - Pichincha, Ecuador', 105, 30, { align: 'center' });
@@ -228,7 +228,7 @@ export class ListarPedidosComponent implements OnInit, OnDestroy {
             // Agregar detalles del pedido en páginas adicionales
             for (const detalle of data.data) {
                 doc.addPage();
-                doc.text('Lavandería Burbuja de Seda', 105, 10, { align: 'center' });
+                doc.text('Lavandería GO CLEANING', 105, 10, { align: 'center' });
                 doc.setFontSize(12);
                 doc.text('Dirección Matriz: Leonardo Murialdo N57-199 y Miguel Valdiviezo', 105, 20, { align: 'center' });
                 doc.text('Kennedy, Quito - Pichincha, Ecuador', 105, 30, { align: 'center' });

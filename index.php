@@ -10,7 +10,7 @@ require_once('./back-end/controllers/estados.controllers.php');
 require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
 require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
 require_once('./back-end/controllers/mensajes.controller.php');
-
+//prueba
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -48,24 +48,25 @@ function getValidToken()
     }
     return $respuesta_token;
 }
-
 Flight::before('start', function () {
-    error_log("Settings default headers");
-
-    Flight::response()->header('Access-Control-Allow-Origin', '*');
-    Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
-    Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers,Authorization, x-Requested-With');
+    // Solo si no es preflight
+    if ($_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
+        Flight::response()->header('Access-Control-Allow-Origin', '*');
+        Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
+        Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+        Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    }
 });
 
+// Responder preflight OPTIONS
 Flight::route('OPTIONS /*', function () {
     Flight::response()->header('Access-Control-Allow-Origin', '*');
-    Flight::response()->header('Content-Type', 'application/json; charset=UTF-8');
     Flight::response()->header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers,Authorization, x-Requested-With');
-
-    echo json_encode(array("status" => "ok"));
+    Flight::response()->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    Flight::response()->status(200);   
+    Flight::stop();                   // Termina la ejecución para OPTIONS
 });
+
 
 Flight::route('POST /login', function () {
     $user_controller = new Usuarios_controller();
@@ -823,11 +824,11 @@ Flight::route('GET /consultarPedidosnoCancelados', function () {
 
 Flight::route('GET /consultarPedidosXid', function () {
     $tokenDesdeCabecera = getValidToken();
-    
+
     if ($tokenDesdeCabecera == true) {
         // Obtener el parámetro de consulta 'id' desde la URL
         $id = Flight::request()->query->__get('id');
-        
+
         if ($id) {
             $controller = new Pedidos_controller();
             $respuesta = $controller->getPedidosXId($id);
@@ -920,7 +921,7 @@ Flight::route('POST /registrarPedidoCompleto', function () {
 
         error_log("----------------------DATOS DEL PEDIDO------------" . $body);
 
-        error_log(message: "detalle desde el index   ".$detalle);
+        error_log(message: "detalle desde el index   " . $detalle);
 
         $respuesta = $controller->insertarPedidoCompleto(
             $fecha_pedido,
@@ -958,11 +959,11 @@ Flight::route('PUT /ejecutar-facturacion', function () {
 
         $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
         $estado_facturacion = $data['estado_facturacion'] ?? null;
-        
+
 
         $respuesta = $controller->ejecutarFacturacion(
             $id_pedido_cabecera,
-            $estado_facturacion 
+            $estado_facturacion
         );
         echo  $respuesta;
     } else {

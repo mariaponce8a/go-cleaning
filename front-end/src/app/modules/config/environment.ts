@@ -1,7 +1,7 @@
 export class EnvironmentData {
 
     public static globalUrl = {
-        host: 'https://b234172ffa0e.ngrok-free.app',
+        host: 'http://192.168.1.86', 
         port: '443',
         name: '/proyecto-integrador-burbujas-seda'
     }

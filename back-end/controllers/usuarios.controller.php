@@ -10,6 +10,8 @@ class Usuarios_controller
         if ($usuario === null  || $clave === null) {
             return json_encode(array("respuesta" => "0", "mensaje" => "Debe ingresar sus credenciales"));
         }
+        error_log($usuario);
+        error_log($clave);
         $resultado = $usuarioModel->iniciarSesion($usuario, $clave);
         if ($resultado === "Usuario o clave incorrectos.") {
             return json_encode(array("respuesta" => "0", "mensaje" => $resultado));

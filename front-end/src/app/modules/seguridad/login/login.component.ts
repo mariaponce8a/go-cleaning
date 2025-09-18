@@ -78,6 +78,7 @@ export class LoginComponent implements OnDestroy {
 
           },
           error: (error) => {
+            console.log(error)
             this.usermessage.getToastMessage('error', error);
           }
         })

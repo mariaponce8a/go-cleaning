@@ -34,7 +34,7 @@
 }
 
 .contenedorImagen {
-    background-image: url(/assets/utils/ropa.jpg);
+    background-image: url(/assets/utils/ropa2.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: center;
@@ -55,4 +55,30 @@
     font-family: var(--regularFont);
     font-size: var(--lsize);
     color: white;
+}
+
+@media screen and (max-width:650px) {
+    .contenedorLogin {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .diamanteformulario {
+        display: none;
+    }
+
+    .contenedorImagen {
+        width: 100%;
+        max-height: 30%;
+    }
+
+    .contenedorFormulario {
+        width: 100%;
+    }
+
+    .formLogin {
+        max-width: 100%;
+    }
 }

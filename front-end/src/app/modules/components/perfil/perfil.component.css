@@ -644,4 +644,53 @@
   .verification-header h4 {
     font-size: 1rem;
   }
+
+  /* En perfil.component.css */
+.password-requirements {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.password-requirement {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+
+.requirement-met {
+  color: #4caf50;
+}
+
+.requirement-unmet {
+  color: #f44336;
+}
+
+.requirement-icon {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+/* Estilos existentes para fortaleza de contraseña */
+.password-weak {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.password-medium {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.password-strong {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.submit-button:disabled {
+  background-color: #ccc !important;
+  cursor: not-allowed !important;
+}
 }

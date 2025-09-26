@@ -58,8 +58,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
   hideConfirmar = true;
 
   passwordStrength: string = '';
+  isPasswordSecure: boolean = false; // Nueva propiedad para controlar si la contraseña es segura
 
-  // ✅ SEPARAR FORMULARIOS - Formulario principal para datos del perfil
+  //SEPARAR FORMULARIOS - Formulario principal para datos del perfil
   perfilForm = new FormGroup({
     id_usuario: new FormControl(''),
     usuario: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -68,14 +69,14 @@ export class PerfilComponent implements OnInit, OnDestroy {
     perfil: new FormControl({ value: '', disabled: true })
   });
 
-  // ✅ FORMULARIO SEPARADO para cambio de contraseña
+  // FORMULARIO SEPARADO para cambio de contraseña
   passwordForm = new FormGroup({
     claveActual: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    claveNueva: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    claveNueva: new FormControl('', [Validators.required, Validators.minLength(8), this.securePasswordValidator]), // Aumentado a 8 y agregado validador
     confirmarClave: new FormControl('', [Validators.required])
-  }, { validators: this.passwordMatchValidator });
+  }, { validators: [this.passwordMatchValidator, this.securePasswordFormValidator] }); // Agregado validador de formulario
 
-  // ✅ FORMULARIO SEPARADO para verificación de edición
+  // FORMULARIO SEPARADO para verificación de edición
   verificationForm = new FormGroup({
     claveActual: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
@@ -84,7 +85,62 @@ export class PerfilComponent implements OnInit, OnDestroy {
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const claveNueva = control.get('claveNueva')?.value;
     const confirmarClave = control.get('confirmarClave')?.value;
-    return claveNueva === confirmarClave ? null : { mismatch: true };
+    return claveNueva && confirmarClave && claveNueva === confirmarClave ? null : { mismatch: true };
+  }
+
+  //Validador de contraseña segura
+  private securePasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.value;
+    
+    if (!password) {
+      return null; // No validar si está vacío (ya hay Validators.required)
+    }
+
+    // Criterios de contraseña segura
+    const hasMinLength = password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    // Requerir al menos 4 de 5 criterios
+    const criteriaMet = [hasMinLength, hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar]
+      .filter(Boolean).length;
+
+    return criteriaMet >= 4 ? null : { weakPassword: true };
+  }
+
+  // Validador a nivel de formulario para habilitar/deshabilitar el botón
+  private securePasswordFormValidator(control: AbstractControl): ValidationErrors | null {
+    const claveNueva = control.get('claveNueva')?.value;
+    const confirmarClave = control.get('confirmarClave')?.value;
+    
+    if (!claveNueva || !confirmarClave) {
+      return { incomplete: true };
+    }
+
+    // Verificar que la contraseña cumple con los criterios de seguridad
+    const isSecure = this.isPasswordSecureEnough(claveNueva);
+    const passwordsMatch = claveNueva === confirmarClave;
+
+    return isSecure && passwordsMatch ? null : { notSecure: true };
+  }
+
+  // Método para evaluar si la contraseña es suficientemente segura
+  private isPasswordSecureEnough(password: string): boolean {
+    if (!password || password.length < 8) return false;
+
+    const criteria = {
+      length: password.length >= 8,
+      upperCase: /[A-Z]/.test(password),
+      lowerCase: /[a-z]/.test(password),
+      numbers: /[0-9]/.test(password),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+
+    // Requerir al menos 4 de 5 criterios
+    const criteriaMet = Object.values(criteria).filter(Boolean).length;
+    return criteriaMet >= 4;
   }
 
   constructor(
@@ -98,6 +154,12 @@ export class PerfilComponent implements OnInit, OnDestroy {
     // Listener para fortaleza de contraseña
     this.passwordForm.get('claveNueva')?.valueChanges.subscribe(value => {
       this.evaluarFortalezaPassword(value ?? '');
+      this.updatePasswordSecurityStatus(value ?? '');
+    });
+
+    // Listener para habilitar/deshabilitar el botón dinámicamente
+    this.passwordForm.valueChanges.subscribe(() => {
+      this.updateSubmitButtonState();
     });
 
     this.idUsuario = this.localStorage.getLocalStorage(Constantes.idusuarioKey);
@@ -117,6 +179,17 @@ export class PerfilComponent implements OnInit, OnDestroy {
     }
 
     this.cargarDatos();
+  }
+
+  //Actualizar estado de seguridad de la contraseña
+  private updatePasswordSecurityStatus(password: string): void {
+    this.isPasswordSecure = this.isPasswordSecureEnough(password);
+  }
+
+  //  Actualizar estado del botón de envío
+  private updateSubmitButtonState(): void {
+    // Esta función se ejecuta automáticamente con valueChanges
+    // El estado se controla mediante los validadores del formulario
   }
 
   cargarDatos(): void {
@@ -263,6 +336,12 @@ export class PerfilComponent implements OnInit, OnDestroy {
   }
 
   cambiarPassword(): void {
+    // Verificar que la contraseña sea segura antes de enviar
+    if (!this.isPasswordSecure) {
+      this.usermessage.getToastMessage('warning', 'La contraseña nueva no cumple con los criterios de seguridad requeridos').fire();
+      return;
+    }
+
     if (this.passwordForm.invalid || !this.idUsuario) {
       this.usermessage.getToastMessage('info', Constantes.formInvalidMessage).fire();
       return;
@@ -288,6 +367,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
                 this.usermessage.getToastMessage('success', Constantes.changePasswordMsg).fire();
                 this.passwordForm.reset();
                 this.mostrarCambioPassword = false;
+                this.passwordStrength = ''; // Resetear indicador de fortaleza
+                this.isPasswordSecure = false; // Resetear estado de seguridad
               } else {
                 this.usermessage.getToastMessage('error', resp.mensaje || Constantes.errorResponseMsg).fire();
               }
@@ -304,7 +385,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Métodos de fortaleza de contraseña (sin cambios)
+  // Métodos de fortaleza de contraseña (mejorados)
   evaluarFortalezaPassword(password: string): void {
     if (!password) {
       this.passwordStrength = '';
@@ -312,18 +393,19 @@ export class PerfilComponent implements OnInit, OnDestroy {
     }
 
     let strength = 0;
-    const length = password.length;
+    const criteria = {
+      length: password.length >= 8,
+      upperCase: /[A-Z]/.test(password),
+      lowerCase: /[a-z]/.test(password),
+      numbers: /[0-9]/.test(password),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
 
-    if (length >= 8) strength++;
-    if (length >= 12) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    strength = Object.values(criteria).filter(Boolean).length;
 
-    if (strength <= 2) {
+    if (strength <= 2 || password.length < 8) {
       this.passwordStrength = 'Débil';
-    } else if (strength <= 4) {
+    } else if (strength <= 3) {
       this.passwordStrength = 'Media';
     } else {
       this.passwordStrength = 'Fuerte';
@@ -340,6 +422,35 @@ export class PerfilComponent implements OnInit, OnDestroy {
         return 'password-strong';
       default:
         return '';
+    }
+  }
+
+  // Método para obtener mensajes de ayuda de contraseña
+  getPasswordRequirements(): string[] {
+    return [
+      'Mínimo 8 caracteres',
+      'Al menos una mayúscula',
+      'Al menos una minúscula', 
+      'Al menos un número',
+      'Al menos un carácter especial (!@#$%^&*)'
+    ];
+  }
+
+  // ✅ NUEVO: Verificar si se cumple un criterio específico
+  checkPasswordCriterion(password: string, criterion: string): boolean {
+    switch (criterion) {
+      case 'Mínimo 8 caracteres':
+        return password.length >= 8;
+      case 'Al menos una mayúscula':
+        return /[A-Z]/.test(password);
+      case 'Al menos una minúscula':
+        return /[a-z]/.test(password);
+      case 'Al menos un número':
+        return /[0-9]/.test(password);
+      case 'Al menos un carácter especial (!@#$%^&*)':
+        return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      default:
+        return false;
     }
   }
 

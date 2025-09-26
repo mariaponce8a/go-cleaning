@@ -39,19 +39,33 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
   ) { }
   tituloPorAccion: string = 'Formulario';
   hide: boolean = false;
+  esActualizacionPerfil: boolean = false;
 
   ngOnInit(): void {
     console.log(this.data);
+   // Determinar si es una actualización específica de perfil
+    this.esActualizacionPerfil = this.data.tipo === 'actualizar-perfil';
+    
     if (this.data.tipo == 'editar') {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
       this.form.patchValue(this.data.fila);
-      this.form.controls.clave.setValue("");
       this.form.controls.usuario.disable();
+      this.form.controls.usuario.disable();
+      this.form.controls.nombre.disable();
+      this.form.controls.apellido.disable();
+    } else if (this.esActualizacionPerfil) {
+      this.tituloPorAccion = 'Actualizar Perfil';
+      this.form.patchValue(this.data.fila);
+      // En actualización de perfil, solo el campo perfil debe ser editable
+      this.form.controls.usuario.disable();
+      this.form.controls.nombre.disable();
+      this.form.controls.apellido.disable();
+      this.form.controls.perfil.enable();
     } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
-      this.form.controls.usuario.enable();
-    }
+      this.form.controls.usuario.enable();    }
   }
+
 
   form = new FormGroup({
     id_usuario: new FormControl(''),
@@ -59,12 +73,8 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     nombre: new FormControl('', [Validators.required]),
     apellido: new FormControl('', [Validators.required]),
     perfil: new FormControl('', [Validators.required]),
-    clave: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[*.!])[A-Za-z\\d*.!]{8,15}$')]),
   })
 
-  hidePassword() {
-    this.hide = !this.hide; 
-  }
 
   cerrarModalSinInformacion(cerrar: boolean) {
     if (cerrar) {
@@ -76,19 +86,30 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     this.dialogRef.close('ok');
   }
 
-  editarUsuario(body: any) {
-    this.requestservice.put(body, Constantes.apiUpdateUser)
+  actualizarPerfilUsuario(body: any) {
+    // Preparar el body específico para actualización de perfil
+    const perfilBody = {
+      id_usuario: body.id_usuario,
+      nuevo_perfil: body.perfil
+    };
+
+    this.requestservice.put(perfilBody, Constantes.apiUpdateProfile)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (value) => {
-          this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
-          this.cerrarModalConInformacion();
+        next: (value: any) => {
+          if (value.respuesta === '1') {
+            this.usermessage.getToastMessage('success', 'Perfil actualizado correctamente').fire();
+            this.cerrarModalConInformacion();
+          } else {
+            this.usermessage.getToastMessage('error', value.mensaje || Constantes.errorResponseMsg).fire();
+          }
         },
         error: (error) => {
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
-      })
-  }
+      });
+    }
+
 
   crearUsuario(body: any) {
     this.requestservice.post(body, Constantes.apiCreateUser)
@@ -121,7 +142,7 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
         if (this.data.tipo == 'editar') {
-          this.editarUsuario(body);
+          this.actualizarPerfilUsuario(body);
         }
         else {
           this.crearUsuario(body);

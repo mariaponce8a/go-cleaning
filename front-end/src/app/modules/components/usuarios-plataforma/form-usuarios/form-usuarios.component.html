@@ -30,20 +30,6 @@
             }
         </mat-form-field>
 
-        <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Clave</mat-label>
-            <input matInput maxlength="15" [type]="hide ? 'text':'password'" placeholder="Clave"
-                formControlName="clave" />
-            <button type="button" mat-icon-button matSuffix (click)="hidePassword()"><mat-icon>{{
-                    hide?'visibility_off':'visibility'}}</mat-icon></button>
-            @if (this.form.controls.clave.hasError('required')) {
-            <mat-error>Clave requerida</mat-error>
-            }
-            @if (this.form.controls.clave.hasError('pattern')) {
-            <mat-error>Formato incorrecto <mat-icon
-                    matTooltip="Formato debe contener: Mayúsculas, minúsculas, números y minimo un caracter especial entre *.!">help_outline</mat-icon></mat-error>
-            }
-        </mat-form-field>
     </div>
 
     <div class="formGroupCont">

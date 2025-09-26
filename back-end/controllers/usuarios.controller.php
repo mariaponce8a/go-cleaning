@@ -33,7 +33,28 @@ class Usuarios_controller
         }
     }
 
-
+    public function getUserById($id_usuario)
+        {
+            error_log("--------------");
+            error_log("Obteniendo usuario por ID: " . $id_usuario);
+            
+            $usuarioModel = new usuarios_model();
+            
+            if ($id_usuario === null) {
+                return json_encode(array("respuesta" => "0", "mensaje" => "ID de usuario requerido"));
+            }
+            
+            $resultado = $usuarioModel->getUserById($id_usuario);
+            $resultado_decodificado = json_decode($resultado, true);
+            
+            error_log("----------RESULTADO GET USER BY ID DESDE CONTROLLER: " . $resultado);
+            
+            if ($resultado_decodificado['success'] == false) {
+                return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
+            } else {
+                return json_encode(array("respuesta" => "1", "mensaje" => "Usuario cargado con éxito", "data" => $resultado_decodificado['data']));
+            }
+        }
     public function insertUser($nombre, $apellido, $perfil, $usuario, $clave)
     {
         error_log("--------------");
@@ -56,28 +77,54 @@ class Usuarios_controller
         }
     }
 
+    public function updateUser ($id_usuario, $nombre, $apellido, $usuario, $clave_actual) {
+    error_log("-------------- Iniciando updateUser  con params directos");
+    
+    // Validación (ya hecha en route, pero por seguridad)
+    if (empty($nombre) || empty($apellido) || empty($usuario) || empty($clave_actual)) {
+        return array("respuesta" => "0", "mensaje" => "Campos requeridos faltantes en controlador.");
+    }
+    
+    $usuarioModel = new usuarios_model();
+    $resultado = $usuarioModel->actualizarUsuario($id_usuario, $nombre, $apellido, $usuario, $clave_actual);
+    
+    error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . json_encode($resultado));
+    
+    // Retorna array directamente (el route lo encodeará)
+    return $resultado;  // Asume que el modelo retorna ['respuesta' => '1', 'mensaje' => '...']
+}
 
-    public function updateUser($id, $nombre, $apellido, $perfil, $usuario, $clave)
+    public function updateUserProfile($id_usuario, $nuevo_perfil, $usuario_admin)
     {
-        error_log("--------------");
-        $usuarioModel = new usuarios_model();
-        error_log("------------------------------------------------------ id: " . $id . " nombre: " . $nombre . " apellido: " . $apellido . " perfil: " . $perfil . " usuario: " . $usuario . " clave: " . $clave);
-        if (
-            $id === null ||
-            $usuario === null  ||
-            $clave === null ||
-            $nombre === null  ||
-            $apellido === null ||
-            $perfil === null
-        ) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        error_log("-------------- Iniciando updateUserProfile");
+        error_log("ID Usuario a modificar: " . $id_usuario);
+        error_log("Nuevo perfil: " . $nuevo_perfil);
+        error_log("ID Administrador: " . $usuario_admin);
+        
+        // Validaciones básicas
+        if ($id_usuario === null || $nuevo_perfil === null || $usuario_admin === null) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Datos requeridos faltantes."));
         }
-        $resultado = $usuarioModel->actualizarUsuario($id, $nombre, $apellido, $perfil, $usuario, $clave);
-        error_log("----------RESULTADO UPDATE DESDE CONTROLLER: " . $resultado);
-        if ($resultado == false) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para actualizar el usuario"));
+        
+        // Validar que el perfil sea A o E
+        if (!in_array($nuevo_perfil, ['A', 'E'])) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Perfil no válido. Solo se permiten A (Administrador) o E (Empleado)."));
+        }
+        
+        $usuarioModel = new usuarios_model();
+        $resultado = $usuarioModel->actualizarPerfilUsuario($id_usuario, $nuevo_perfil, $usuario_admin);
+        $resultado_decodificado = json_decode($resultado, true);
+        
+        error_log("----------RESULTADO UPDATE PERFIL DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado_decodificado['success'] == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
         } else {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Usuario actualizado con éxito"));
+            return json_encode(array(
+                "respuesta" => "1", 
+                "mensaje" => "Perfil actualizado con éxito",
+                "data" => $resultado_decodificado['data']
+            ));
         }
     }
 
@@ -96,6 +143,45 @@ class Usuarios_controller
             return json_encode(array("respuesta" => "0", "mensaje" => "Problemas para eliminar el usuario"));
         } else {
             return json_encode(array("respuesta" => "1", "mensaje" => "Usuario eliminado con éxito"));
+        }
+    }
+
+
+    public function changePassword($id_usuario, $clave_actual, $clave_nueva, $confirmar_clave)
+    {
+        error_log("--------------");
+        $usuarioModel = new usuarios_model();
+        
+        if (
+            $id_usuario === null ||
+            $clave_actual === null ||
+            $clave_nueva === null ||
+            $confirmar_clave === null
+        ) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "Por favor complete todos los campos."));
+        }
+
+        // Validar que las contraseñas nuevas coincidan
+        if ($clave_nueva !== $confirmar_clave) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "La nueva contraseña y la confirmación no coinciden."));
+        }
+
+        // Validar longitud mínima
+        if (strlen($clave_nueva) < 6) {
+            return json_encode(array("respuesta" => "0", "mensaje" => "La nueva contraseña debe tener al menos 6 caracteres."));
+        }
+
+        error_log("------ Cambiando contraseña para usuario ID: " . $id_usuario);
+        
+        $resultado = $usuarioModel->cambiarClave($id_usuario, $clave_actual, $clave_nueva, $confirmar_clave);
+        $resultado_decodificado = json_decode($resultado, true);
+        
+        error_log("----------RESULTADO CAMBIO CONTRASEÑA DESDE CONTROLLER: " . $resultado);
+        
+        if ($resultado_decodificado['success'] == false) {
+            return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
+        } else {
+            return json_encode(array("respuesta" => "1", "mensaje" => "Contraseña actualizada con éxito"));
         }
     }
 }

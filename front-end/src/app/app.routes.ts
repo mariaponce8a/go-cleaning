@@ -20,6 +20,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./modules/components/home/tablas-home/tablas-home.component').then(c => c.TablasHomeComponent),
             },
             {
+                path: 'perfil',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('./modules/components/perfil/perfil.component').then(c => c.PerfilComponent),
+            },
+            {
                 path: 'facturas-del-servicio',
                 canActivate: [AuthGuard],
                 loadComponent: () => import('./modules/components/facturacion/facturas-preparadas/facturas-preparadas.component').then(c => c.FacturasPreparadasComponent)

@@ -1,0 +1,647 @@
+/* Reset y Globales */
+* {
+  box-sizing: border-box;
+}
+
+.perfil-container {
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: calc(100vh - 120px);
+}
+
+.perfil-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Tarjeta principal del perfil */
+.profile-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondaryDark) 100%);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 1;
+}
+
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.avatar-icon {
+  font-size: 60px !important;
+  width: 60px !important;
+  height: 60px !important;
+  color: white;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.status-badge.admin {
+  background: rgba(255, 193, 7, 0.9);
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.status-badge.employee {
+  background: rgba(40, 167, 69, 0.9);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.profile-actions {
+  z-index: 1;
+}
+
+.edit-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.05);
+}
+
+/* Información del perfil */
+.profile-info {
+  padding: 30px 40px 0;
+  text-align: center;
+}
+
+.welcome-text h2 {
+  font-size: 2.5rem;
+  color: var(--secondary);
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.welcome-text .subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Formulario */
+.profile-form-section {
+  padding: 20px 40px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 0 !important;
+}
+
+.mat-mdc-form-field-outline {
+  border-radius: 12px !important;
+}
+
+.mat-mdc-form-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  transition: all 0.3s ease;
+}
+
+.mat-mdc-form-field:not(.mdc-text-field--disabled) .mdc-text-field__input[readonly] {
+  background: #f8f9fa;
+  cursor: default;
+}
+
+/* ✅ Estilos para Sección de Verificación (Globales) */
+.verification-section {
+  margin: 20px 40px;  /* Alineado con padding del form */
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);  /* Usa variable de color */
+  animation: slideInDown 0.3s ease-out;  /* Animación suave de aparición */
+  transition: all 0.3s ease;
+}
+
+.verification-section:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.verification-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.verification-icon {
+  color: var(--primary);
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.verification-header h4 {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.verification-text {
+  margin: 0 0 12px 0;
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.verification-form {
+  margin-top: 8px;
+}
+
+.verification-form .mat-mdc-form-field {
+  background: white;  /* Fondo blanco para resaltar en el contenedor gris */
+}
+
+/* Botones de acción */
+.action-buttons,
+.edit-buttons {
+  padding: 30px 40px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 14px 28px !important;
+  border-radius: 25px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 180px !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  color: white !important;
+}
+
+.action-btn.cancel {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+  color: white !important;
+}
+
+/* Tarjetas de información adicional */
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.info-card-header mat-icon {
+  color: var(--secondary);
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.info-card-header h3 {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.info-card-content p {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.timestamp,
+.security-status {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.security-status {
+  color: #28a745;
+  font-weight: 600;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  color: var(--secondary);
+  font-size: 1.1rem;
+}
+
+.loading-container mat-spinner {
+  margin-bottom: 16px;
+}
+
+/* Tarjeta de cambio de contraseña */
+.password-card {
+  margin-top: 20px;
+  animation: slideInUp 0.3s ease-out;
+}
+
+.password-card-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primaryDark) 100%);
+  padding: 30px 40px;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.password-card-header::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.header-icon {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.password-card-header h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-subtitle {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* Formulario de contraseña */
+.password-form {
+  padding: 30px 40px 20px;
+}
+
+.password-grid {
+  grid-template-columns: 1fr;
+  gap: 25px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.password-item {
+  position: relative;
+}
+
+.prefix-icon {
+  color: var(--primary) !important;
+  margin-right: 8px;
+}
+
+.visibility-toggle {
+  color: #6c757d !important;
+  transition: color 0.3s ease;
+}
+
+.visibility-toggle:hover {
+  color: var(--primary) !important;
+}
+
+/* Indicador de fortaleza de contraseña */
+.password-strength {
+  padding: 0 40px 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.strength-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.strength-value {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.strength-value.password-weak {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.strength-value.password-medium {
+  color: #fd7e14;
+  background: rgba(253, 126, 20, 0.1);
+}
+
+.strength-value.password-strong {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.strength-bar {
+  width: 100%;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.strength-progress {
+  height: 100%;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  width: 0%;
+}
+
+.strength-progress.password-weak {
+  background: #dc3545;
+  width: 25%;
+}
+
+.strength-progress.password-medium {
+  background: #fd7e14;
+  width: 50%;
+}
+
+.strength-progress.password-strong {
+  background: #28a745;
+  width: 100%;
+}
+
+/* Botones de contraseña */
+.password-actions {
+  padding-top: 10px;
+  border-top: 1px solid #e9ecef;
+  margin: 0 40px 30px;
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de validación */
+.mat-mdc-form-field.mat-form-field-invalid .prefix-icon {
+  color: #dc3545 !important;
+}
+
+.mat-mdc-form-field.mat-form-field-valid .prefix-icon {
+  color: #28a745 !important;
+}
+
+/* Responsive (Global) */
+@media (max-width: 768px) {
+  .perfil-container {
+    padding: 15px;
+  }
+
+  .profile-header {
+    padding: 30px 20px;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-icon {
+    font-size: 50px !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .profile-info,
+  .profile-form-section,
+  .action-buttons,
+  .edit-buttons {
+    padding: 20px;
+  }
+
+  .welcome-text h2 {
+    font-size: 2rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons,
+  .edit-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-btn {
+    min-width: unset !important;
+    width: 100%;
+  }
+
+  /* Responsive para Verificación */
+  .verification-section {
+    margin: 15px 20px;
+    padding: 16px;
+  }
+
+  .verification-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .verification-text {
+    font-size: 13px;
+  }
+
+  /* Responsive para Password Card */
+  .password-card-header {
+    padding: 25px 20px;
+  }
+  
+  .password-form {
+    padding: 20px;
+  }
+  
+  .password-strength {
+    padding: 0 20px 15px;
+  }
+  
+  .password-actions {
+    margin: 0 20px 25px;
+    flex-direction: column;
+  }
+  
+  .password-actions .action-btn {
+    width: 100%;
+  }
+
+  .header-icon {
+    font-size: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 20px 15px;
+  }
+
+  .welcome-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .avatar-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* Responsive para Password Card en Mobile Pequeño */
+  .password-card-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .verification-section {
+    margin: 10px 15px;
+    padding: 12px;
+  }
+
+  .verification-header h4 {
+    font-size: 1rem;
+  }
+}

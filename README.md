@@ -61,9 +61,5 @@ Las contribuciones son bienvenidas ✨.
    https://www.conventionalcommits.org/
 4. Envía un Pull Request describiendo los cambios.
 
-Lee la Guía de Contribución en /docs/CONTRIBUTING.md para más detalles.
 
-📜 Licencia
------------
-Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más información.
 

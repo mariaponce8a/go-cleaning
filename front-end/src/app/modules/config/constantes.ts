@@ -14,9 +14,14 @@ export class Constantes {
   public static perfilKey: string = 'perfilvalue';
   public static env = EnvironmentData.globalUrl;
 
-  // Nuevo endpoint para cambio de contraseña (ajusta la ruta si tu controlador usa otra)
+  // APIS CAMBIO DE CONTRASEÑA
   public static apiChangePassword: string =
-    this.env.host + this.env.name + '/cambiarClave';  // Llama a tu método cambiarClave en el modelo
+    this.env.host + this.env.name + '/cambiarClave';  
+  public static apiSetInitialPassword: string = 
+  this.env.host + this.env.name + '/establecerClaveInicial'; 
+  public static apiRequestPasswordReset: string = 
+    this.env.host + this.env.name + '/solicitarRecuperacion';
+ 
 
   // mensajes generales
   public static messageGeneral: string =
@@ -41,6 +46,11 @@ export class Constantes {
     // Nuevos mensajes para cambio de contraseña
   public static changePasswordMsg: string = 'Contraseña actualizada con éxito';
   public static changePasswordQuestion: string = '¿Está seguro que desea cambiar la contraseña?';
+  public static firstLoginMsg: string = 'Debe establecer una contraseña permanente para continuar';
+  public static passwordResetRequestMsg: string = 'Código de verificación enviado a su email';
+  public static passwordResetSuccessMsg: string = 'Contraseña restablecida exitosamente';
+  public static otpExpiredMsg: string = 'El código de verificación ha expirado';
+  public static temporaryPasswordMsg: string = 'Usuario creado. Credenciales enviadas por email';
   
   //labels generales
   public static modalHeaderMensajeEditar: string = 'Formulario edición'
@@ -49,7 +59,8 @@ export class Constantes {
 
 
   //----------- APIS SEGURIDAD
-  public static apiLogin: string = this.env.host + this.env.name + '/login';
+  public static apiLogin: string = 
+  this.env.host + this.env.name + '/login';
   //----------- APIS USUARIO PLATAFORMA
   public static apiGetAllUsers: string =
     this.env.host + this.env.name + '/consultarUsuarios';

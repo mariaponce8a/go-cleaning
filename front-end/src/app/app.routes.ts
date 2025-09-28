@@ -30,6 +30,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./modules/components/facturacion/facturas-preparadas/facturas-preparadas.component').then(c => c.FacturasPreparadasComponent)
             },
             {
+                path: 'cambiar-password-obligatorio',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('./modules/components/cambiar-password-obligatorio/cambiar-password-obligatorio.component').then(c => c.CambiarPasswordObligatorioComponent)
+            },
+            {
                 path: 'facturas',
                 canActivate: [AuthGuard],
                 loadComponent: () => import('./modules/components/facturacion/listado-pedidos-facturar/listado-pedidos-facturar.component').then(c => c.ListadoPedidosFacturarComponent),

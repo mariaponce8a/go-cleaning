@@ -1,5 +1,7 @@
 <?php
 require_once('./back-end/config/conexion.php');    
+require_once('./back-end/utils/EmailService.php');
+
  
 
 class usuarios_model
@@ -11,23 +13,43 @@ class usuarios_model
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
             $clave_cifrada_ingresada = hash('sha256', $clave);
-            $consulta = "SELECT * FROM tb_usuarios_plataforma where usuario = ? and clave = ?";
+            $consulta = "SELECT * FROM tb_usuarios_plataforma WHERE usuario = ? AND clave = ?";
             $stmt = $conexion->prepare($consulta);
             $stmt->bind_param("ss", $usuario, $clave_cifrada_ingresada);
-
             if ($stmt->execute()) {
                 $resultado = $stmt->get_result();
-                // error_log( $resultado);
+                
                 if ($resultado->num_rows > 0) {
                     $data_nav_token = $resultado->fetch_assoc();
-                    return json_encode(array("perfil" => $data_nav_token['perfil'], "usuario" => $data_nav_token['usuario'], "id_usuario" => $data_nav_token['id_usuario']));
+                    
+                    // MANEJO CORRECTO DE primer_inicio (puede ser NULL)
+                    $primer_inicio = $data_nav_token['primer_inicio'];
+                    
+                    if ($primer_inicio === null) {
+                        $primer_inicio = 0; // O 1
+                    }
+                    
+                    // Asegurarse de que es un integer
+                    $primer_inicio = (int)$primer_inicio;
+                    
+                    error_log("🔐 Login exitoso - Usuario: {$usuario}, Primer inicio: {$primer_inicio}");
+                    
+                    // Devolver JSON con datos
+                    return json_encode(array(
+                        "perfil" => $data_nav_token['perfil'], 
+                        "usuario" => $data_nav_token['usuario'], 
+                        "id_usuario" => $data_nav_token['id_usuario'],
+                        "primer_inicio" => $primer_inicio, 
+                        "nombre" => $data_nav_token['nombre'],
+                        "apellido" => $data_nav_token['apellido']
+                    ));
                 } else {
                     throw new Exception("Usuario o clave incorrectos.");
-                }
+    }
             }
         } catch (Exception $e) {
             error_log("Error en login desde modelo: " . $e->getMessage());
-            return $e->getMessage();
+            return json_encode(array("error" => $e->getMessage()));
         } finally {
             if (isset($conexion)) {
                 $conexion->close();
@@ -35,12 +57,12 @@ class usuarios_model
         }
     }
 
-    public function getAllUsers()
+   public function getAllUsers()
     {
         try {
             $con = new Clase_Conectar();
             $conexion = $con->Procedimiento_Conectar();
-            $query = "select * from tb_usuarios_plataforma";
+            $query = "select id_usuario, usuario, nombre, apellido, perfil, email, cuenta_verificada, primer_inicio from tb_usuarios_plataforma";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {
@@ -50,7 +72,6 @@ class usuarios_model
                 while ($fila = mysqli_fetch_assoc($exeResult)) {
                     $users[] = $fila;
                 }
-
                 return json_encode($users);
             }
         } catch (Exception $e) {
@@ -63,6 +84,7 @@ class usuarios_model
         }
     }
 
+   
     public function getUserById($id_usuario)
 {
     try {
@@ -70,7 +92,7 @@ class usuarios_model
         $conexion = $con->Procedimiento_Conectar();
         
         // Consulta para obtener los datos del usuario sin incluir la contraseña
-        $query = "SELECT id_usuario, usuario, nombre, apellido, perfil FROM tb_usuarios_plataforma WHERE id_usuario = ?";
+        $query = "SELECT id_usuario, usuario, nombre, apellido, email, perfil FROM tb_usuarios_plataforma WHERE id_usuario = ?";
         $stmt = $conexion->prepare($query);
         $stmt->bind_param("i", $id_usuario);
 
@@ -103,34 +125,7 @@ class usuarios_model
     }
 }
 
-    public function registrarUsuario($nombre, $apellido, $perfil, $usuario, $clave)
-    {
-        try {
-            $con = new Clase_Conectar();
-            $conexion = $con->Procedimiento_Conectar();
-            $clave_cifrada_ingresada = hash('sha256', $clave);
-            $query = "insert into tb_usuarios_plataforma (usuario, nombre, apellido, perfil, clave) values (?,?,?,?,?);";
-            $stmt = $conexion->prepare($query);
-            $stmt->bind_param("sssss", $usuario, $nombre, $apellido, $perfil, $clave_cifrada_ingresada);
-
-            if ($stmt->execute()) {   
-                $resultado = $stmt->get_result();
-                error_log("?????????????????????RESULTADO INSERT DESDE MODEL " . $resultado);
-                return true;
-            } else {
-                throw new Exception("Problemas al registrar el usuario");
-            }
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return false;
-        } finally {
-            if (isset($conexion)) {
-                $conexion->close();
-            }    
-        }
-    } 
-
-   public function actualizarUsuario($id, $nombre, $apellido, $usuario, $clave_actual = null) {  // $perfil y $clave removidos o opcionales
+   public function actualizarUsuario($id, $nombre, $apellido, $usuario, $email, $clave_actual = null) {  // $perfil y $clave removidos o opcionales
     try {
         $con = new Clase_Conectar();
         $conexion = $con->Procedimiento_Conectar();
@@ -138,7 +133,7 @@ class usuarios_model
         // Primero, obtener datos actuales del usuario para verificar clave y perfil
         $query_select = "SELECT clave, perfil FROM tb_usuarios_plataforma WHERE id_usuario = ?";
         $stmt_select = $conexion->prepare($query_select);
-        $stmt_select->bind_param("i", $id);  // Asumiendo id es int
+        $stmt_select->bind_param("i", $id);  
         $stmt_select->execute();
         $result = $stmt_select->get_result();
         
@@ -163,9 +158,9 @@ class usuarios_model
         }
         
         // Query de actualización: Solo actualiza nombre, apellido, usuario. Mantiene clave y perfil
-        $query = "UPDATE tb_usuarios_plataforma SET usuario = ?, nombre = ?, apellido = ? WHERE id_usuario = ?";
+        $query = "UPDATE tb_usuarios_plataforma SET usuario = ?, nombre = ?, apellido = ?, email = ? WHERE id_usuario = ?";
         $stmt = $conexion->prepare($query);
-        $stmt->bind_param("sssi", $usuario, $nombre, $apellido, $id);  // "sssi" para strings y int
+        $stmt->bind_param("ssssi", $usuario, $nombre, $apellido, $email, $id);  
 
         if ($stmt->execute()) {
             error_log("Usuario actualizado exitosamente: ID $id");
@@ -209,7 +204,6 @@ class usuarios_model
             }
         }
     }
-
 
     public function cambiarClave($id_usuario, $clave_actual, $clave_nueva, $confirmar_clave)
     {
@@ -363,4 +357,286 @@ class usuarios_model
             }
         }
     }
+
+    public function registrarUsuario($nombre, $apellido, $perfil, $usuario, $email)
+{
+    try {
+        $con = new Clase_Conectar();
+        $conexion = $con->Procedimiento_Conectar();
+        
+        // Verificar si el usuario o email ya existen
+        $consulta_verificar = "SELECT id_usuario FROM tb_usuarios_plataforma WHERE usuario = ? OR email = ?";
+        $stmt_verificar = $conexion->prepare($consulta_verificar);
+        $stmt_verificar->bind_param("ss", $usuario, $email);
+        
+        if ($stmt_verificar->execute()) {
+            $resultado_verificar = $stmt_verificar->get_result();
+            if ($resultado_verificar->num_rows > 0) {
+                throw new Exception("El usuario o email ya existe.");
+            }
+        }
+        
+        // Generar contraseña temporal
+        $clave_temporal = $this->generarClaveAleatoria(8);
+        $clave_temporal_cifrada = hash('sha256', $clave_temporal);
+        
+        // También cifrar la misma clave temporal para el campo 'clave'
+        $clave_cifrada = $clave_temporal_cifrada;
+        
+        $expiracion = date('Y-m-d H:i:s', strtotime('+24 hours')); // Expira en 24 horas
+        
+        // CORREGIR: Incluir el campo 'clave' en la consulta
+        $query = "INSERT INTO tb_usuarios_plataforma (usuario, nombre, apellido, perfil, email, clave, clave_temporal, clave_temporal_expiracion, primer_inicio, cuenta_verificada) VALUES (?,?,?,?,?,?,?,?,1,1)";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param("ssssssss", $usuario, $nombre, $apellido, $perfil, $email, $clave_cifrada, $clave_temporal_cifrada, $expiracion);
+
+        if ($stmt->execute()) {
+            // Enviar email con contraseña temporal
+            $emailService = new EmailService();
+            $subject = "Bienvenido - Credenciales de acceso temporales";
+            $message = "
+            <h2>Bienvenido al sistema</h2>
+            <p>Se ha creado una cuenta para usted con las siguientes credenciales temporales:</p>
+            <p><strong>Usuario:</strong> {$usuario}</p>
+            <p><strong>Contraseña temporal:</strong> {$clave_temporal}</p>
+            <p><strong>Esta contraseña expira en 24 horas.</strong></p>
+            <p>Por seguridad, deberá cambiar su contraseña en el primer inicio de sesión.</p>
+            <p>Acceda al sistema lo antes posible.</p>
+            ";
+            
+            $emailSent = $emailService->enviarEmail($email, $subject, $message);
+            
+            if (!$emailSent) {
+                error_log("Error al enviar email de bienvenida a: " . $email);
+            }
+            
+            return true;
+        } else {
+            throw new Exception("Problemas al registrar el usuario: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return $e->getMessage();
+    } finally {
+        if (isset($conexion)) {
+            $conexion->close();
+        }    
+    }
+}
+
+    // Cambio de contraseña para primer inicio 
+    public function cambiarClaveInicial($id_usuario, $clave_temporal, $nueva_clave, $confirmar_clave)
+{
+    try {
+        if ($nueva_clave !== $confirmar_clave) {
+            throw new Exception("La nueva contraseña y la confirmación no coinciden.");
+        }
+
+        if (strlen($nueva_clave) < 6) {
+            throw new Exception("La nueva contraseña debe tener al menos 6 caracteres.");
+        }
+
+        $con = new Clase_Conectar();
+        $conexion = $con->Procedimiento_Conectar();
+        
+        // Verificar contraseña temporal
+        $clave_temporal_cifrada = hash('sha256', $clave_temporal);
+        $consulta_verificar = "SELECT id_usuario FROM tb_usuarios_plataforma WHERE id_usuario = ? AND clave_temporal = ? AND clave_temporal_expiracion > NOW()";
+        $stmt_verificar = $conexion->prepare($consulta_verificar);
+        $stmt_verificar->bind_param("is", $id_usuario, $clave_temporal_cifrada);
+        
+        if ($stmt_verificar->execute()) {
+            $resultado = $stmt_verificar->get_result();
+            
+            if ($resultado->num_rows === 0) {
+                throw new Exception("La contraseña temporal es incorrecta o ha expirado.");
+            }
+            
+            //Actualizar con nueva contraseña y marcar primer_inicio como completado
+            $nueva_clave_cifrada = hash('sha256', $nueva_clave);
+            $query_actualizar = "UPDATE tb_usuarios_plataforma SET 
+                                clave = ?, 
+                                clave_temporal = NULL, 
+                                clave_temporal_expiracion = NULL, 
+                                primer_inicio = 0  -- AQUÍ SE ACTUALIZA A 0
+                                WHERE id_usuario = ?";
+            $stmt_actualizar = $conexion->prepare($query_actualizar);
+            $stmt_actualizar->bind_param("si", $nueva_clave_cifrada, $id_usuario);
+            
+            if ($stmt_actualizar->execute()) {
+                return json_encode(array("success" => true, "message" => "Contraseña establecida exitosamente."));
+            } else {
+                throw new Exception("Error al establecer la nueva contraseña.");
+            }
+            
+        } else {
+            throw new Exception("Error al verificar la contraseña temporal.");
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error al cambiar contraseña inicial: " . $e->getMessage());
+        return json_encode(array("success" => false, "message" => $e->getMessage()));
+    } finally {
+        if (isset($conexion)) {
+            $conexion->close();
+        }
+    }
+}
+    // Solicitar recuperación de contraseña por OTP
+    public function solicitarRecuperacionClave($email_o_usuario)
+    {
+        try {
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            
+            // Buscar usuario por email o nombre de usuario
+            $consulta = "SELECT id_usuario, email, usuario FROM tb_usuarios_plataforma WHERE email = ? OR usuario = ?";
+            $stmt = $conexion->prepare($consulta);
+            $stmt->bind_param("ss", $email_o_usuario, $email_o_usuario);
+            
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                
+                if ($resultado->num_rows === 0) {
+                    throw new Exception("No se encontró ninguna cuenta asociada con esa información.");
+                }
+                
+                $usuario_data = $resultado->fetch_assoc();
+                
+                // Generar OTP de 6 dígitos
+                $otp = sprintf("%06d", mt_rand(0, 999999));
+                $otp_expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes')); // Expira en 15 minutos
+                
+                // Actualizar OTP en la base de datos
+                $query_otp = "UPDATE tb_usuarios_plataforma SET otp = ?, otp_expiracion = ? WHERE id_usuario = ?";
+                $stmt_otp = $conexion->prepare($query_otp);
+                $stmt_otp->bind_param("ssi", $otp, $otp_expiracion, $usuario_data['id_usuario']);
+                
+                if ($stmt_otp->execute()) {
+                    // Enviar OTP por email
+                    $emailService = new EmailService();
+                    $subject = "Código de recuperación de contraseña";
+                    $message = "
+                    <h2>Recuperación de contraseña</h2>
+                    <p>Ha solicitado recuperar su contraseña.</p>
+                    <p><strong>Su código de verificación es:</strong> <span style='font-size:24px; font-weight:bold; color:#007bff;'>{$otp}</span></p>
+                    <p>Este código expira en 15 minutos.</p>
+                    <p>Si no solicitó este código, ignore este mensaje.</p>
+                    ";
+                    
+                    $emailSent = $emailService->enviarEmail($usuario_data['email'], $subject, $message);
+                    
+                    if ($emailSent) {
+                        return json_encode(array(
+                            "success" => true, 
+                            "message" => "Código de verificación enviado al email registrado.",
+                            "masked_email" => $this->enmascararEmail($usuario_data['email'])
+                        ));
+                    } else {
+                        throw new Exception("Error al enviar el código de verificación.");
+                    }
+                    
+                } else {
+                    throw new Exception("Error al generar el código de verificación.");
+                }
+                
+            } else {
+                throw new Exception("Error al buscar la cuenta.");
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error en solicitar recuperación: " . $e->getMessage());
+            return json_encode(array("success" => false, "message" => $e->getMessage()));
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+    // Verificar OTP y permitir cambio de contraseña
+    public function verificarOTPyResetearClave($email_o_usuario, $otp, $nueva_clave, $confirmar_clave)
+    {
+        try {
+            if ($nueva_clave !== $confirmar_clave) {
+                throw new Exception("La nueva contraseña y la confirmación no coinciden.");
+            }
+
+            if (strlen($nueva_clave) < 6) {
+                throw new Exception("La nueva contraseña debe tener al menos 6 caracteres.");
+            }
+
+            $con = new Clase_Conectar();
+            $conexion = $con->Procedimiento_Conectar();
+            
+            // Verificar OTP
+            $consulta = "SELECT id_usuario, email FROM tb_usuarios_plataforma WHERE (email = ? OR usuario = ?) AND otp = ? AND otp_expiracion > NOW()";
+            $stmt = $conexion->prepare($consulta);
+            $stmt->bind_param("sss", $email_o_usuario, $email_o_usuario, $otp);
+            
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                
+                if ($resultado->num_rows === 0) {
+                    throw new Exception("Código de verificación incorrecto o expirado.");
+                }
+                
+                $usuario_data = $resultado->fetch_assoc();
+                
+                // Actualizar contraseña y limpiar OTP
+                $nueva_clave_cifrada = hash('sha256', $nueva_clave);
+                $query_reset = "UPDATE tb_usuarios_plataforma SET clave = ?, otp = NULL, otp_expiracion = NULL, clave_temporal = NULL, clave_temporal_expiracion = NULL WHERE id_usuario = ?";
+                $stmt_reset = $conexion->prepare($query_reset);
+                $stmt_reset->bind_param("si", $nueva_clave_cifrada, $usuario_data['id_usuario']);
+                
+                if ($stmt_reset->execute()) {
+                    // Notificar por email del cambio de contraseña
+                    $emailService = new EmailService();
+                    $subject = "Contraseña restablecida exitosamente";
+                    $message = "
+                    <h2>Contraseña restablecida</h2>
+                    <p>Su contraseña ha sido restablecida exitosamente.</p>
+                    <p>Si no realizó esta acción, contacte al administrador inmediatamente.</p>
+                    <p>Fecha: " . date('Y-m-d H:i:s') . "</p>
+                    ";
+                    
+                    $emailService->enviarEmail($usuario_data['email'], $subject, $message);
+                    
+                    return json_encode(array("success" => true, "message" => "Contraseña restablecida exitosamente."));
+                } else {
+                    throw new Exception("Error al restablecer la contraseña.");
+                }
+                
+            } else {
+                throw new Exception("Error al verificar el código.");
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error en verificar OTP y resetear: " . $e->getMessage());
+            return json_encode(array("success" => false, "message" => $e->getMessage()));
+        } finally {
+            if (isset($conexion)) {
+                $conexion->close();
+            }
+        }
+    }
+
+    // Funciones auxiliares
+    private function generarClaveAleatoria($longitud = 8)
+    {
+        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        return substr(str_shuffle($caracteres), 0, $longitud);
+    }
+
+    private function enmascararEmail($email)
+    {
+        $partes = explode('@', $email);
+        $usuario = $partes[0];
+        $dominio = $partes[1];
+        
+        $usuario_enmascarado = substr($usuario, 0, 2) . str_repeat('*', strlen($usuario) - 2);
+        return $usuario_enmascarado . '@' . $dominio;
+    }
+
+ 
 }

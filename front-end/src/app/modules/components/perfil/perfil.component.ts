@@ -20,6 +20,7 @@ export interface IUsuarioPerfil {
   usuario: string;
   nombre: string;
   apellido: string;
+  email?: string;
   perfil: string;
 }
 
@@ -58,25 +59,26 @@ export class PerfilComponent implements OnInit, OnDestroy {
   hideConfirmar = true;
 
   passwordStrength: string = '';
-  isPasswordSecure: boolean = false; // Nueva propiedad para controlar si la contraseña es segura
+  isPasswordSecure: boolean = false; // propiedad para controlar si la contraseña es segura
 
-  //SEPARAR FORMULARIOS - Formulario principal para datos del perfil
+  //Formulario principal para datos del perfil
   perfilForm = new FormGroup({
     id_usuario: new FormControl(''),
     usuario: new FormControl({ value: '', disabled: true }, [Validators.required]),
     nombre: new FormControl('', [Validators.required, Validators.minLength(2)]),
     apellido: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email]),
     perfil: new FormControl({ value: '', disabled: true })
   });
 
-  // FORMULARIO SEPARADO para cambio de contraseña
+  // Form  para cambio de contraseña
   passwordForm = new FormGroup({
     claveActual: new FormControl('', [Validators.required, Validators.minLength(6)]),
     claveNueva: new FormControl('', [Validators.required, Validators.minLength(8), this.securePasswordValidator]), // Aumentado a 8 y agregado validador
     confirmarClave: new FormControl('', [Validators.required])
   }, { validators: [this.passwordMatchValidator, this.securePasswordFormValidator] }); // Agregado validador de formulario
 
-  // FORMULARIO SEPARADO para verificación de edición
+  // Form para verificación de edición
   verificationForm = new FormGroup({
     claveActual: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
@@ -188,7 +190,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   //  Actualizar estado del botón de envío
   private updateSubmitButtonState(): void {
-    // Esta función se ejecuta automáticamente con valueChanges
     // El estado se controla mediante los validadores del formulario
   }
 
@@ -208,7 +209,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
           console.log('Respuesta perfil:', resp);
           if (resp.respuesta === '1' && resp.data) {
             this.usuarioData = resp.data;
-            this.originalData = { ...resp.data }; // Guardar copia para cancelar
+            this.originalData = { ...resp.data }; 
             this.actualizarFormulario(resp.data);
           } else {
             this.usermessage.getToastMessage('error', resp.mensaje || Constantes.messageGeneral).fire();
@@ -241,6 +242,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       usuario: usuario.usuario,
       nombre: usuario.nombre,
       apellido: usuario.apellido,
+      email: usuario.email,
       perfil: this.perfilPersonaDesc
     });
   }
@@ -252,6 +254,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       // Habilitar edición
       this.perfilForm.controls.nombre.enable();
       this.perfilForm.controls.apellido.enable();
+      this.perfilForm.controls.email.enable();
       this.perfilForm.controls.usuario.enable();
       this.mostrarVerificacion = false;
       this.verificationForm.reset(); // Limpiar formulario de verificación
@@ -263,6 +266,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       this.perfilForm.controls.nombre.disable();
       this.perfilForm.controls.apellido.disable();
       this.perfilForm.controls.usuario.disable();
+      this.perfilForm.controls.email.disable();
       this.mostrarVerificacion = false;
       this.verificationForm.reset();
     }
@@ -291,6 +295,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       nombre: this.perfilForm.value.nombre,
       apellido: this.perfilForm.value.apellido,
       usuario: this.perfilForm.getRawValue().usuario ?? '',
+      email: this.perfilForm.getRawValue().email ?? '',
       clave_actual: this.verificationForm.value.claveActual // ✅ Usar verificationForm
     };
 
@@ -312,6 +317,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
                   usuario: this.perfilForm.getRawValue().usuario ?? '',
                   nombre: this.perfilForm.getRawValue().nombre ?? '',
                   apellido: this.perfilForm.getRawValue().apellido ?? '',
+                  email: this.perfilForm.getRawValue().email ?? '',
                   perfil: this.perfilForm.getRawValue().perfil ?? ''
                 };
                 
@@ -385,7 +391,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Métodos de fortaleza de contraseña (mejorados)
+  // Métodos de fortaleza de contraseña
   evaluarFortalezaPassword(password: string): void {
     if (!password) {
       this.passwordStrength = '';
@@ -436,7 +442,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     ];
   }
 
-  // ✅ NUEVO: Verificar si se cumple un criterio específico
+  // Verificar si se cumple un criterio específico
   checkPasswordCriterion(password: string, criterion: string): boolean {
     switch (criterion) {
       case 'Mínimo 8 caracteres':

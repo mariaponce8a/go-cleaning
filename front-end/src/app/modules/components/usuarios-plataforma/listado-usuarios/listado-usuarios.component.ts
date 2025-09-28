@@ -43,6 +43,10 @@ export class ListadoUsuariosComponent implements OnInit, OnDestroy {
       viewValue: "Apellido"
     },
     {
+      value: "email",
+      viewValue: "Email"
+    },
+    {
       value: "perfil",
       viewValue: "Perfil"
     },

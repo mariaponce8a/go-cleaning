@@ -76,6 +76,18 @@
               </mat-form-field>
             </div>
 
+            <!-- Campo Email -->
+            <div class="form-item">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Usuario</mat-label>
+                <input matInput formControlName="email" [readonly]="!isEditMode">
+                <mat-icon matPrefix>account_circle</mat-icon>
+                <mat-error *ngIf="perfilForm.get('usuario')?.hasError('required')">
+                  El usuario es requerido
+                </mat-error>
+              </mat-form-field>
+            </div>
+
             <!-- Campo Perfil -->
             <div class="form-item">
               <mat-form-field appearance="outline" class="full-width">
@@ -88,7 +100,7 @@
         </form>
       </div>
 
-      <!-- ✅ SECCIÓN DE VERIFICACIÓN CORREGIDA -->
+      <!-- SECCIÓN DE VERIFICACIÓN  -->
       <div class="verification-section" *ngIf="isEditMode && mostrarVerificacion">
         <div class="verification-header">
           <mat-icon class="verification-icon">security</mat-icon>
@@ -130,7 +142,7 @@
         </button>
       </div>
 
-      <!-- ✅ BOTONES DE EDICIÓN MEJORADOS -->
+      <!--BOTONES DE EDICIÓN  -->
       <div class="edit-buttons" *ngIf="isEditMode">
         <button mat-raised-button 
                 color="primary" 

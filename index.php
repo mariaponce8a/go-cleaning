@@ -81,6 +81,7 @@ function getValidToken()
 
     return $respuesta_token;
 }
+
 Flight::before('start', function () {
     error_log("Settings default headers");
 
@@ -126,6 +127,47 @@ Flight::route('POST /login', function () {
     }
 });
 
+// Establecer contraseña inicial 
+Flight::route('PUT /establecerClaveInicial', function () {
+    // QUITAR la verificación de token - esta ruta debe ser pública
+    $user_controller = new Usuarios_controller();
+    $body = Flight::request()->getBody();
+    $data = json_decode($body, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Datos JSON inválidos"));
+        return;
+    }
+
+    $id_usuario = $data['id_usuario'] ?? null;
+    $clave_temporal = $data['clave_temporal'] ?? null;
+    $nueva_clave = $data['nueva_clave'] ?? null;
+    $confirmar_clave = $data['confirmar_clave'] ?? null;
+
+    $respuesta = $user_controller->setInitialPassword($id_usuario, $clave_temporal, $nueva_clave, $confirmar_clave);
+    echo $respuesta;
+});
+
+// Solicitar recuperación de contraseña 
+Flight::route('POST /solicitarRecuperacion', function () {
+    // QUITAR la verificación de token - esta ruta debe ser pública
+    $user_controller = new Usuarios_controller();
+    $body = Flight::request()->getBody();
+    $data = json_decode($body, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Datos JSON inválidos"));
+        return;
+    }
+
+    $email_o_usuario = $data['email_o_usuario'] ?? null;
+
+    $respuesta = $user_controller->requestPasswordReset($email_o_usuario);
+    echo $respuesta;
+});
+
 Flight::route('POST /registrarUsuario', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera !== false) {
@@ -134,13 +176,13 @@ Flight::route('POST /registrarUsuario', function () {
         $data = json_decode($body, true);
 
         $usuario = $data['usuario'] ?? null;
-        $clave = $data['clave'] ?? null;
         $nombre = $data['nombre'] ?? null;
         $apellido = $data['apellido'] ?? null;
         $perfil = $data['perfil'] ?? null;
+        $email = $data['email'] ?? null;
 
-        $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $clave);
-        echo  $respuesta;
+        $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $email);
+        echo $respuesta;
     } else {
         http_response_code(401);
         echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
@@ -164,25 +206,27 @@ Flight::route('PUT /actualizarUsuario', function () {
         $nombre = isset($data['nombre']) ? trim($data['nombre']) : null;
         $apellido = isset($data['apellido']) ? trim($data['apellido']) : null;
         $usuario = isset($data['usuario']) ? trim($data['usuario']) : null;
+        $email = isset($data['email']) ? trim($data['email']) : null;
         $clave_actual = isset($data['clave_actual']) ? $data['clave_actual'] : null;
         // NO extraemos $perfil: No se envía ni se necesita aquí
         
-        error_log("PUT /actualizarUsuario - Params recibidos: id_usuario={$id_usuario}, nombre={$nombre}, apellido={$apellido}, usuario={$usuario}, clave_actual=[PROVIDED]");
+        error_log("PUT /actualizarUsuario - Params recibidos: id_usuario={$id_usuario}, nombre={$nombre}, apellido={$apellido}, usuario={$usuario}, email={$email}, clave_actual=[PROVIDED]");
         
         if (
             $id_usuario === null || $id_usuario <= 0 ||
             empty($nombre) ||
             empty($apellido) ||
             empty($usuario) ||
+            empty($email) ||
             empty($clave_actual)
         ) {
             http_response_code(400);
-            echo json_encode(array("respuesta" => "0", "mensaje" => "Faltan campos requeridos: id_usuario, nombre, apellido, usuario y clave_actual."));
+            echo json_encode(array("respuesta" => "0", "mensaje" => "Faltan campos requeridos: id_usuario, nombre, apellido, usuario, email y clave_actual."));
             return;
         }
         
         $user_controller = new Usuarios_controller();
-        $respuesta_array = $user_controller->updateUser ($id_usuario, $nombre, $apellido, $usuario, $clave_actual);
+        $respuesta_array = $user_controller->updateUser ($id_usuario, $nombre, $apellido, $usuario, $email, $clave_actual);
         
         if (is_array($respuesta_array)) {
             echo json_encode($respuesta_array);
@@ -196,7 +240,6 @@ Flight::route('PUT /actualizarUsuario', function () {
         exit;
     }
 });
-
 
 Flight::route('PUT /eliminarUsuario', function () {
     $tokenDesdeCabecera = getValidToken();
@@ -466,7 +509,6 @@ Flight::route('PUT /actualizarCliente', function () {
         exit;
     }
 });
-
 
 Flight::route('PUT /eliminarCliente', function () {
     $tokenDesdeCabecera = getValidToken();

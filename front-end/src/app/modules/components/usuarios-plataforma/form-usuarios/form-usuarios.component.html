@@ -18,7 +18,6 @@
             <mat-error>Apellido requerido</mat-error>
             }
         </mat-form-field>
-
     </div>
 
     <div class="formGroupCont">
@@ -30,6 +29,16 @@
             }
         </mat-form-field>
 
+        <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" placeholder="Email" formControlName="email" />
+            @if (this.form.controls.email.hasError('required')) {
+            <mat-error>Email requerido</mat-error>
+            }
+            @if (this.form.controls.email.hasError('email')) {
+            <mat-error>Formato de email inválido</mat-error>
+            }
+        </mat-form-field>
     </div>
 
     <div class="formGroupCont">
@@ -46,5 +55,4 @@
     </div>
     
     <app-global-buttons [showCancel]="true" [textBtn2]="'GUARDAR'" (btnAction)="guardar()"></app-global-buttons>
-
 </form>

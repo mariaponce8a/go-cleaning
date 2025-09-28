@@ -56,34 +56,82 @@ export class LoginComponent implements OnDestroy {
     clave: new FormControl('', [Validators.required])
   })
 
-  public handleAction(event: string) {
-    console.log(event)
-    if (event == 'confirm') {
-      if (this.formlogin.invalid) {
-        this.usermessage.getToastMessage('info', Constantes.formInvalidMessage).fire()
-        this.formlogin.markAllAsTouched();
-        return;
-      }
-      let body = this.formlogin.getRawValue();
-      this.requesService.post(body, Constantes.apiLogin)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (value) => {
-            this.localencript.setLocalStorage(Constantes.tokenKey, value.data.token);
-            this.localencript.setLocalStorage(Constantes.usuarioKey, value.data.usuario);
-            this.localencript.setLocalStorage(Constantes.perfilKey, value.data.perfil);
-            this.localencript.setLocalStorage(Constantes.idusuarioKey, String(value.data.id_usuario));
-            console.log(value.data.id_usuario)
-            this.router.navigateByUrl('/bds/home');
-
-          },
-          error: (error) => {
-            console.log(error)
-            this.usermessage.getToastMessage('error', error);
-          }
-        })
+ public handleAction(event: string) {
+  console.log(event);
+  if (event == 'confirm') {
+    if (this.formlogin.invalid) {
+      this.usermessage.getToastMessage('info', Constantes.formInvalidMessage).fire();
+      this.formlogin.markAllAsTouched();
+      return;
     }
+    let body = this.formlogin.getRawValue();
+    this.requesService.post(body, Constantes.apiLogin)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (value: any) => {
+          console.log('Respuesta completa:', value); // DEBUG
+          
+          // VERIFICACIÓN MEJORADA
+          if (!value) {
+            console.error('Error: Respuesta vacía del servidor');
+            this.usermessage.getToastMessage('error', 'No se recibió respuesta del servidor').fire();
+            return;
+          }
+
+          // Si la respuesta es de error (respuesta: "0")
+          if (value.respuesta === "0") {
+            console.log('Error del servidor:', value.mensaje);
+            this.usermessage.getToastMessage('error', value.mensaje || 'Error en el login').fire();
+            return;
+          }
+
+          // Si es éxito, verificar que data existe
+          if (!value.data) {
+            console.error('Error: Estructura de respuesta inválida', value);
+            this.usermessage.getToastMessage('error', 'Estructura de respuesta inválida').fire();
+            return;
+          }
+
+          // Verificar si es primer inicio
+          const esPrimerInicio = value.data.primer_inicio === 1 || value.data.primer_inicio === '1';
+          
+          // Guardar datos en localStorage
+          if (value.data.token) {
+            this.localencript.setLocalStorage(Constantes.tokenKey, value.data.token);
+          }
+          this.localencript.setLocalStorage(Constantes.usuarioKey, value.data.usuario || body.usuario);
+          
+          if (value.data.perfil) {
+            this.localencript.setLocalStorage(Constantes.perfilKey, value.data.perfil);
+          }
+          if (value.data.id_usuario) {
+            this.localencript.setLocalStorage(Constantes.idusuarioKey, String(value.data.id_usuario));
+          }
+          this.localencript.setLocalStorage('primer_inicio', esPrimerInicio ? 'true' : 'false');
+          
+          console.log('Login exitoso. Primer inicio:', esPrimerInicio);
+          
+          // Redirigir al home
+          this.router.navigateByUrl('/bds/home');
+        },
+        error: (error) => {
+          console.log('Error HTTP:', error);
+          // Manejar diferentes tipos de error
+          let mensajeError = 'Error de conexión';
+          
+          if (error.status === 0) {
+            mensajeError = 'No hay conexión con el servidor';
+          } else if (error.error && error.error.mensaje) {
+            mensajeError = error.error.mensaje;
+          } else if (error.message) {
+            mensajeError = error.message;
+          }
+          
+          this.usermessage.getToastMessage('error', mensajeError).fire();
+        }
+      });
   }
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();

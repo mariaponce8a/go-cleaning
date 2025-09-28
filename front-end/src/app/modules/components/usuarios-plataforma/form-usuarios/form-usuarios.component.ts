@@ -22,8 +22,9 @@ import { IonicModule } from '@ionic/angular';
     MaterialModule,
     ColoredBodyHeaderComponent,
     GlobalButtonsComponent,
-     CommonModule,
-        IonicModule
+    CommonModule,
+    IonicModule,
+    ReactiveFormsModule 
   ],
   templateUrl: './form-usuarios.component.html',
   styleUrl: './form-usuarios.component.css'
@@ -37,44 +38,70 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<FormUsuariosComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IaccionBotones,
   ) { }
+  
   tituloPorAccion: string = 'Formulario';
   hide: boolean = false;
   esActualizacionPerfil: boolean = false;
+  esEdicionNormal: boolean = false;
 
   ngOnInit(): void {
     console.log(this.data);
-   // Determinar si es una actualización específica de perfil
-    this.esActualizacionPerfil = this.data.tipo === 'actualizar-perfil';
     
-    if (this.data.tipo == 'editar') {
+    // Determinar el tipo de acción
+    this.esActualizacionPerfil = this.data.tipo === 'actualizar-perfil';
+    this.esEdicionNormal = this.data.tipo === 'editar';
+    
+    if (this.esEdicionNormal) {
       this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
-      this.form.patchValue(this.data.fila);
-      this.form.controls.usuario.disable();
-      this.form.controls.usuario.disable();
-      this.form.controls.nombre.disable();
-      this.form.controls.apellido.disable();
+      this.configurarFormularioEdicion();
     } else if (this.esActualizacionPerfil) {
       this.tituloPorAccion = 'Actualizar Perfil';
-      this.form.patchValue(this.data.fila);
-      // En actualización de perfil, solo el campo perfil debe ser editable
-      this.form.controls.usuario.disable();
-      this.form.controls.nombre.disable();
-      this.form.controls.apellido.disable();
-      this.form.controls.perfil.enable();
+      this.configurarFormularioActualizacionPerfil();
     } else {
       this.tituloPorAccion = Constantes.modalHeaderMensajeCrear;
-      this.form.controls.usuario.enable();    }
+      this.configurarFormularioCreacion();
+    }
   }
 
+  // Configurar formulario para creación
+  configurarFormularioCreacion(): void {
+    this.form.controls.usuario.enable();
+    this.form.controls.nombre.enable();
+    this.form.controls.apellido.enable();
+    this.form.controls.email.enable();
+    this.form.controls.perfil.enable();
+  }
+
+  // Configurar formulario para edición normal
+  configurarFormularioEdicion(): void {
+    this.form.patchValue(this.data.fila);
+    // En edición normal, todos los campos excepto usuario pueden editarse
+    this.form.controls.usuario.disable();
+    this.form.controls.nombre.enable();
+    this.form.controls.apellido.enable();
+    this.form.controls.email.enable();
+    this.form.controls.perfil.disable(); 
+  }
+
+  // Configurar formulario para actualización de perfil
+  configurarFormularioActualizacionPerfil(): void {
+    this.form.patchValue(this.data.fila);
+    // Solo el campo perfil es editable en actualización de perfil
+    this.form.controls.usuario.disable();
+    this.form.controls.nombre.disable();
+    this.form.controls.apellido.disable();
+    this.form.controls.email.disable();
+    this.form.controls.perfil.enable();
+  }
 
   form = new FormGroup({
     id_usuario: new FormControl(''),
     usuario: new FormControl({ value: '', disabled: false }, [Validators.required]),
     nombre: new FormControl('', [Validators.required]),
     apellido: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]), 
     perfil: new FormControl('', [Validators.required]),
   })
-
 
   cerrarModalSinInformacion(cerrar: boolean) {
     if (cerrar) {
@@ -86,8 +113,8 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     this.dialogRef.close('ok');
   }
 
+  // Método específico para actualizar perfil
   actualizarPerfilUsuario(body: any) {
-    // Preparar el body específico para actualización de perfil
     const perfilBody = {
       id_usuario: body.id_usuario,
       nuevo_perfil: body.perfil
@@ -105,21 +132,56 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
+          console.error('Error actualizando perfil:', error);
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
       });
-    }
+  }
 
+  // Método para edición normal de usuario
+  editarUsuario(body: any) {
+    // Para edición normal
+    const editBody = {
+      id_usuario: body.id_usuario,
+      nombre: body.nombre,
+      apellido: body.apellido,
+      usuario: body.usuario,
+      email: body.email,
+      clave_actual: 'clave_temporal_placeholder' 
+    };
+
+    this.requestservice.put(editBody, Constantes.apiUpdateUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (value: any) => {
+          if (value.respuesta === '1') {
+            this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
+            this.cerrarModalConInformacion();
+          } else {
+            this.usermessage.getToastMessage('error', value.mensaje || Constantes.errorResponseMsg).fire();
+          }
+        },
+        error: (error) => {
+          console.error('Error editando usuario:', error);
+          this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
+        }
+      });
+  }
 
   crearUsuario(body: any) {
     this.requestservice.post(body, Constantes.apiCreateUser)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (value) => {
-          this.usermessage.getToastMessage('success', Constantes.createResponseMsg).fire();
-          this.cerrarModalConInformacion();
+        next: (value: any) => {
+          if (value.respuesta === '1') {
+            this.usermessage.getToastMessage('success', Constantes.temporaryPasswordMsg).fire();
+            this.cerrarModalConInformacion();
+          } else {
+            this.usermessage.getToastMessage('error', value.mensaje || Constantes.errorResponseMsg).fire();
+          }
         },
         error: (error) => {
+          console.error('Error creando usuario:', error);
           this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
         }
       })
@@ -133,6 +195,8 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     }
 
     let body = this.form.getRawValue();
+    
+    // Convertir perfil a formato de backend
     if (body.perfil == 'Empleado') {
       body.perfil = 'E';
     } else {
@@ -141,10 +205,11 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
 
     this.usermessage.questionMessage(Constantes.formQuestion).then((r) => {
       if (r.isConfirmed) {
-        if (this.data.tipo == 'editar') {
+        if (this.esActualizacionPerfil) {
           this.actualizarPerfilUsuario(body);
-        }
-        else {
+        } else if (this.esEdicionNormal) {
+          this.editarUsuario(body);
+        } else {
           this.crearUsuario(body);
         }
       }
@@ -155,5 +220,4 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
 }

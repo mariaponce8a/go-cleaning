@@ -3,13 +3,25 @@
         <button class="mt-0" mat-icon-button (click)="sidenav.toggle()">
             <mat-icon class="toolbarItem mt-0">menu</mat-icon>
         </button>
-        <label class="tituloApp ml-3">Burbuja de seda</label>
+        <label class="tituloApp ml-3">GO CLEANING</label>
     </div>
 
-    <div class=" contUserPerf d-flex flex-row justify-content-center align-items-center g-2">
-        <label class="user">
-            {{this.nombrePersona}} | {{this.perfilPersonaDesc}}
-        </label>
+    <div class="contUserPerf d-flex flex-row justify-content-center align-items-center g-2">
+  <div class="dropdown" ngbDropdown placement="bottom-end">
+    <button class="btn dropdown-toggle user-dropdown-trigger d-flex align-items-center" 
+            ngbDropdownToggle
+            id="userDropdown">
+      <span class="user-text">
+        {{this.nombrePersona}} | {{this.perfilPersonaDesc}}
+      </span>
+    </button>
+    
+    <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="userDropdown">
+      <button class="dropdown-item" (click)="verPerfil()">
+        <i class="fas fa-user me-2"></i>Ver Perfil
+      </button>
+    </div>
+  </div>    
 
         <button class="Btn" (click)="logout()">
             <div class="sign"><svg viewBox="0 0 512 512">

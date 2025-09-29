@@ -11,13 +11,21 @@ body {
 }
 
 :root {
-    --primary: #191723;
+    /* --primary: #191723;
     --primaryLigth: #252135;
     --primaryDark: #000000;
 
     --secondary: #2d584d;
     --secondaryLigth: #44796b;
-    --secondaryDark: #203d36;
+    --secondaryDark: #203d36; */
+
+    --primary: #06070b;
+    --primaryLigth: #20232e;
+    --primaryDark: #000000;
+
+    --secondary: #122534;
+    --secondaryLigth: #22455f;
+    --secondaryDark: #0c1822;
 
     --xxxxlsize: max(25px, min(70px, 5vw));
     --xxxlsize: max(29px, min(35px, 3vw));
@@ -70,7 +78,7 @@ body {
 
 /**************GLOBAL STYLES*****************/
 
- 
+
 
 .tableItemsHeader {
     background-color: white;
@@ -96,7 +104,7 @@ body {
     background-color: white;
     padding: 10px;
     border: 1px solid rgb(214, 214, 214);
-    border-radius: 0 0 10px 10px ;
+    border-radius: 0 0 10px 10px;
 }
 
 /*********MATERIAL DESIGN OVERWRITE STYLES**********/
@@ -230,8 +238,10 @@ body {
     background-color: var(--secondaryDark);
     transition: .3s;
 }
+
 .mat-dialog-content img {
     width: 70%;
     height: 70%;
     object-fit: contain;
-  }
+}
+

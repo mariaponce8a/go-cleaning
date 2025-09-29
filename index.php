@@ -17,35 +17,68 @@ use Firebase\JWT\Key;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
+// function getValidToken()
+// {
+//     $respuesta_token = false;
+//     $os = PHP_OS_FAMILY;
+
+//     if ($os === 'Windows') {
+//         $key = $_SERVER['TOKEN_KEY'];
+//         $headers = apache_request_headers();
+//         error_log("------------------------ENCABEZADOS " . implode(",", $headers));
+//         $authorization = $headers["Authorization"];
+//         $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
+//         if ($decodedToken) {
+//             error_log(json_encode($decodedToken));
+//             $respuesta_token = $decodedToken;
+//         } else {
+//             $respuesta_token = false;
+//         }
+//     } else {
+
+//         $key = $_SERVER['TOKEN_KEY'];
+//         $authorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+//         error_log("AUTORIZACIOOOOOOOOOONNNNN " . $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+//         if ($authorization) {
+//             error_log(json_encode($authorization));
+//             $respuesta_token =  $authorization;
+//         } else {
+//             $respuesta_token = false;
+//         }
+//     }
+//     return $respuesta_token;
+// }
+
 function getValidToken()
 {
     $respuesta_token = false;
-    $os = PHP_OS_FAMILY;
+    $key = $_SERVER['TOKEN_KEY'] ?? 'default_key';
+    $authorization = null;
 
-    if ($os === 'Windows') {
-        $key = $_SERVER['TOKEN_KEY'];
-        $headers = apache_request_headers();
-        error_log("------------------------ENCABEZADOS " . implode(",", $headers));
-        $authorization = $headers["Authorization"];
-        $decodedToken =  JWT::decode($authorization, new Key($key, 'HS256'));
-        if ($decodedToken) {
-            error_log(json_encode($decodedToken));
-            $respuesta_token = $decodedToken;
-        } else {
-            $respuesta_token = false;
-        }
-    } else {
-
-        $key = $_SERVER['TOKEN_KEY'];
+    // Buscar el header en diferentes lugares (depende de Apache/Nginx/ngrok)
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
         $authorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
-        error_log("AUTORIZACIOOOOOOOOOONNNNN " . $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
-        if ($authorization) {
-            error_log(json_encode($authorization));
-            $respuesta_token =  $authorization;
-        } else {
+    } elseif (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            $authorization = $headers['Authorization'];
+        }
+    }
+
+    if ($authorization) {
+        // Si viene con "Bearer " lo limpiamos
+        $authorization = str_replace('Bearer ', '', $authorization);
+        try {
+            $decodedToken = JWT::decode($authorization, new Key($key, 'HS256'));
+            $respuesta_token = $decodedToken;
+        } catch (Exception $e) {
+            error_log("Error decodificando token: " . $e->getMessage());
             $respuesta_token = false;
         }
     }
+
     return $respuesta_token;
 }
 
@@ -94,6 +127,53 @@ Flight::route('POST /login', function () {
     }
 });
 
+// Establecer contraseña inicial 
+Flight::route('PUT /establecerClaveInicial', function () {
+    // QUITAR la verificación de token - esta ruta debe ser pública
+    $user_controller = new Usuarios_controller();
+    $body = Flight::request()->getBody();
+    $data = json_decode($body, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Datos JSON inválidos"));
+        return;
+    }
+
+    $id_usuario = $data['id_usuario'] ?? null;
+    $clave_temporal = $data['clave_temporal'] ?? null;
+    $nueva_clave = $data['nueva_clave'] ?? null;
+    $confirmar_clave = $data['confirmar_clave'] ?? null;
+
+    $respuesta = $user_controller->setInitialPassword($id_usuario, $clave_temporal, $nueva_clave, $confirmar_clave);
+    echo $respuesta;
+});
+
+// Solicitar recuperación de contraseña 
+Flight::route('POST /solicitarRecuperacion', function () {
+    // QUITAR la verificación de token - esta ruta debe ser pública
+    $user_controller = new Usuarios_controller();
+    $body = Flight::request()->getBody();
+    $data = json_decode($body, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Datos JSON inválidos"));
+        return;
+    }
+
+    // Obtener los 4 campos requeridos
+    $datos_recuperacion = [
+        'nombre' => $data['nombre'] ?? null,
+        'apellido' => $data['apellido'] ?? null,
+        'usuario' => $data['usuario'] ?? null,
+        'email' => $data['email'] ?? null
+    ];
+
+    $respuesta = $user_controller->requestPasswordReset($datos_recuperacion);
+    echo $respuesta;
+});
+
 Flight::route('POST /registrarUsuario', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera !== false) {
@@ -102,44 +182,70 @@ Flight::route('POST /registrarUsuario', function () {
         $data = json_decode($body, true);
 
         $usuario = $data['usuario'] ?? null;
-        $clave = $data['clave'] ?? null;
         $nombre = $data['nombre'] ?? null;
         $apellido = $data['apellido'] ?? null;
         $perfil = $data['perfil'] ?? null;
+        $email = $data['email'] ?? null;
 
-        $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $clave);
-        echo  $respuesta;
+        $respuesta = $user_controller->insertUser($nombre, $apellido, $perfil, $usuario, $email);
+        echo $respuesta;
     } else {
         http_response_code(401);
         echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
         exit;
     }
 });
-
 
 Flight::route('PUT /actualizarUsuario', function () {
     $tokenDesdeCabecera = getValidToken();
     if ($tokenDesdeCabecera == true) {
-        $user_controller = new Usuarios_controller();
         $body = Flight::request()->getBody();
         $data = json_decode($body, true);
-
-        $id_usuario = $data['id_usuario'] ?? null;
-        $usuario = $data['usuario'] ?? null;
-        $clave = $data['clave'] ?? null;
-        $nombre = $data['nombre'] ?? null;
-        $apellido = $data['apellido'] ?? null;
-        $perfil = $data['perfil'] ?? null;
-
-        $respuesta = $user_controller->updateUser($id_usuario, $nombre, $apellido, $perfil, $usuario, $clave);
-        echo  $respuesta;
+        
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "Datos de entrada inválidos (JSON malformado)"));
+            return;  // Salir temprano
+        }
+        
+        $id_usuario = isset($data['id_usuario']) ? intval($data['id_usuario']) : null;
+        $nombre = isset($data['nombre']) ? trim($data['nombre']) : null;
+        $apellido = isset($data['apellido']) ? trim($data['apellido']) : null;
+        $usuario = isset($data['usuario']) ? trim($data['usuario']) : null;
+        $email = isset($data['email']) ? trim($data['email']) : null;
+        $clave_actual = isset($data['clave_actual']) ? $data['clave_actual'] : null;
+        // NO extraemos $perfil: No se envía ni se necesita aquí
+        
+        error_log("PUT /actualizarUsuario - Params recibidos: id_usuario={$id_usuario}, nombre={$nombre}, apellido={$apellido}, usuario={$usuario}, email={$email}, clave_actual=[PROVIDED]");
+        
+        if (
+            $id_usuario === null || $id_usuario <= 0 ||
+            empty($nombre) ||
+            empty($apellido) ||
+            empty($usuario) ||
+            empty($email) ||
+            empty($clave_actual)
+        ) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "Faltan campos requeridos: id_usuario, nombre, apellido, usuario, email y clave_actual."));
+            return;
+        }
+        
+        $user_controller = new Usuarios_controller();
+        $respuesta_array = $user_controller->updateUser ($id_usuario, $nombre, $apellido, $usuario, $email, $clave_actual);
+        
+        if (is_array($respuesta_array)) {
+            echo json_encode($respuesta_array);
+        } else {
+            echo $respuesta_array;
+        }
+        
     } else {
         http_response_code(401);
-        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada - Token inválido"));  // Cambié "status" a "respuesta" para consistencia
         exit;
     }
 });
-
 
 Flight::route('PUT /eliminarUsuario', function () {
     $tokenDesdeCabecera = getValidToken();
@@ -170,6 +276,92 @@ Flight::route('GET /consultarUsuarios', function () {
         exit;
     }
 });
+
+Flight::route('PUT /actualizarPerfilUsuario', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $user_controller = new Usuarios_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "Datos de entrada inválidos (JSON malformado)"));
+            return;
+        }
+        
+        $id_usuario = isset($data['id_usuario']) ? intval($data['id_usuario']) : null;
+        $nuevo_perfil = isset($data['nuevo_perfil']) ? trim($data['nuevo_perfil']) : null;
+        
+        // Obtener el ID del administrador desde el token
+        $usuario_admin = $tokenDesdeCabecera->data->id_usuario ?? null;
+        
+        error_log("PUT /actualizarPerfilUsuario - Params recibidos: id_usuario={$id_usuario}, nuevo_perfil={$nuevo_perfil}, usuario_admin={$usuario_admin}");
+        
+        // Validaciones básicas
+        if ($id_usuario === null || $id_usuario <= 0) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "ID de usuario inválido."));
+            return;
+        }
+        
+        if (!in_array($nuevo_perfil, ['A', 'E'])) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "Perfil no válido. Solo se permiten A (Administrador) o E (Empleado)."));
+            return;
+        }
+        
+        if ($usuario_admin === null) {
+            http_response_code(400);
+            echo json_encode(array("respuesta" => "0", "mensaje" => "No se pudo identificar al usuario administrador."));
+            return;
+        }
+        
+        $respuesta = $user_controller->updateUserProfile($id_usuario, $nuevo_perfil, $usuario_admin);
+        echo $respuesta;
+        
+    } else {
+        http_response_code(401);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada - Token inválido"));
+        exit;
+    }
+});
+
+// Ruta para obtener el perfil de un usuario por ID
+Flight::route('GET /obtenerPerfil/@id_usuario', function ($id_usuario) {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $user_controller = new Usuarios_controller();
+        $respuesta = $user_controller->getUserById($id_usuario);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('PUT /cambiarClave', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $user_controller = new Usuarios_controller();
+        $body = Flight::request()->getBody();
+        $data = json_decode($body, true);
+
+        $id_usuario = $data['id_usuario'] ?? null;
+        $clave_actual = $data['clave_actual'] ?? null;
+        $clave_nueva = $data['clave_nueva'] ?? null;
+        $confirmar_clave = $data['confirmar_clave'] ?? null;
+
+        $respuesta = $user_controller->changePassword($id_usuario, $clave_actual, $clave_nueva, $confirmar_clave);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
 // Ruta para consultar todos los servicios (GET)
 Flight::route('GET /consultarServicios', function () {
     $tokenDesdeCabecera = getValidToken(); // Verificación del token de autenticación
@@ -323,7 +515,6 @@ Flight::route('PUT /actualizarCliente', function () {
         exit;
     }
 });
-
 
 Flight::route('PUT /eliminarCliente', function () {
     $tokenDesdeCabecera = getValidToken();
@@ -823,11 +1014,11 @@ Flight::route('GET /consultarPedidosnoCancelados', function () {
 
 Flight::route('GET /consultarPedidosXid', function () {
     $tokenDesdeCabecera = getValidToken();
-    
+
     if ($tokenDesdeCabecera == true) {
         // Obtener el parámetro de consulta 'id' desde la URL
         $id = Flight::request()->query->__get('id');
-        
+
         if ($id) {
             $controller = new Pedidos_controller();
             $respuesta = $controller->getPedidosXId($id);
@@ -920,7 +1111,7 @@ Flight::route('POST /registrarPedidoCompleto', function () {
 
         error_log("----------------------DATOS DEL PEDIDO------------" . $body);
 
-        error_log(message: "detalle desde el index   ".$detalle);
+        error_log(message: "detalle desde el index   " . $detalle);
 
         $respuesta = $controller->insertarPedidoCompleto(
             $fecha_pedido,
@@ -958,11 +1149,11 @@ Flight::route('PUT /ejecutar-facturacion', function () {
 
         $id_pedido_cabecera = $data['id_pedido_cabecera'] ?? null;
         $estado_facturacion = $data['estado_facturacion'] ?? null;
-        
+
 
         $respuesta = $controller->ejecutarFacturacion(
             $id_pedido_cabecera,
-            $estado_facturacion 
+            $estado_facturacion
         );
         echo  $respuesta;
     } else {
@@ -1063,12 +1254,13 @@ Flight::route('GET /ordenPedido/@id_pedido_cabecera', function ($id_pedido_cabec
 });
 
 Flight::route('GET /consultarPedidosNoFinalizados', function () {
-    $tokenDesdeCabecera = getValidToken();
+    $tokenDesdeCabecera = getValidToken(); 
     if ($tokenDesdeCabecera == true) {
         $controller = new Pedidos_controller();
         $respuesta = $controller->getPedidosNoFinalizados();
+        
         echo  $respuesta;
-    } else {
+    } else { 
         echo json_encode(array("respuesta" => "0", "mensaje" => "Petición no autorizada"));
     }
 });

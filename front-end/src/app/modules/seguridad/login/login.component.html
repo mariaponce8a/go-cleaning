@@ -6,14 +6,14 @@
             <path
                 d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2" />
         </svg>
-        <label class="appName">Burbuja de seda</label>
-        <label class="appLogo">Eres como te ves</label>
+        <label class="appName">Go Cleaning</label>
+        <label class="appLogo">Tu confianza, nuestra mejor prenda</label>
     </div>
     <div class="contenedorFormulario">
-        <div class="w-100">
+        <div class="contenedor-centrado">
             <div class="formLogin d-flex flex-column gap-2 mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="#000"
-                    class="bi bi-suit-diamond-fill" viewBox="0 0 16 16">
+                    class="bi bi-suit-diamond-fill diamanteformulario" viewBox="0 0 16 16">
                     <path
                         d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2" />
                 </svg>
@@ -59,9 +59,15 @@
                         (btnAction)="handleAction($event)"></app-global-buttons>
                 </div>
             </form>
+             <div class="forgot-password-link">
+                <a (click)="openRecovery()" class="link">¿Olvidaste tu contraseña?</a>
+            </div>
+            
             <div class="d-flex justify-content-center w-100 mt-3"
                 style=" font-family: var(--regularFont);color: var(--primaryDark); font-size: var(--ssize);">v1.0.0
             </div>
         </div>
     </div>
+
 </div>
+

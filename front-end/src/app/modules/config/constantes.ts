@@ -13,6 +13,16 @@ export class Constantes {
   public static idusuarioKey: string = 'idusuarioValue';
   public static perfilKey: string = 'perfilvalue';
   public static env = EnvironmentData.globalUrl;
+
+  // APIS CAMBIO DE CONTRASEÑA
+  public static apiChangePassword: string =
+    this.env.host + this.env.name + '/cambiarClave';  
+  public static apiSetInitialPassword: string = 
+  this.env.host + this.env.name + '/establecerClaveInicial'; 
+  public static apiRequestPasswordReset: string = 
+    this.env.host + this.env.name + '/solicitarRecuperacion';
+ 
+
   // mensajes generales
   public static messageGeneral: string =
     'Estimado cliente, intente de nuevo más tarde.';
@@ -32,21 +42,39 @@ export class Constantes {
     'Problemas para procesar la acción, intentelo más tarde.';
   public static logOutQuestion: string =
     '¿Está seguro que desea cerrar sesión?';
+
+    // Nuevos mensajes para cambio de contraseña
+  public static changePasswordMsg: string = 'Contraseña actualizada con éxito';
+  public static changePasswordQuestion: string = '¿Está seguro que desea cambiar la contraseña?';
+  public static firstLoginMsg: string = 'Debe establecer una contraseña permanente para continuar';
+  public static passwordResetRequestMsg: string = 'Código de verificación enviado a su email';
+  public static passwordResetSuccessMsg: string = 'Contraseña restablecida exitosamente';
+  public static temporaryPasswordMsg: string = 'Usuario creado. Credenciales enviadas por email';
+  
   //labels generales
   public static modalHeaderMensajeEditar: string = 'Formulario edición'
   public static modalHeaderMensajeCrear: string = 'Formulario creación'
+  public static modalHeaderMensajeCambiarPassword: string = 'Cambiar Contraseña'  // Nuevo
+
 
   //----------- APIS SEGURIDAD
-  public static apiLogin: string = this.env.host + this.env.name + '/login';
+  public static apiLogin: string = 
+  this.env.host + this.env.name + '/login';
   //----------- APIS USUARIO PLATAFORMA
   public static apiGetAllUsers: string =
     this.env.host + this.env.name + '/consultarUsuarios';
+  public static apiGetUserbyId: string =
+    this.env.host + this.env.name + '/obtenerPerfil';
   public static apiUpdateUser: string =
-    this.env.host + this.env.name + '/actualizaUsuario';
+    this.env.host + this.env.name + '/actualizarUsuario';
+    public static apiUpdateProfile: string =
+    this.env.host + this.env.name + '/actualizarPerfilUsuario';
   public static apiCreateUser: string =
     this.env.host + this.env.name + '/registrarUsuario';
   public static apiDeleteUser: string =
     this.env.host + this.env.name + '/eliminarUsuario';
+
+
 
   //----------- APIS PEDIDOS
   public static apiGetAllPedidos: string =

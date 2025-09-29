@@ -483,144 +483,92 @@ class usuarios_model
     }
 }
     // Solicitar recuperación de contraseña por OTP
-    public function solicitarRecuperacionClave($email_o_usuario)
-    {
-        try {
-            $con = new Clase_Conectar();
-            $conexion = $con->Procedimiento_Conectar();
+   public function solicitarRecuperacionClave($datos)
+{
+    try {
+        $con = new Clase_Conectar();
+        $conexion = $con->Procedimiento_Conectar();
+        
+        // Extraer datos
+        $nombre = $datos['nombre'] ?? '';
+        $apellido = $datos['apellido'] ?? '';
+        $usuario = $datos['usuario'] ?? '';
+        $email = $datos['email'] ?? '';
+        
+        // Buscar usuario que coincida con todos los datos
+        $consulta = "SELECT id_usuario, email, usuario, nombre, apellido 
+                    FROM tb_usuarios_plataforma 
+                    WHERE nombre = ? AND apellido = ? AND usuario = ? AND email = ?";
+        $stmt = $conexion->prepare($consulta);
+        $stmt->bind_param("ssss", $nombre, $apellido, $usuario, $email);
+        
+        if ($stmt->execute()) {
+            $resultado = $stmt->get_result();
             
-            // Buscar usuario por email o nombre de usuario
-            $consulta = "SELECT id_usuario, email, usuario FROM tb_usuarios_plataforma WHERE email = ? OR usuario = ?";
-            $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param("ss", $email_o_usuario, $email_o_usuario);
+            if ($resultado->num_rows === 0) {
+                throw new Exception("No se encontró ninguna cuenta que coincida con los datos proporcionados.");
+            }
             
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
+            $usuario_data = $resultado->fetch_assoc();
+            
+            // Generar clave temporal de 8 caracteres
+            $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $clave_temporal = '';
+            for ($i = 0; $i < 8; $i++) {
+                $clave_temporal .= $caracteres[rand(0, strlen($caracteres) - 1)];
+            }
+            
+            // Expiración de 15 minutos
+            $clave_temporal_expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+            
+            // CORRECCIÓN: Usar SHA256 en lugar de password_hash()
+            $clave_cifrada = hash('sha256', $clave_temporal);
+            
+            // Actualizar en la base de datos
+            $query_update = "UPDATE tb_usuarios_plataforma 
+                           SET clave_temporal = ?, 
+                               clave_temporal_expiracion = ?,
+                               clave = ?,
+                               primer_inicio = 1
+                           WHERE id_usuario = ?";
+            $stmt_update = $conexion->prepare($query_update);
+            
+            // Usar la misma clave cifrada con SHA256 
+            $stmt_update->bind_param("sssi", $clave_cifrada, $clave_temporal_expiracion, $clave_cifrada, $usuario_data['id_usuario']);
+            
+            if ($stmt_update->execute()) {
+                // Enviar email usando tu servicio existente
+                $emailService = new EmailService();
                 
-                if ($resultado->num_rows === 0) {
-                    throw new Exception("No se encontró ninguna cuenta asociada con esa información.");
-                }
+                $resultadoEmail = $emailService->enviarClaveTemporal($email, $clave_temporal);
                 
-                $usuario_data = $resultado->fetch_assoc();
-                
-                // Generar OTP de 6 dígitos
-                $otp = sprintf("%06d", mt_rand(0, 999999));
-                $otp_expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes')); // Expira en 15 minutos
-                
-                // Actualizar OTP en la base de datos
-                $query_otp = "UPDATE tb_usuarios_plataforma SET otp = ?, otp_expiracion = ? WHERE id_usuario = ?";
-                $stmt_otp = $conexion->prepare($query_otp);
-                $stmt_otp->bind_param("ssi", $otp, $otp_expiracion, $usuario_data['id_usuario']);
-                
-                if ($stmt_otp->execute()) {
-                    // Enviar OTP por email
-                    $emailService = new EmailService();
-                    $subject = "Código de recuperación de contraseña";
-                    $message = "
-                    <h2>Recuperación de contraseña</h2>
-                    <p>Ha solicitado recuperar su contraseña.</p>
-                    <p><strong>Su código de verificación es:</strong> <span style='font-size:24px; font-weight:bold; color:#007bff;'>{$otp}</span></p>
-                    <p>Este código expira en 15 minutos.</p>
-                    <p>Si no solicitó este código, ignore este mensaje.</p>
-                    ";
-                    
-                    $emailSent = $emailService->enviarEmail($usuario_data['email'], $subject, $message);
-                    
-                    if ($emailSent) {
-                        return json_encode(array(
-                            "success" => true, 
-                            "message" => "Código de verificación enviado al email registrado.",
-                            "masked_email" => $this->enmascararEmail($usuario_data['email'])
-                        ));
-                    } else {
-                        throw new Exception("Error al enviar el código de verificación.");
-                    }
-                    
+                if ($resultadoEmail['success']) {
+                    return json_encode(array(
+                        "success" => true, 
+                        "message" => "Se ha enviado una clave temporal a tu correo electrónico. Tienes 15 minutos para usarla.",
+                        "masked_email" => $this->enmascararEmail($email)
+                    ));
                 } else {
-                    throw new Exception("Error al generar el código de verificación.");
+                    throw new Exception("Error al enviar el email: " . $resultadoEmail['message']);
                 }
                 
             } else {
-                throw new Exception("Error al buscar la cuenta.");
+                throw new Exception("Error al generar la clave temporal.");
             }
             
-        } catch (Exception $e) {
-            error_log("Error en solicitar recuperación: " . $e->getMessage());
-            return json_encode(array("success" => false, "message" => $e->getMessage()));
-        } finally {
-            if (isset($conexion)) {
-                $conexion->close();
-            }
+        } else {
+            throw new Exception("Error al verificar los datos.");
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error en recuperación de cuenta: " . $e->getMessage());
+        return json_encode(array("success" => false, "message" => $e->getMessage()));
+    } finally {
+        if (isset($conexion)) {
+            $conexion->close();
         }
     }
-
-    // Verificar OTP y permitir cambio de contraseña
-    public function verificarOTPyResetearClave($email_o_usuario, $otp, $nueva_clave, $confirmar_clave)
-    {
-        try {
-            if ($nueva_clave !== $confirmar_clave) {
-                throw new Exception("La nueva contraseña y la confirmación no coinciden.");
-            }
-
-            if (strlen($nueva_clave) < 6) {
-                throw new Exception("La nueva contraseña debe tener al menos 6 caracteres.");
-            }
-
-            $con = new Clase_Conectar();
-            $conexion = $con->Procedimiento_Conectar();
-            
-            // Verificar OTP
-            $consulta = "SELECT id_usuario, email FROM tb_usuarios_plataforma WHERE (email = ? OR usuario = ?) AND otp = ? AND otp_expiracion > NOW()";
-            $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param("sss", $email_o_usuario, $email_o_usuario, $otp);
-            
-            if ($stmt->execute()) {
-                $resultado = $stmt->get_result();
-                
-                if ($resultado->num_rows === 0) {
-                    throw new Exception("Código de verificación incorrecto o expirado.");
-                }
-                
-                $usuario_data = $resultado->fetch_assoc();
-                
-                // Actualizar contraseña y limpiar OTP
-                $nueva_clave_cifrada = hash('sha256', $nueva_clave);
-                $query_reset = "UPDATE tb_usuarios_plataforma SET clave = ?, otp = NULL, otp_expiracion = NULL, clave_temporal = NULL, clave_temporal_expiracion = NULL WHERE id_usuario = ?";
-                $stmt_reset = $conexion->prepare($query_reset);
-                $stmt_reset->bind_param("si", $nueva_clave_cifrada, $usuario_data['id_usuario']);
-                
-                if ($stmt_reset->execute()) {
-                    // Notificar por email del cambio de contraseña
-                    $emailService = new EmailService();
-                    $subject = "Contraseña restablecida exitosamente";
-                    $message = "
-                    <h2>Contraseña restablecida</h2>
-                    <p>Su contraseña ha sido restablecida exitosamente.</p>
-                    <p>Si no realizó esta acción, contacte al administrador inmediatamente.</p>
-                    <p>Fecha: " . date('Y-m-d H:i:s') . "</p>
-                    ";
-                    
-                    $emailService->enviarEmail($usuario_data['email'], $subject, $message);
-                    
-                    return json_encode(array("success" => true, "message" => "Contraseña restablecida exitosamente."));
-                } else {
-                    throw new Exception("Error al restablecer la contraseña.");
-                }
-                
-            } else {
-                throw new Exception("Error al verificar el código.");
-            }
-            
-        } catch (Exception $e) {
-            error_log("Error en verificar OTP y resetear: " . $e->getMessage());
-            return json_encode(array("success" => false, "message" => $e->getMessage()));
-        } finally {
-            if (isset($conexion)) {
-                $conexion->close();
-            }
-        }
-    }
-
+}
     // Funciones auxiliares
     private function generarClaveAleatoria($longitud = 8)
     {

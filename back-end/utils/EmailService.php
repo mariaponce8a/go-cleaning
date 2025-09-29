@@ -125,7 +125,7 @@ class EmailService
         return $this->enviarEmail($email, $asunto, $mensaje);
     }
     
-    public function enviarCodigoOTP($email, $otp)
+    public function enviarClaveTemporal($email, $otp)
     {
         $asunto = "🔒 Código de verificación - Sistema Go Cleaning";
         $mensaje = "

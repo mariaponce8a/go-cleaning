@@ -162,9 +162,15 @@ Flight::route('POST /solicitarRecuperacion', function () {
         return;
     }
 
-    $email_o_usuario = $data['email_o_usuario'] ?? null;
+    // Obtener los 4 campos requeridos
+    $datos_recuperacion = [
+        'nombre' => $data['nombre'] ?? null,
+        'apellido' => $data['apellido'] ?? null,
+        'usuario' => $data['usuario'] ?? null,
+        'email' => $data['email'] ?? null
+    ];
 
-    $respuesta = $user_controller->requestPasswordReset($email_o_usuario);
+    $respuesta = $user_controller->requestPasswordReset($datos_recuperacion);
     echo $respuesta;
 });
 

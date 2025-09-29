@@ -49,7 +49,6 @@ export class Constantes {
   public static firstLoginMsg: string = 'Debe establecer una contraseña permanente para continuar';
   public static passwordResetRequestMsg: string = 'Código de verificación enviado a su email';
   public static passwordResetSuccessMsg: string = 'Contraseña restablecida exitosamente';
-  public static otpExpiredMsg: string = 'El código de verificación ha expirado';
   public static temporaryPasswordMsg: string = 'Usuario creado. Credenciales enviadas por email';
   
   //labels generales

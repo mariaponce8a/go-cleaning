@@ -14,7 +14,8 @@ import { LocalStorageEncryptationService } from '../../shared/services/local-sto
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-
+import { RecuperacionCuentaComponent } from '../recuperacion-cuenta/recuperacion-cuenta.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -27,7 +28,8 @@ import { IonicModule } from '@ionic/angular';
     MatCheckboxModule,
     GlobalButtonsComponent,
     HttpClientModule,
-     CommonModule,
+    CommonModule,
+    MatDialogModule,
         IonicModule
   ],
   templateUrl: './login.component.html',
@@ -44,7 +46,8 @@ export class LoginComponent implements OnDestroy {
     private requesService: RequestService,
     private usermessage: UserMessageService,
     private localencript: LocalStorageEncryptationService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog 
   ) { }
 
   changePasswordVisibility() {
@@ -132,6 +135,13 @@ export class LoginComponent implements OnDestroy {
       });
   }
 }
+
+  openRecovery() {
+    this.dialog.open(RecuperacionCuentaComponent, {
+      width: '500px',
+      disableClose: true
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

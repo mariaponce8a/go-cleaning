@@ -243,7 +243,6 @@ class Usuarios_controller
         }
     }
 
-
     public function changePassword($id_usuario, $clave_actual, $clave_nueva, $confirmar_clave)
     {
         error_log("--------------");
@@ -301,49 +300,29 @@ class Usuarios_controller
         }
     }
 
-    // Solicitar recuperación por OTP
-    public function requestPasswordReset($email_o_usuario)
-    {
-        error_log("-------------- Solicitando recuperación de contraseña");
-        $usuarioModel = new usuarios_model();
-        
-        if (empty($email_o_usuario)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Debe proporcionar su email o usuario."));
-        }
-
-        $resultado = $usuarioModel->solicitarRecuperacionClave($email_o_usuario);
-        $resultado_decodificado = json_decode($resultado, true);
-        
-        if ($resultado_decodificado['success']) {
-            return json_encode(array(
-                "respuesta" => "1", 
-                "mensaje" => "Código enviado exitosamente.",
-                "data" => array("masked_email" => $resultado_decodificado['masked_email'] ?? "")
-            ));
-        } else {
-            return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
-        }
-    }
-
-    // Verificar OTP y resetear contraseña
-    public function resetPasswordWithOTP($email_o_usuario, $otp, $nueva_clave, $confirmar_clave)
-    {
-        error_log("-------------- Verificando OTP y reseteando contraseña");
-        $usuarioModel = new usuarios_model();
-        
-        if (empty($email_o_usuario) || empty($otp) || empty($nueva_clave) || empty($confirmar_clave)) {
-            return json_encode(array("respuesta" => "0", "mensaje" => "Todos los campos son requeridos."));
-        }
-
-        $resultado = $usuarioModel->verificarOTPyResetearClave($email_o_usuario, $otp, $nueva_clave, $confirmar_clave);
-        $resultado_decodificado = json_decode($resultado, true);
-        
-        if ($resultado_decodificado['success']) {
-            return json_encode(array("respuesta" => "1", "mensaje" => "Contraseña restablecida exitosamente."));
-        } else {
-            return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
-        }
-    }
+   public function requestPasswordReset($datos)
+{
+    error_log("-------------- Solicitando recuperación de contraseña");
+    $usuarioModel = new usuarios_model();
     
+    // Verificar que todos los campos requeridos estén presentes
+    if (empty($datos['nombre']) || empty($datos['apellido']) || empty($datos['usuario']) || empty($datos['email'])) {
+        return json_encode(array("respuesta" => "0", "mensaje" => "Debe proporcionar todos los datos: nombre, apellido, usuario y email."));
+    }
+
+    $resultado = $usuarioModel->solicitarRecuperacionClave($datos);
+    $resultado_decodificado = json_decode($resultado, true);
+    
+    if ($resultado_decodificado['success']) {
+        return json_encode(array(
+            "respuesta" => "1", 
+            "mensaje" => "Clave temporal enviada exitosamente.",
+            "data" => array("masked_email" => $resultado_decodificado['masked_email'] ?? "")
+        ));
+    } else {
+        return json_encode(array("respuesta" => "0", "mensaje" => $resultado_decodificado['message']));
+    }
+}
+
 
 }

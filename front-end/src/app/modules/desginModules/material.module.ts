@@ -27,6 +27,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   exports: [
@@ -57,6 +58,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatDatepickerModule,
     MatNativeDateModule, 
     ReactiveFormsModule,
+    MatChipsModule,
     MatButtonToggleModule
   ]
 })

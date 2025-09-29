@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -17,6 +17,8 @@ import { LocalStorageEncryptationService } from '../shared/services/local-storag
 import { Constantes } from '../config/constantes';
 import { HttpClient } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -27,7 +29,8 @@ import { IonicModule } from '@ionic/angular';
     CommonModule,
     MatSidenavModule,
     RouterModule, 
-        IonicModule
+    IonicModule,
+    NgbDropdownModule
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
@@ -107,6 +110,11 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       perfil: 'A'
     },
   ];
+  dropdownAbierto = false;
+
+  toggleDropdown() {
+    this.dropdownAbierto = !this.dropdownAbierto;
+  }
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -140,6 +148,26 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       this.perfilPersonaDesc = 'Administrador';
     }
   }
+
+  verPerfil() {
+    // Navegar a la página de perfil
+    console.log('Ver perfil');
+    this.router.navigate(['bds/perfil']);
+  }
+
+  editarPerfil() {
+    // Navegar a edición de perfil
+    console.log('Editar perfil');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.user-dropdown-trigger') && !target.closest('.dropdown-menu-custom')) {
+      this.dropdownAbierto = false;
+    }
+  }
+
   
   logout(): void {
     this.usermessage.questionMessage(Constantes.logOutQuestion).then((r) => {

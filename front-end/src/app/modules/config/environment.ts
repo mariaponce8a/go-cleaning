@@ -1,9 +1,9 @@
 export class EnvironmentData {
 
     public static globalUrl = {
-        host: 'http://192.168.1.86', 
+        host: 'http://localhost', 
         port: '443',
-        name: '/proyecto-integrador-burbujas-seda'
+        name: '/proyecto-movil'
     }
 
     //'http://localhost',  es para cuando se levante en web  

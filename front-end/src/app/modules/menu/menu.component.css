@@ -145,3 +145,176 @@ button {
 .Btn:active {
     transform: translate(2px, 2px);
 }
+
+/* Botón del dropdown personalizado */
+.user-dropdown-trigger {
+    background-color: var(--secondaryDark) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 8px 15px !important;
+    color: white !important;
+    font-size: var(--msize) !important;
+    font-family: var(--regularFonts) !important;
+    transition: all 0.3s ease;
+    box-shadow: none !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 35px;
+}
+
+.user-dropdown-trigger:hover {
+    background-color: var(--secondary) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.user-dropdown-trigger:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Icono de flecha */
+.dropdown-toggle::after {
+    content: "▼";
+    border: none;
+    margin-left: 8px;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.user-dropdown-trigger[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+
+/* Menú dropdown personalizado */
+.dropdown-menu-custom {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    min-width: 200px;
+    background: var(--secondaryDark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 8px 0;
+    backdrop-filter: blur(10px);
+}
+
+.dropdown-menu-custom.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Items del dropdown */
+.dropdown-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.3s ease;
+    color: white;
+    font-family: var(--regularFonts);
+    font-size: var(--msize);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 0;
+}
+
+.dropdown-item:hover {
+    background: var(--secondary);
+    color: white;
+    transform: translateX(5px);
+}
+
+.dropdown-item:focus {
+    outline: none;
+    background: var(--secondary);
+    color: white;
+}
+
+.dropdown-item i {
+    width: 16px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Separador */
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+    border: none;
+}
+
+/* Overlay para cerrar dropdown */
+.dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background: transparent;
+}
+
+/* Animación para el icono de chevron si usas FontAwesome */
+.fa-chevron-down {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.fa-chevron-down.rotate {
+    transform: rotate(180deg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dropdown-menu-custom {
+        min-width: 180px;
+        right: -10px;
+    }
+    
+    .contUserPerf {
+        padding: 0 10px;
+        gap: 5px;
+    }
+}
+
+/* Para NgBootstrap - sobreescribir estilos por defecto */
+.dropdown-menu {
+    background: var(--secondaryDark) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+    padding: 8px 0 !important;
+    min-width: 200px !important;
+}
+
+.dropdown-item {
+    color: white !important;
+    font-family: var(--regularFonts) !important;
+    font-size: var(--msize) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: var(--secondary) !important;
+    color: white !important;
+}
+
+/* Estilo adicional para el botón cuando está activo */
+.user-dropdown-trigger[aria-expanded="true"] {
+    background-color: var(--secondary) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}

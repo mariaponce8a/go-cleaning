@@ -1,0 +1,95 @@
+<mat-dialog-content class="dialog-content">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>lock_reset</mat-icon>
+    </div>
+    <div class="header-text">
+      <h2 class="header-title">Recuperación de Cuenta</h2>
+      <p class="header-subtitle">Ingresa tus datos para generar una nueva clave temporal</p>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="formRecuperacion" (ngSubmit)="onSubmit()" class="form-recuperacion">
+    
+    <!-- Nombre -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required>
+      <mat-icon matSuffix>person</mat-icon>
+      <mat-error *ngIf="formRecuperacion.get('nombre')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Apellido -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" required>
+      <mat-icon matSuffix>person_outline</mat-icon>
+      <mat-error *ngIf="formRecuperacion.get('apellido')?.hasError('required')">
+        El apellido es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Usuario -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Usuario</mat-label>
+      <input matInput formControlName="usuario" required>
+      <mat-icon matSuffix>badge</mat-icon>
+      <mat-error *ngIf="formRecuperacion.get('usuario')?.hasError('required')">
+        El usuario es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+      <mat-icon matSuffix>email</mat-icon>
+      <mat-error *ngIf="formRecuperacion.get('email')?.hasError('required')">
+        El email es requerido
+      </mat-error>
+      <mat-error *ngIf="formRecuperacion.get('email')?.hasError('email')">
+        Formato de email inválido
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="success-message">
+      <mat-icon>check_circle</mat-icon>
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="30"></mat-spinner>
+      <p class="loading-text">Procesando solicitud...</p>
+    </div>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button 
+        mat-button 
+        type="button" 
+        (click)="onCancel()"
+        [disabled]="isLoading">
+        <mat-icon>close</mat-icon>
+        Cancelar
+    </button>
+    <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit"
+        [disabled]="formRecuperacion.invalid || isLoading || isSubmitting">
+        <mat-icon>send</mat-icon>
+        {{ isLoading ? 'Enviando...' : 'Enviar Clave Temporal' }}
+    </button>
+</mat-dialog-actions>
+  </form>
+</mat-dialog-content>

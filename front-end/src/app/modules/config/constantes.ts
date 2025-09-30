@@ -74,7 +74,19 @@ export class Constantes {
   public static apiDeleteUser: string =
     this.env.host + this.env.name + '/eliminarUsuario';
 
-
+//----------- APIS ESTADISTICAS
+public static apiEstadisticasServicioMasSolicitado: string =
+  this.env.host + this.env.name + '/estadisticas/servicio-mas-solicitado';
+public static apiEstadisticasTopClientes: string =
+  this.env.host + this.env.name + '/estadisticas/top-clientes';
+public static apiEstadisticasControlCaja: string =
+  this.env.host + this.env.name + '/estadisticas/control-caja';
+public static apiEstadisticasGenerales: string =
+  this.env.host + this.env.name + '/estadisticas/generales';
+public static apiEstadisticasVentasMes: string =
+  this.env.host + this.env.name + '/estadisticas/ventas-mes';
+public static apiEstadisticasTodas: string =
+  this.env.host + this.env.name + '/estadisticas/todas';
 
   //----------- APIS PEDIDOS
   public static apiGetAllPedidos: string =

@@ -49,6 +49,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewInit {
       perfil: 'A, E'
     },
     {
+      descripcion: 'Estadísticas',
+      icon: 'analytics',
+      pagina: 'bds/estadisticas',
+      perfil: 'A, E'
+    },
+    {
       descripcion: 'Pedidos',
       icon: 'shopping_cart',
       pagina: 'bds/pedidos',

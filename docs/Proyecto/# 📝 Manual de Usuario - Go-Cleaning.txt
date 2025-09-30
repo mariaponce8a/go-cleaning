@@ -1,0 +1,106 @@
+# 📝 Manual de Usuario - Go-Cleaning
+
+---
+
+## 📋 Tabla de Contenidos
+1. 🌟 Introducción
+2. 🚀 Características del Sistema
+3. 💻 Requisitos del Sistema
+4. ⚙️ Instalación y Configuración
+5. 👤 Guía de Usuario
+6. 🧹 Funcionalidades Principales
+7. 📱 Interfaz Móvil
+8. 🔧 Solución de Problemas
+9. ❓ Preguntas Frecuentes
+10. 📞 Soporte Técnico
+
+---
+
+## 🌟 Introducción
+Go-Cleaning es una aplicación web moderna diseñada para la gestión integral de servicios de lavandería. El sistema ofrece una interfaz intuitiva para dispositivos móviles, permitiendo a los usuarios gestionar pedidos, clientes, y servicios de lavandería de manera eficiente.
+
+**Beneficios Principales:**
+- ✅ Gestión completa de pedidos de lavandería
+- ✅ Interfaz responsive para móvil 
+- ✅ Sistema de autenticación seguro
+- ✅ Generación automática de reportes en PDF
+- ✅ Notificaciones inteligentes
+- ✅ Seguimiento en tiempo real de pedidos
+
+---
+
+## 🚀 Características del Sistema
+**Tecnologías Utilizadas:**
+- 🌐 Frontend: Angular 17 + Ionic Framework
+- ⚙️ Backend: PHP con Flight micro-framework
+- 🗄️ Base de Datos: MySQL/PostgreSQL
+- 🔐 Autenticación: JSON Web Tokens (JWT)
+- 🎨 UI/UX: Angular Material + Bootstrap 5
+- 📱 Móvil: Capacitor para apps nativas
+
+**Características Técnicas:**
+- 🔐 Seguridad: Autenticación JWT y cifrado de datos
+- 📱 Multiplataforma: Web y aplicación móvil
+- 📊 Reportes: Generación automática de PDFs
+- 🔄 Tiempo Real: Actualizaciones instantáneas
+- 🎨 Diseño Moderno: Interfaz Material Design
+
+---
+
+## 💻 Requisitos del Sistema
+**Para Usuarios Web:**
+- Navegador Web Moderno:
+  - Chrome 70+
+  - Firefox 65+
+  - Safari 12+
+  - Edge 79+
+- Conexión a Internet: Estable (mínimo 1 Mbps)
+- Resolución de Pantalla: Mínimo 1024x768px
+
+**Para Aplicación Móvil:**
+- Android: Versión 7.0 (API level 24) o superior
+- iOS: Versión 12.0 o superior
+- Almacenamiento: 50 MB de espacio libre
+- RAM: Mínimo 2 GB
+
+---
+
+## ⚙️ Instalación y Configuración
+**Para Desarrolladores/Administradores:**
+
+1. **Configuración del Backend:**
+```bash
+# Clonar el repositorio
+git clone https://github.com/mariaponce8a/go-cleaning.git
+cd go-cleaning
+
+# Instalar dependencias PHP
+composer install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con la configuración de base de datos
+Configuración del Frontend:
+
+# Navegar al directorio frontend
+cd front-end
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run start
+# La aplicación estará disponible en http://localhost:4200
+Configuración para Móvil:
+
+# Construir para producción
+npm run build
+
+# Sincronizar con Capacitor
+npx cap sync
+
+# Ejecutar en Android
+npx cap run android
+
+# Ejecutar en iOS
+npx cap run ios

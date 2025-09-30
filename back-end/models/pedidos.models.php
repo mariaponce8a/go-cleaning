@@ -22,7 +22,8 @@ class pedidos_model
             left join tb_clientes_registrados c on c.id_cliente = p.fk_id_cliente
             left join tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
             left join tb_estados e ON a.fk_id_estado = e.id_estado
-            left join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos";
+            left join tb_tipo_descuentos d on d.id_tipo_descuento = p.fk_id_descuentos
+            order by p.id_pedido_cabecera desc";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {
@@ -44,8 +45,6 @@ class pedidos_model
             }
         }
     }
-
-
 
     public function getAllPedidosNoCancelados()
     {
@@ -605,6 +604,7 @@ class pedidos_model
                                     tb_asignaciones_empleado a ON p.id_pedido_cabecera = a.fk_id_pedido
                                 LEFT JOIN 
                                     tb_estados e ON a.fk_id_estado = e.id_estado
+                                ORDER BY p.id_pedido_cabecera DESC
                                 ";
             $exeResult = mysqli_query($conexion, $query);
 

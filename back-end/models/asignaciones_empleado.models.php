@@ -30,7 +30,8 @@ class Clase_AsignacionesEmpleado
                         JOIN tb_pedido pc ON a.fk_id_pedido = pc.id_pedido_cabecera
                         JOIN tb_clientes_registrados c ON pc.fk_id_cliente = c.id_cliente
                         JOIN tb_pedido_detalle pd ON pc.id_pedido_cabecera = pd.fk_id_pedido
-                        JOIN tb_servicios s ON pd.fk_id_servicio = s.id_servicio";;
+                        JOIN tb_servicios s ON pd.fk_id_servicio = s.id_servicio
+                        ORDER BY a.id_asignaciones DESC";
             
             $stmt = $conexion->prepare($consulta);
             $stmt->execute();

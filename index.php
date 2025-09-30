@@ -10,7 +10,7 @@ require_once('./back-end/controllers/estados.controllers.php');
 require_once('./back-end/controllers/recomendacion_lavado.controllers.php');
 require_once('./back-end/controllers/asignaciones_empleado.controllers.php');
 require_once('./back-end/controllers/mensajes.controller.php');
-
+require_once('./back-end/controllers/estadisticas.controller.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -124,6 +124,91 @@ Flight::route('POST /login', function () {
     } else {
         error_log("El objeto 'data' no existe");
         echo json_encode($respuesta);
+    }
+});
+
+//----------- RUTAS ESTADISTICAS
+Flight::route('GET /estadisticas/servicio-mas-solicitado', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $periodo = Flight::request()->query['periodo'] ?? 'dia';
+        $respuesta = $estadisticas_controller->getServicioMasSolicitado($periodo);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('GET /estadisticas/top-clientes', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $periodo = Flight::request()->query['periodo'] ?? 'dia';
+        $respuesta = $estadisticas_controller->getTopClientes($periodo);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('GET /estadisticas/control-caja', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $periodo = Flight::request()->query['periodo'] ?? 'dia';
+        $respuesta = $estadisticas_controller->getControlCaja($periodo);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('GET /estadisticas/generales', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $periodo = Flight::request()->query['periodo'] ?? 'dia';
+        $respuesta = $estadisticas_controller->getEstadisticasGenerales($periodo);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('GET /estadisticas/ventas-mes', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $anio = Flight::request()->query['anio'] ?? date('Y');
+        $respuesta = $estadisticas_controller->getVentasPorMes($anio);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
+    }
+});
+
+Flight::route('GET /estadisticas/todas', function () {
+    $tokenDesdeCabecera = getValidToken();
+    if ($tokenDesdeCabecera == true) {
+        $estadisticas_controller = new Estadisticas_controller();
+        $periodo = Flight::request()->query['periodo'] ?? 'dia';
+        $respuesta = $estadisticas_controller->getAllEstadisticas($periodo);
+        echo $respuesta;
+    } else {
+        http_response_code(401);
+        echo json_encode(array("status" => "0", "mensaje" => "Petición no autorizada"));
+        exit;
     }
 });
 

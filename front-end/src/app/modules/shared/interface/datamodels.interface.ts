@@ -118,3 +118,38 @@ export interface IAsignacionEmpleadosPlataforma {
   fk_id_estado?: string;
 }
 
+export interface IEstadisticasServicioMasSolicitado {
+  descripcion_servicio: string;
+  total_solicitudes: number;
+  total_articulos: number;
+}
+
+export interface IEstadisticasTopCliente {
+  id_cliente: number;
+  nombre_cliente: string;
+  apellido_cliente: string;
+  identificacion_cliente: string;
+  total_pedidos: number;
+  total_gastado: number;
+}
+
+export interface IEstadisticasControlCaja {
+  total_pedidos: number;
+  ingresos_totales: number;
+  subtotal: number;
+  impuestos_descuentos: number;
+  promedio_por_pedido: number;
+}
+
+export interface IEstadisticasGenerales {
+  total_pedidos: number;
+  ingresos_totales: number;
+  clientes_atendidos: number;
+  servicios_realizados: number;
+}
+
+export interface IEstadisticasVentaMes {
+  mes: number;
+  total_pedidos: number;
+  ingresos_totales: number;
+}

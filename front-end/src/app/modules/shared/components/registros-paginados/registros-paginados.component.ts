@@ -71,7 +71,7 @@ export class RegistrosPaginadosComponent implements OnInit {
 
   ngOnInit(): void {
     this.showActions = this.router.url !== '/bds/home'; // Ocultar botones de acción en home
-    this.showPdfButtonNextToCreate = this.router.url == '/bds/clientes';
+    this.showPdfButtonNextToCreate = false;//this.router.url == '/bds/clientes';
     this.onFillData();
 
   }

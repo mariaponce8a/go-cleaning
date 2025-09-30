@@ -25,6 +25,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./modules/components/perfil/perfil.component').then(c => c.PerfilComponent),
             },
             {
+                path: 'estadisticas',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('./modules/components/estadisticas/estadisticas.component').then(c => c.EstadisticasComponent),
+            },
+            {
                 path: 'facturas-del-servicio',
                 canActivate: [AuthGuard],
                 loadComponent: () => import('./modules/components/facturacion/facturas-preparadas/facturas-preparadas.component').then(c => c.FacturasPreparadasComponent)

@@ -79,11 +79,11 @@
             <!-- Campo Email -->
             <div class="form-item">
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Usuario</mat-label>
+                <mat-label>Email</mat-label>
                 <input matInput formControlName="email" [readonly]="!isEditMode">
-                <mat-icon matPrefix>account_circle</mat-icon>
+                <mat-icon matPrefix>email</mat-icon>
                 <mat-error *ngIf="perfilForm.get('usuario')?.hasError('required')">
-                  El usuario es requerido
+                  El email es requerido
                 </mat-error>
               </mat-form-field>
             </div>

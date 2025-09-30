@@ -1,0 +1,227 @@
+# 📑 Documento de Identificación de Ítems de Configuración y Línea Base  
+**Sistema Go-Cleaning**
+
+---
+
+## 1. ℹ️ Información General del Proyecto
+- **📌 Nombre del Proyecto:** Sistema de control Go Cleaning  
+- **🏷️ Versión de Línea Base:** BL-1.0  
+- **🎯 Propósito:** Manejo completo de órdenes de limpieza, desde registro de clientes hasta entrega final.  
+
+**👥 Roles GCS**
+- 🛠️ Responsable GCS: Equipo (Gestión de líneas base, CCB, CSA)  
+- 👨‍💻 Desarrolladores: Implementación de cambios y PRs  
+- ✅ QA: Verificación pre-release  
+- 🔐 Aprobador CAB: Valida cambios críticos  
+
+**📂 Repositorios – Estructura Monorepo**  
+go-cleaning-repo/
+├── back-end/ # Código del backend
+│ ├── config/ # Configuraciones del sistema
+│ ├── controllers/ # Controladores de la aplicación
+│ ├── models/ # Modelos de datos
+│ └── ...otros directorios
+├── front-end/ # Código del frontend
+│ ├── app/ # Aplicación principal
+│ ├── guards/ # Guards de autenticación
+│ ├── modules/ # Módulos de la aplicación
+│ │ ├── asignaciones/ # Gestión de asignaciones
+│ │ ├── clientes/ # Gestión de clientes
+│ │ ├── descuentos/ # Gestión de descuentos
+│ │ ├── estados/ # Gestión de estados
+│ │ ├── facturación/ # Módulo de facturación
+│ │ ├── home/tablas-home/ # Tablas del dashboard
+│ │ ├── imagenes/ # Gestión de imágenes
+│ │ ├── materiales/ # Gestión de materiales
+│ │ ├── pedidos/ # Gestión de pedidos
+│ │ ├── recomendaciones/ # Sistema de recomendaciones
+│ │ ├── servicios/ # Gestión de servicios
+│ │ └── usuarios-plataforma/ # Gestión de usuarios
+│ ├── config/ # Configuración del frontend
+│ ├── desginModules/ # Módulos de diseño
+│ ├── menu/ # Configuración de menús
+│ ├── seguridad/login/ # Sistema de autenticación
+│ └── shared/ # Recursos compartidos
+├── docs/ # Documentación
+├── public/ # Archivos públicos
+├── views/ # Vistas del sistema
+├── .env.example # Variables de entorno (ejemplo)
+├── .gitignore # Archivos ignorados por Git
+├── .htaccess # Configuración de Apache
+├── README.md # Este archivo
+├── composer.json # Dependencias de PHP
+├── composer.lock # Versiones bloqueadas de dependencias
+└── index.php # Punto de entrada principal
+
+**🧩 Esquema de Versionado:** SemVer (`vMAJOR.MINOR.PATCH`)  
+- 🔴 **MAJOR:** Cambios incompatibles  
+- 🟡 **MINOR:** Nuevas funcionalidades compatibles  
+- 🟢 **PATCH:** Correcciones de errores  
+
+**🌳 Estrategia de Ramas (GitFlow adaptado):**  
+- `main` → 🚀 Líneas base estables  
+- `develop` → 🔄 Integración continua  
+- `feature/*` → ✨ Nuevas funcionalidades  
+- `hotfix/*` → 🛠️ Correcciones urgentes  
+
+---
+
+## 2. 🏗️ Arquitectura del Sistema
+El sistema implementa **arquitectura de tres capas**:
+
+- 🎨 **Capa de Presentación:** Angular 17+, TypeScript, Angular Material, Ionic  
+- ⚙️ **Capa de Lógica de Negocio:** API RESTful en PHP con Framework Flight  
+- 🗄️ **Capa de Datos:** MySQL con procedimientos almacenados  
+
+---
+
+## 3. 📦 Ítems de Configuración Identificados
+
+### 🔧 CI-001: Configuración de Entorno Frontend
+- **Archivo:** `front-end/src/app/modules/config/environment.ts`  
+- **Evidencia de Fijación:** BL-1.0-ENV  
+- **⚠️ Criticidad:** Alta  
+- **👤 Responsable:** DESKTOP-I26BE1C\User  
+
+---
+
+### 🔗 CI-002: Constantes de API y Endpoints
+- **Archivo:** `front-end/src/app/modules/config/constantes.ts`  
+- **Evidencia de Fijación:** BL-1.0-API  
+- **⚠️ Criticidad:** Alta  
+- **👤 Responsable:** Bomberiux  
+
+---
+
+### 📦 CI-003: Dependencias del Frontend
+- **Archivo:** `front-end/package.json`  
+- **Evidencia de Fijación:** BL-1.0-DEP  
+- **⚠️ Criticidad:** Alta  
+- **👤 Responsable:** nathalyparedes  
+
+---
+
+### 🚦 CI-004: Router Principal del Backend
+- **Archivo:** `index.php`  
+- **Evidencia de Fijación:** BL-1.0-ROUTER  
+- **🔥 Criticidad:** Crítica  
+- **👥 Responsable:** Equipo  
+
+---
+
+### 🧩 CI-005: Controladores de Negocio
+- **Archivos:** `back-end/controllers/*.php`  
+- **Evidencia de Fijación:** BL-1.0-CTRL  
+- **⚠️ Criticidad:** Alta  
+- **👤 Responsable:** nathalyparedes  
+
+---
+
+### 🗄️ CI-006: Modelos de Datos
+- **Archivos:** `back-end/models/*.php`  
+- **Evidencia de Fijación:** BL-1.0-MODEL  
+- **🔥 Criticidad:** Crítica  
+- **👥 Responsable:** Equipo de desarrollo  
+
+---
+
+### 🎨 CI-007: Componentes Angular Frontend
+- **Archivos:** `front-end/src/app/modules/components/**/*.ts`  
+- **Evidencia de Fijación:** BL-1.0-COMP  
+- **⚠️ Criticidad:** Media  
+- **👥 Responsable:** Equipo frontend  
+
+---
+
+### 🗂️ CI-008: Vistas Legacy PHP
+- **Archivos:** `views/**/*.php`  
+- **Evidencia de Fijación:** BL-1.0-LEGACY  
+- **⚪ Criticidad:** Baja  
+- **👥 Responsable:** Equipo de mantenimiento  
+
+---
+
+## 4. 📌 Línea Base Establecida
+- **Versión:** BL-1.0  
+- **📅 Fecha:** Septiembre 2024  
+- **✅ Estado:** Aprobada y Congelada  
+
+**Incluye:**
+1. 🔐 Sistema de Autenticación con JWT  
+2. 📦 Gestión Integral de Pedidos  
+3. 🛎️ Catálogo de Servicios Configurable  
+4. 🖼️ Gestión de Materiales con Imágenes  
+5. 🤖 Sistema de Recomendaciones  
+
+---
+
+## 5. 📑 Evidencias de Fijación
+
+| 🏷️ Código     | 📖 Descripción              | 📂 Archivos        | 🔑 Commit | 👤 Responsable       |
+|---------------|------------------------------|--------------------|-----------|----------------------|
+| BL-1.0-ENV    | Configuración de entorno     | environment.ts    | 3f561de5  | DESKTOP-I26BE1C\User |
+| BL-1.0-API    | Endpoints de API             | constantes.ts     | 51706c26  | Bomberiux            |
+| BL-1.0-DEP    | Dependencias Angular         | package.json      | 3e7598f8  | nathalyparedes       |
+| BL-1.0-ROUTER | Router principal             | index.php         | múltiples | Equipo               |
+| BL-1.0-CTRL   | Controladores de negocio     | controllers/*.php | be8441bd  | nathalyparedes       |
+| BL-1.0-MODEL  | Modelos de datos             | models/*.php      | múltiples | Equipo               |
+
+---
+
+## 6. 🔍 Matriz de Trazabilidad
+
+| 📌 Requisito Funcional       | 🔧 Ítems Configuración | 📂 Archivos                                                                                               | 📑 Evidencias BL-1.0                  | ✅ Estado |
+|-------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------|----------------------------------------|----------|
+| RF-001: Control de Pedidos    | CI-005, CI-006, CI-007 | pedidos/, controllers/pedidos.controller.php, models/pedidos.models.php                                   | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-002: Control de Clientes   | CI-005, CI-006, CI-007 | clientes/, controllers/clientes.controller.php, models/cliente.models.php                                 | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-003: Control de Servicios  | CI-005, CI-006, CI-007 | servicios/, controllers/servicios.controller.php, models/servicio.models.php                              | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-004: Asignación de Tareas  | CI-005, CI-006, CI-007 | asignaciones/, controllers/asignaciones_empleado.controller.php, models/asignaciones_empleados.models.php | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-005: Control de Precios    | CI-005, CI-006, CI-007 | servicios/, controllers/servicios.controller.php, models/servicios.model.php                              | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-006: Notificaciones        | CI-002, CI-004         | notificaciones/, controllers/NotificacionesController.php, servicios externos                             | BL-1.0-API, BL-1.0-ROUTER              | 🔄 Parcial |
+| RF-007: Control de Usuarios   | CI-005, CI-006, CI-007 | usuarios/, seguridad/login/, controllers/usuarios.controller.php, models/usuarios.model.php               | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+| RF-008: Control de Descuentos | CI-005, CI-006, CI-007 | descuentos/, controllers/descuentos.controller.php, models/descuento.model.php                            | BL-1.0-CTRL, BL-1.0-MODEL, BL-1.0-COMP | ✅ |
+
+---
+
+## 7. 🔄 Procedimientos de Control de Cambios
+1. 📝 Solicitud de Cambio  
+2. 🔍 Análisis de Impacto  
+3. ✅ Aprobación Técnica  
+4. 👨‍💻 Implementación con versionado  
+5. 🧪 Verificación de pruebas  
+6. 📌 Actualización de línea base  
+
+**Roles:**  
+- 👨‍💼 Administrador de Configuración → Control de versiones  
+- 👨‍💻 Desarrolladores → Implementación  
+- 🧪 QA → Validación  
+- 📊 Project Manager → Aprobación de cambios mayores  
+
+---
+
+## 8. 🛡️ Plan de Respaldo y Recuperación
+**Elementos Críticos:**  
+- 💻 Código fuente en Git  
+- 🗄️ Base de datos MySQL  
+- ⚙️ Archivos de configuración  
+- 🖼️ Imágenes y documentos del sistema  
+
+**📆 Frecuencia:**  
+- Código fuente → Continuo  
+- Base de datos → Diario  
+- Configuración → Semanal  
+- Documentos → Semanal  
+
+---
+
+## 9. 📋 Tabla de Ítems de Configuración (ICs)
+
+| 🧩 IC             | 🔖 Identificador | 🏷️ Versión | 📂 Ubicación       | 👤 Responsable                 | 📌 Estado   |
+|------------------|--------------------|------------|------------------  |---------------------------------|-------------|
+| 🌐 Frontend App  | app-web            | v1.0.0     | /front-end       | Equipo                            | ✅ Estable |
+| ⚙️ API Backend   | api-backend        | v1.0.0     | /back-end        | Equipo                            | ✅ Estable |
+| 🗄️ Esquema BD    | db-schema           | v1.0.0     | /back-end/models | Equipo                            | 🔎 Verificado |
+| ⚙️ Configuración | infra-config       | v1.0.0     | /raíz /front-end | María Ponce                       | 🆗 Aprobado |
+| 📖 Documentación | user-docs          | v0.9.0     | /docs            | Sebastián Espín / Nathaly Paredes | 📝 En revisión |
+
+---

@@ -1,0 +1,203 @@
+esta asi <app-colored-body-header 
+    [icon]="'analytics'" 
+    [nombrePagina]="'Dashboard'"
+    [subtitulo]="'Métricas generales del sistema'">
+</app-colored-body-header>
+
+<div class="estadisticas-container">
+  <!-- Header y Selector de Periodo -->
+  <div class="estadisticas-header">
+    <h1 class="page-title">
+      <i class="fas fa-chart-bar"></i>
+      Sistema Go Cleaning
+    </h1>
+    <div class="periodo-selector">
+      <label>Período:</label>
+      <div class="btn-group">
+        <button *ngFor="let periodo of periodos" 
+                [class.active]="periodoSeleccionado === periodo.valor"
+                (click)="cambiarPeriodo(periodo.valor)"
+                class="btn-periodo">
+          {{periodo.texto}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div *ngIf="!loading" class="estadisticas-content">
+    
+    <!-- Tarjetas de Resumen General -->
+    <div class="resumen-cards">
+      <div class="resumen-card">
+        <div class="card-icon">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{estadisticasGenerales.total_pedidos || 0}}</h3>
+          <p>Total Pedidos</p>
+        </div>
+      </div>
+
+      <div class="resumen-card highlight">
+        <div class="card-icon">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{formatearMoneda(estadisticasGenerales.ingresos_totales)}}</h3>
+          <p>Ingresos Totales</p>
+        </div>
+      </div>
+
+      <div class="resumen-card">
+        <div class="card-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{estadisticasGenerales.clientes_atendidos || 0}}</h3>
+          <p>Clientes Atendidos</p>
+        </div>
+      </div>
+
+      <div class="resumen-card">
+        <div class="card-icon">
+          <i class="fas fa-concierge-bell"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{estadisticasGenerales.servicios_realizados || 0}}</h3>
+          <p>Servicios Realizados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Estadísticas Detalladas -->
+    <div class="estadisticas-detalladas">
+      
+      <!-- Servicio Más Solicitado -->
+    <div class="servicios-scroll-container">
+      <div class="estadistica-card">
+        <div class="card-header">
+          <h3><i class="fas fa-star"></i> Top 5 Servicios Más Solicitados</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="serviciosMasSolicitados.length > 0" class="servicios-lista">
+            <div *ngFor="let servicio of serviciosMasSolicitados; let i = index" 
+                 class="servicio-item" [class.top-service]="i === 0">
+              <div class="servicio-rank">
+                <span class="rank-number">{{i + 1}}</span>
+              </div>
+              <div class="servicio-info">
+                <h4>{{servicio.descripcion_servicio}}</h4>
+                <div class="servicio-stats">
+                  <div class="stat">
+                    <span class="stat-value">{{servicio.total_solicitudes || 0}}</span>
+                    <span class="stat-label">Solicitudes</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-value">{{servicio.total_articulos || 0}}</span>
+                    <span class="stat-label">Artículos</span>
+                  </div>
+                  <div class="stat" *ngIf="servicio.ingresos_generados > 0">
+                    <span class="stat-value">{{formatearMoneda(servicio.ingresos_generados)}}</span>
+                    <span class="stat-label">Ingresos</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="serviciosMasSolicitados.length === 0" class="no-data">
+            No hay datos de servicios para este período
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <!-- Control de Caja -->
+      <div class="estadistica-card">
+        <div class="card-header">
+          <h3><i class="fas fa-cash-register"></i> Control de Caja</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="controlCaja.total_pedidos !== undefined" class="caja-stats">
+            <div class="stat-row">
+              <span class="stat-label">Total Pedidos:</span>
+              <span class="stat-value">{{controlCaja.total_pedidos || 0}}</span>
+            </div>
+            <div class="stat-row highlight">
+              <span class="stat-label">Ingresos Totales:</span>
+              <span class="stat-value">{{formatearMoneda(controlCaja.ingresos_totales)}}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Subtotal:</span>
+              <span class="stat-value">{{formatearMoneda(controlCaja.subtotal)}}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Impuestos/Descuentos:</span>
+              <span class="stat-value">{{formatearMoneda(controlCaja.impuestos_descuentos)}}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Promedio por Pedido:</span>
+              <span class="stat-value">{{formatearMoneda(controlCaja.promedio_por_pedido)}}</span>
+            </div>
+          </div>
+          <div *ngIf="controlCaja.total_pedidos === undefined" class="no-data">
+            No hay datos de caja para este período
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 5 Clientes -->
+      <div class="estadistica-card full-width">
+        <div class="card-header">
+          <h3><i class="fas fa-trophy"></i> Top 5 Mejores Clientes</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="topClientes.length > 0" class="clientes-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Cliente</th>
+                  <th>Identificación</th>
+                  <th>Total Pedidos</th>
+                  <th>Total Gastado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cliente of topClientes; let i = index" [class.top-row]="i < 3">
+                  <td class="rank">{{i + 1}}</td>
+                  <td class="cliente-info">
+                    <strong>{{cliente.nombre_cliente}} {{cliente.apellido_cliente}}</strong>
+                  </td>
+                  <td>{{cliente.identificacion_cliente}}</td>
+                  <td class="text-center">{{cliente.total_pedidos}}</td>
+                  <td class="text-right moneda">{{formatearMoneda(cliente.total_gastado)}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="topClientes.length === 0" class="no-data">
+            No hay datos de clientes para este período
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Resumen del Período -->
+    <div class="periodo-resumen">
+      <div class="resumen-info">
+        <h4>Resumen del Período Seleccionado</h4>
+        <p>Mostrando estadísticas para: <strong>{{getPeriodoTexto()}}</strong></p>
+        <p class="last-update">Última actualización: {{getFechaActual()}}</p>
+      </div>
+    </div>
+
+  </div>
+</div> 

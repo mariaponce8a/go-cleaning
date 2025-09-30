@@ -3,11 +3,11 @@ require_once('./back-end/models/asignaciones_empleado.models.php');
 
 class AsignacionesEmpleado_controller
 {
-    public function getAllAssignments()
+    public function getAllAssignments($usuario)
     {
         error_log("Obteniendo todas las asignaciones");
         $asignacionesModel = new Clase_AsignacionesEmpleado();
-        $resultado = $asignacionesModel->todos();
+        $resultado = $asignacionesModel->todos($usuario);
         if ($resultado === false) {
             return json_encode(array("respuesta" => "0", "mensaje" => "No se encontraron asignaciones."));
         } else {

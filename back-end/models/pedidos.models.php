@@ -59,7 +59,9 @@ class pedidos_model
             p.direccion_recoleccion, p.fecha_entrega_estimada, p.direccion_entrega, 
             p.tipo_entrega FROM tb_pedido p 
             INNER JOIN tb_clientes_registrados c ON c.id_cliente = p.fk_id_cliente 
-            WHERE p.estado_pedido = 1";
+            WHERE p.estado_pedido = 1
+            ORDER BY p.fecha_pedido DESC
+            ";
             $exeResult = mysqli_query($conexion, $query);
 
             if ($exeResult == false) {

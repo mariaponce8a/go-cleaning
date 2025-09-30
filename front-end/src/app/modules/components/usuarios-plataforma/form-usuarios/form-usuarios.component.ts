@@ -42,19 +42,13 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
   tituloPorAccion: string = 'Formulario';
   hide: boolean = false;
   esActualizacionPerfil: boolean = false;
-  esEdicionNormal: boolean = false;
 
   ngOnInit(): void {
     console.log(this.data);
     
     // Determinar el tipo de acción
-    this.esActualizacionPerfil = this.data.tipo === 'actualizar-perfil';
-    this.esEdicionNormal = this.data.tipo === 'editar';
-    
-    if (this.esEdicionNormal) {
-      this.tituloPorAccion = Constantes.modalHeaderMensajeEditar;
-      this.configurarFormularioEdicion();
-    } else if (this.esActualizacionPerfil) {
+    this.esActualizacionPerfil = this.data.tipo === 'editar';
+     if (this.esActualizacionPerfil) {
       this.tituloPorAccion = 'Actualizar Perfil';
       this.configurarFormularioActualizacionPerfil();
     } else {
@@ -70,29 +64,31 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
     this.form.controls.apellido.enable();
     this.form.controls.email.enable();
     this.form.controls.perfil.enable();
+
+    this.form.reset();
+
   }
 
-  // Configurar formulario para edición normal
-  configurarFormularioEdicion(): void {
-    this.form.patchValue(this.data.fila);
-    // En edición normal, todos los campos excepto usuario pueden editarse
-    this.form.controls.usuario.disable();
-    this.form.controls.nombre.enable();
-    this.form.controls.apellido.enable();
-    this.form.controls.email.enable();
-    this.form.controls.perfil.disable(); 
+ // Configurar formulario para actualización de perfil
+configurarFormularioActualizacionPerfil(): void {
+  const datos = { ...this.data.fila };
+  
+  // Convertir el perfil de 'A'/'E' a texto para el formulario
+  if (datos.perfil === 'A') {
+    datos.perfil = 'Administrador';
+  } else if (datos.perfil === 'E') {
+    datos.perfil = 'Empleado';
   }
-
-  // Configurar formulario para actualización de perfil
-  configurarFormularioActualizacionPerfil(): void {
-    this.form.patchValue(this.data.fila);
-    // Solo el campo perfil es editable en actualización de perfil
-    this.form.controls.usuario.disable();
-    this.form.controls.nombre.disable();
-    this.form.controls.apellido.disable();
-    this.form.controls.email.disable();
-    this.form.controls.perfil.enable();
-  }
+  
+  this.form.patchValue(datos);
+  
+  // Solo el campo perfil es editable en actualización de perfil
+  this.form.controls.usuario.disable();
+  this.form.controls.nombre.disable();
+  this.form.controls.apellido.disable();
+  this.form.controls.email.disable();
+  this.form.controls.perfil.enable();
+}
 
   form = new FormGroup({
     id_usuario: new FormControl(''),
@@ -138,36 +134,6 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Método para edición normal de usuario
-  editarUsuario(body: any) {
-    // Para edición normal
-    const editBody = {
-      id_usuario: body.id_usuario,
-      nombre: body.nombre,
-      apellido: body.apellido,
-      usuario: body.usuario,
-      email: body.email,
-      clave_actual: 'clave_temporal_placeholder' 
-    };
-
-    this.requestservice.put(editBody, Constantes.apiUpdateUser)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (value: any) => {
-          if (value.respuesta === '1') {
-            this.usermessage.getToastMessage('success', Constantes.updateResponseMsg).fire();
-            this.cerrarModalConInformacion();
-          } else {
-            this.usermessage.getToastMessage('error', value.mensaje || Constantes.errorResponseMsg).fire();
-          }
-        },
-        error: (error) => {
-          console.error('Error editando usuario:', error);
-          this.usermessage.getToastMessage('error', Constantes.errorResponseMsg).fire();
-        }
-      });
-  }
-
   crearUsuario(body: any) {
     this.requestservice.post(body, Constantes.apiCreateUser)
       .pipe(takeUntil(this.destroy$))
@@ -207,8 +173,6 @@ export class FormUsuariosComponent implements OnInit, OnDestroy {
       if (r.isConfirmed) {
         if (this.esActualizacionPerfil) {
           this.actualizarPerfilUsuario(body);
-        } else if (this.esEdicionNormal) {
-          this.editarUsuario(body);
         } else {
           this.crearUsuario(body);
         }
